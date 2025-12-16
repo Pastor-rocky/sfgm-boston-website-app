@@ -99,10 +99,10 @@ export default function CourseDetail() {
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-indigo-900 to-purple-900">
       <Navigation />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8 mobile-container">
         {/* Course Header */}
         <div className="text-center mb-12">
-          <div className="flex justify-center mb-6">
+          <div className="flex justify-center mb-4 md:mb-6">
             <img 
               src={id === "1" ? "/acts-in-action-cover.png" : 
                     id === "2" ? "/becoming-a-fire-starter-cover.jpeg" :
@@ -114,14 +114,14 @@ export default function CourseDetail() {
                     id === "8" ? "/sfgm-youth-ministry-cover.png" :
                     "/course-cover-placeholder.png"} 
               alt={`${(course as any)?.name || 'Course'} Cover`}
-              className={`${id === "6" || id === "7" || id === "8" ? "w-72 h-72" : "w-48 h-64"} object-contain rounded-lg shadow-2xl border-4 border-white/20`}
+              className={`${id === "6" || id === "7" || id === "8" ? "w-48 h-48 md:w-72 md:h-72" : "w-40 h-52 md:w-48 md:h-64"} object-contain rounded-lg shadow-2xl border-4 border-white/20 mx-auto`}
             />
           </div>
-          <h1 className="text-5xl font-bold text-white mb-6">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 md:mb-6 mobile-heading">
             {id === '8' ? 'Youth Ministry Course' : (course as any)?.name || 'Course'}
           </h1>
           
-          <p className="text-xl text-purple-200 max-w-3xl mx-auto mb-8">
+          <p className="text-base md:text-lg lg:text-xl text-purple-200 max-w-3xl mx-auto mb-6 md:mb-8 mobile-text px-2">
             {id === '1' ? (
               "This Bible School semester we will be studying the first century church, reading through the book of Acts and paying close attention to what they did, so we can get what they got - signs, wonders, miracles and the empowering of the Holy Spirit to proclaim the Gospel like never before!"
             ) : id === '0' ? (
@@ -154,7 +154,7 @@ export default function CourseDetail() {
                       onClick={() => enrollMutation.mutate()}
                       disabled={enrollMutation.isPending}
                       size="lg"
-                      className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-8 py-4 text-lg"
+                      className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-6 py-3 md:px-8 md:py-4 text-base md:text-lg min-h-[44px] w-full sm:w-auto"
                     >
                       <i className="fas fa-play mr-2"></i>
                       {enrollMutation.isPending ? 'Enrolling...' : 'Enroll Now'}

@@ -60,13 +60,57 @@
     @apply border-border;
   }
 
+  html {
+    /* Prevent horizontal scroll on iOS */
+    overflow-x: hidden;
+    /* Smooth scrolling */
+    scroll-behavior: smooth;
+    /* iOS momentum scrolling */
+    -webkit-overflow-scrolling: touch;
+    /* Prevent text size adjustment on orientation change */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
   body {
     @apply font-sans antialiased bg-background text-foreground;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    /* Prevent horizontal scroll */
+    overflow-x: hidden;
+    /* iOS safe area insets for notched devices */
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    /* Prevent pull-to-refresh on iOS Safari */
+    overscroll-behavior-y: contain;
+    /* Prevent rubber band effect on iOS */
+    position: relative;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
   }
   
   h1, h2, h3, h4, h5, h6 {
     @apply font-semibold text-foreground;
+  }
+
+  /* Prevent iOS zoom on input focus - ensure font size is at least 16px */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="search"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+
+  /* Fix iOS input rendering */
+  @media screen and (-webkit-min-device-pixel-ratio: 0) {
+    input,
+    textarea,
+    select {
+      font-size: 16px !important;
+    }
   }
 }
 
@@ -159,6 +203,14 @@
 
   .mobile-nav {
     @apply flex items-center justify-between p-4 bg-background border-b;
+    /* iOS safe area top padding for notched devices */
+    padding-top: max(1rem, calc(1rem + env(safe-area-inset-top)));
+    /* Prevent layout shift */
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    /* Smooth transitions */
+    transition: transform 0.2s ease-in-out;
   }
 
   .mobile-menu {
@@ -171,7 +223,13 @@
 
   .mobile-input {
     @apply w-full px-3 py-2 border border-input rounded-lg bg-background;
-    @apply text-base; /* Prevent zoom on iOS */
+    @apply text-base; /* Prevent zoom on iOS - must be 16px or larger */
+    font-size: 16px !important; /* Force 16px to prevent iOS zoom */
+    /* Better touch targets */
+    min-height: 44px;
+    /* Remove iOS input styling */
+    -webkit-appearance: none;
+    appearance: none;
   }
 
   .mobile-modal {
@@ -204,6 +262,58 @@
 
   .mobile-subtitle {
     @apply text-xl md:text-2xl lg:text-3xl font-semibold;
+  }
+
+  /* App-like mobile experience */
+  @media (max-width: 768px) {
+    /* Prevent layout shifts */
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+    
+    /* Better touch targets - minimum 44x44px */
+    button,
+    a,
+    [role="button"],
+    input[type="button"],
+    input[type="submit"] {
+      min-height: 44px;
+      min-width: 44px;
+    }
+    
+    /* Prevent text selection on buttons (app-like feel) */
+    button,
+    [role="button"] {
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+    
+    /* Smooth scrolling for mobile */
+    * {
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Fix iOS viewport height issues */
+    .min-h-screen {
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+    }
+    
+    /* Prevent horizontal scroll */
+    body,
+    html {
+      overflow-x: hidden;
+      width: 100%;
+      position: relative;
+    }
+    
+    /* Better card spacing on mobile */
+    .mobile-card {
+      margin-bottom: 1rem;
+    }
   }
 
   /* Line clamp utilities for text truncation */

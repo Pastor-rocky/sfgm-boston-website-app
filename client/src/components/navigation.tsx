@@ -80,7 +80,7 @@ export default function Navigation() {
                 <div className="flex items-center space-x-3 bg-gradient-to-r from-blue-50 to-purple-50 px-4 py-2 rounded-lg border border-blue-200">
                   <Avatar className="w-10 h-10 border-2 border-blue-600">
                     <AvatarImage 
-                      src={user?.profileImageUrl} 
+                      src={user?.profileImageUrl || undefined} 
                       alt={`${user?.firstName || user?.username || 'Member'}'s profile`}
                     />
                     <AvatarFallback className="bg-blue-600 text-white text-sm font-semibold">
@@ -207,7 +207,7 @@ export default function Navigation() {
               <div className="flex items-center space-x-2 bg-gradient-to-r from-blue-50 to-purple-50 px-3 py-1.5 rounded-lg border border-blue-200">
                 <Avatar className="w-8 h-8 border-2 border-blue-600">
                   <AvatarImage 
-                    src={user?.profileImageUrl} 
+                    src={user?.profileImageUrl || undefined} 
                     alt={`${user?.firstName || user?.username || 'Member'}'s profile`}
                   />
                   <AvatarFallback className="bg-blue-600 text-white text-xs font-semibold">
@@ -286,7 +286,7 @@ export default function Navigation() {
                         <div className="px-3 py-2 text-sm text-gray-600 border-b flex items-center space-x-2">
                           <Avatar className="w-6 h-6">
                             <AvatarImage 
-                              src={user?.profileImageUrl} 
+                              src={user?.profileImageUrl || undefined} 
                               alt={`${user?.firstName || user?.username || 'Member'}'s profile`}
                             />
                             <AvatarFallback className="bg-blue-600 text-white text-xs font-semibold">

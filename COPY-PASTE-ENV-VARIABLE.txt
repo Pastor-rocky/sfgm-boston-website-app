@@ -1,0 +1,18 @@
+=== COPY AND PASTE THESE ===
+
+Variable Name (Key):
+VITE_R2_PUBLIC_URL
+
+Variable Value:
+https://pub-5d553209d3dd4635aa4ee7406e048bf4.r2.dev
+
+=== INSTRUCTIONS ===
+
+1. Go to Render dashboard
+2. Click your service
+3. Click "Environment"
+4. Click "Add Environment Variable"
+5. Paste the Key above
+6. Paste the Value above
+7. Save Changes
+
