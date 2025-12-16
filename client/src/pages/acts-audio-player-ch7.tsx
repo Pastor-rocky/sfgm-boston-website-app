@@ -28,7 +28,7 @@ const ActsAudioPlayerCh7: React.FC = () => {
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const audioSrc = '/uploads/textbook-audio/acts-in-action-cp7.mp3';
+  const audioSrc = '/uploads/textbook-audio/Act in Action 🎬  Cp7.mp3';
   const localStorageKey = 'audio_progress_acts_ch7';
 
   // Load saved progress on mount
