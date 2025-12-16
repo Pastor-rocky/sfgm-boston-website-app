@@ -457,18 +457,6 @@ export default function TextbookCatalog() {
       return;
     }
     
-    // For The Power of Preaching (courseId 6), link to authorized source
-    if (textbook.courseId === 6) {
-      window.open('https://www.amazon.com/Power-Preaching-Crafting-Creative-Expository/dp/0802418309', '_blank');
-      return;
-    }
-    
-    // For The 5 Levels of Leadership, link to John Maxwell's book
-    if (textbook.courseId === 5) {
-      window.open('https://www.amazon.com/Levels-Leadership-Proven-Maximize-Potential/dp/1599953633', '_blank');
-      return;
-    }
-    
     // For other textbooks, navigate to the complete book reader
     setLocation(`/pdf-download?courseId=${textbook.courseId}`);
   };
