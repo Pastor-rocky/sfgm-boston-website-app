@@ -1970,6 +1970,17 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                 // Render available videos only - filter published and remove duplicates
                 videos
                     .filter((v: CourseVideo) => v.isPublished) // Only show published videos
+                    .filter((v: CourseVideo) => {
+                      // Remove test videos
+                      if (v.title.toLowerCase().includes('test')) {
+                        return false;
+                      }
+                      // Remove Don't Be a Jonah video incorrectly assigned to Course 1
+                      if (v.videoUrl && v.videoUrl.includes('kK_nCld8Jow')) {
+                        return false;
+                      }
+                      return true;
+                    })
                     .filter((v: CourseVideo, index: number, self: CourseVideo[]) => 
                       // Remove duplicates by ID (keep first occurrence)
                       index === self.findIndex((other: CourseVideo) => other.id === v.id)
