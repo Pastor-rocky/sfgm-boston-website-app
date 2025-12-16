@@ -51,16 +51,11 @@ export default function DontBeAJonahPlayerCh1() {
       <div className="sticky top-0 z-50 bg-black/20 backdrop-blur-sm border-b border-white/10">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex gap-2">
-              <Button onClick={() => setLocation("/course/3")} variant="ghost" className="text-white hover:bg-white/10">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Course
-              </Button>
-              <Button onClick={() => setLocation("/dont-be-a-jonah-complete-book")} variant="outline" className="text-white border-white/20 hover:bg-white/10">
-                📖 Full Book
-              </Button>
-            </div>
-            <h1 className="text-xl font-bold text-white">Don’t Be a Jonah - Chapter 1</h1>
+            <Button onClick={() => setLocation("/course/3")} variant="ghost" className="text-white hover:bg-white/10">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Course
+            </Button>
+            <h1 className="text-xl font-bold text-white">Don't Be a Jonah - Chapter 1</h1>
             <div className="w-24" />
           </div>
         </div>
