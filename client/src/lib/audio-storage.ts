@@ -39,8 +39,14 @@ export const getAudioUrl = (filename: string): string => {
   
   // For local files, convert emoji names to URL-safe names
   // R2 uses emoji names, but local files use URL-safe names
-  const localFilename = filename
-    .replace(/Act in Action 🎬  Cp(\d+)\.mp3/i, 'acts-in-action-cp$1.mp3');
+  // Match pattern: "Act in Action 🎬  Cp" followed by digits and ".mp3"
+  let localFilename = filename;
+  if (filename.includes('Act in Action') && filename.includes('🎬')) {
+    const match = filename.match(/Act in Action 🎬  Cp(\d+)\.mp3/i);
+    if (match && match[1]) {
+      localFilename = `acts-in-action-cp${match[1]}.mp3`;
+    }
+  }
   
   return `${baseUrl}/${localFilename}`;
 };
