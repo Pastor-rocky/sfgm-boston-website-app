@@ -48,46 +48,6 @@ export function registerCourseRoutes(app: Express) {
     }
   });
 
-  // Admin endpoint to remove incorrect videos from Course 1 (must come before parameterized route)
-  router.delete("/api/courses/1/videos/cleanup", requireAuth, async (req: Request, res: Response) => {
-    try {
-      const user = (req as any).user;
-      if (!user || (user.role !== 'admin' && user.role !== 'instructor')) {
-        return res.status(403).json({ message: "Unauthorized" });
-      }
-
-      // Find videos to remove: test videos and Don't Be a Jonah video
-      const videosToRemove = await db.select()
-        .from(schema.courseVideos)
-        .where(
-          eq(schema.courseVideos.courseId, 1)
-        );
-
-      const wrongVideos = videosToRemove.filter(v => 
-        v.title.toLowerCase().includes('test') || 
-        (v.videoUrl && v.videoUrl.includes('kK_nCld8Jow'))
-      );
-
-      if (wrongVideos.length === 0) {
-        return res.json({ message: "No incorrect videos found", removed: 0 });
-      }
-
-      // Delete the videos
-      for (const video of wrongVideos) {
-        await storage.permanentlyDeleteCourseVideo(video.id);
-      }
-
-      res.json({ 
-        message: `Successfully removed ${wrongVideos.length} incorrect video(s)`,
-        removed: wrongVideos.length,
-        videos: wrongVideos.map(v => ({ id: v.id, title: v.title }))
-      });
-    } catch (error: any) {
-      console.error("Error removing videos:", error);
-      res.status(500).json({ message: "Failed to remove videos", error: error?.message || String(error) });
-    }
-  });
-
   router.get("/api/courses/:courseId/videos", async (req: Request, res: Response) => {
     try {
       const courseId = parseInt(req.params.courseId);

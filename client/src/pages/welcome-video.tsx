@@ -3,7 +3,17 @@ import { useToast } from "@/hooks/use-toast";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import sfgmLogoBlue from "@/assets/sfgm-logo-new-blue.png";
-import welcomeVideo from "@/assets/welcome-video.mp4";
+
+// Try to import video, but make it optional in case Git LFS fails
+let welcomeVideo: string | null = null;
+try {
+  // Dynamic import to handle missing file gracefully
+  welcomeVideo = new URL('/src/assets/welcome-video.mp4', import.meta.url).href;
+} catch (e) {
+  console.warn('Welcome video not available:', e);
+  // Fallback: use public path if available
+  welcomeVideo = '/assets/welcome-video.mp4';
+}
 
 export default function WelcomeVideo() {
   const { toast } = useToast();
@@ -76,26 +86,49 @@ export default function WelcomeVideo() {
               )}
               
               {/* Auto-Scaling Video Player */}
-              <video
-                className="w-full h-full object-contain"
-                autoPlay
-                muted
-                playsInline
-                onEnded={handleVideoEnd}
-                onLoadedData={handleVideoLoad}
-                controls
-                preload="metadata"
-                style={{ 
-                  width: '100%', 
-                  height: '100%',
-                  objectFit: 'contain',
-                  objectPosition: 'center'
-                }}
-                poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 9'%3E%3Crect width='16' height='9' fill='%23000'/%3E%3C/svg%3E"
-              >
-                <source src={welcomeVideo} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
+              {welcomeVideo ? (
+                <video
+                  className="w-full h-full object-contain"
+                  autoPlay
+                  muted
+                  playsInline
+                  onEnded={handleVideoEnd}
+                  onLoadedData={handleVideoLoad}
+                  onError={() => {
+                    // If video fails to load, skip to end
+                    setVideoLoading(false);
+                    handleVideoEnd();
+                  }}
+                  controls
+                  preload="metadata"
+                  style={{ 
+                    width: '100%', 
+                    height: '100%',
+                    objectFit: 'contain',
+                    objectPosition: 'center'
+                  }}
+                  poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 9'%3E%3Crect width='16' height='9' fill='%23000'/%3E%3C/svg%3E"
+                >
+                  <source src={welcomeVideo} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-600">
+                  <div className="text-center text-white px-6">
+                    <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <i className="fas fa-check text-3xl"></i>
+                    </div>
+                    <p className="text-xl font-medium mb-2">Welcome to SFGM Boston!</p>
+                    <p className="text-sm opacity-90">Redirecting to your dashboard...</p>
+                    <button
+                      onClick={handleVideoEnd}
+                      className="mt-4 px-6 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors"
+                    >
+                      Continue to Dashboard
+                    </button>
+                  </div>
+                </div>
+              )}
               
               {/* Subtle Video Overlay */}
               <div className="absolute inset-0 pointer-events-none">
