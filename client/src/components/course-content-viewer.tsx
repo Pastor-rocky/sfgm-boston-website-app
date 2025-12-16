@@ -547,9 +547,9 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
             completed: variables.completed,
             // Add placeholder fields that might be needed
             id: Date.now(), // Temporary ID
-            userId: 0, // Will be set by server
+            studentId: '', // Will be set by server
+            completedAt: variables.completed ? new Date().toISOString() : null,
             createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
           } as ContentProgressItem];
         }
       });
