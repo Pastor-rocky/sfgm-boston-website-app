@@ -3,9 +3,12 @@
 /**
  * Remove Wrong Videos from Course 1
  * 
- * This script finds and unpublishes/deletes:
+ * This script permanently deletes:
  * 1. The "Don't Be a Jonah" video (kK_nCld8Jow) incorrectly assigned to Course 1
  * 2. The "Test Video" that shouldn't be there
+ * 
+ * Usage:
+ *   DATABASE_URL="your_database_url" node_modules/.bin/tsx remove-wrong-course1-videos.ts
  */
 
 import { db } from './server/db';
@@ -62,20 +65,14 @@ async function removeWrongVideos() {
     console.log('');
   });
   
-  // Unpublish and mark as deleted
+  // Permanently delete the videos
   for (const video of wrongVideos) {
-    console.log(`🗑️  Removing video ID ${video.id} (${video.title})...`);
+    console.log(`🗑️  Permanently deleting video ID ${video.id} (${video.title})...`);
     
-    await db.update(courseVideos)
-      .set({
-        isPublished: false,
-        isDeleted: true,
-        deletedAt: new Date(),
-        updatedAt: new Date()
-      })
+    await db.delete(courseVideos)
       .where(eq(courseVideos.id, video.id));
     
-    console.log(`✅ Video ID ${video.id} has been unpublished and marked as deleted\n`);
+    console.log(`✅ Video ID ${video.id} has been permanently deleted\n`);
   }
   
   console.log('🎉 Done! All incorrect videos have been removed from Course 1.');
