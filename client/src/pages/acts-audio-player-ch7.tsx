@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
 import { Play, Pause, SkipBack, SkipForward, Volume2, ArrowLeft, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { getAudioUrl } from '@/lib/audio-storage';
 import {
   SectionHeading,
   BlueSection,
@@ -28,7 +29,7 @@ const ActsAudioPlayerCh7: React.FC = () => {
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const audioSrc = '/uploads/textbook-audio/acts-in-action-cp7.mp3';
+  const audioSrc = getAudioUrl('Act in Action 🎬  Cp7.mp3');
   const localStorageKey = 'audio_progress_acts_ch7';
 
   // Load saved progress on mount

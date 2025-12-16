@@ -20,6 +20,7 @@ import {
   CenterText
 } from '@/components/audio-player-text-template';
 import { useToast } from '@/hooks/use-toast';
+import { getAudioUrl } from '@/lib/audio-storage';
 
 const ActsAudioPlayerCh2: React.FC = () => {
   const [, setLocation] = useLocation();
@@ -31,7 +32,7 @@ const ActsAudioPlayerCh2: React.FC = () => {
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
   // Single combined audio file
-  const audioSrc = '/uploads/textbook-audio/acts-in-action-cp2.mp3';
+  const audioSrc = getAudioUrl('Act in Action 🎬  Cp2.mp3');
   const localStorageKey = 'audio_progress_acts_ch2';
   const [isLoading, setIsLoading] = useState(false);
 

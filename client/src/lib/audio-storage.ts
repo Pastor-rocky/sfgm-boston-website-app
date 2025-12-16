@@ -26,8 +26,9 @@ export const getAudioUrl = (filename: string): string => {
   
   // If using R2, ensure filename is just the filename (no path)
   if (baseUrl.startsWith('http')) {
-    // R2 URL - just append filename
-    return `${baseUrl}/${filename}`;
+    // R2 URL - encode filename for URL (handles spaces, emoji, etc.)
+    const encodedFilename = encodeURIComponent(filename);
+    return `${baseUrl}/${encodedFilename}`;
   }
   
   // Local URL - use the path as-is
