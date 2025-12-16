@@ -199,11 +199,41 @@ const ActsAudioPlayer: React.FC = () => {
                     setIsLoading(false);
                   }}
                   onError={(e) => {
-                    console.error('Audio loading error:', e, audioSrc);
+                    const audio = audioRef.current;
+                    const error = audio?.error;
+                    let errorMessage = 'Failed to load audio file.';
+                    
+                    if (error) {
+                      switch (error.code) {
+                        case error.MEDIA_ERR_ABORTED:
+                          errorMessage = 'Audio loading was aborted.';
+                          break;
+                        case error.MEDIA_ERR_NETWORK:
+                          errorMessage = 'Network error while loading audio.';
+                          break;
+                        case error.MEDIA_ERR_DECODE:
+                          errorMessage = 'Audio file could not be decoded.';
+                          break;
+                        case error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+                          errorMessage = 'Audio format not supported or file not found.';
+                          break;
+                        default:
+                          errorMessage = `Audio error (code ${error.code}).`;
+                      }
+                    }
+                    
+                    console.error('Audio loading error:', {
+                      error,
+                      code: error?.code,
+                      message: error?.message,
+                      src: audioSrc,
+                      audioElement: audio,
+                    });
+                    
                     setIsLoading(false);
                     toast({
                       title: 'Audio Error',
-                      description: 'Failed to load audio file. Please check your connection and try again.',
+                      description: `${errorMessage} File: ${audioSrc}. Check browser console for details.`,
                       variant: 'destructive',
                     });
                   }}
