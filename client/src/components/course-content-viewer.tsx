@@ -5771,10 +5771,10 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                     key={quiz.id} 
                     className={`border-l-4 ${isFinalExam ? 'border-red-500 bg-gradient-to-r from-red-50 to-orange-50' : 'border-purple-500'} ${!isAccessible ? 'opacity-60' : ''}`}
                   >
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                          <h4 className={`${isFinalExam ? 'text-xl font-bold' : 'text-lg font-semibold'} text-gray-800 flex items-center gap-2`}>
+                    <CardContent className="p-3 md:p-6">
+                      <div className="flex items-center justify-between flex-col md:flex-row gap-3 md:gap-0">
+                        <div className="flex-1 w-full md:w-auto">
+                          <h4 className={`${isFinalExam ? 'text-base md:text-xl font-bold' : 'text-base md:text-lg font-semibold'} text-gray-800 flex items-center gap-2`}>
                             <i className={`fas ${isFinalExam ? 'fa-graduation-cap text-red-600' : isAccessible ? 'fa-quiz text-purple-600' : 'fa-quiz text-gray-400'}`}></i>
                             {quiz.title}
                           </h4>
