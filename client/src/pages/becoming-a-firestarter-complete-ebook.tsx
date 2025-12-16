@@ -36,10 +36,10 @@ export default function BecomingAFireStarterCompleteEbook() {
   const [currentChapter, setCurrentChapter] = useState(1);
 
   const chapters = [
-    { id: 1, title: "Chapter 1: When God Answers with Fire", audioUrl: "/uploads/textbook-audio/fire-starter-cp1.mp3" },
-    { id: 2, title: "Chapter 2: It's Fire or Nothing!", audioUrl: "/uploads/textbook-audio/fire-starter-cp2.mp3" },
-    { id: 3, title: "Chapter 3: Fuel for the Fire", audioUrl: "/uploads/textbook-audio/fire-starter-cp3.mp3" },
-    { id: 4, title: "Chapter 4: Keep Your Eyes on the Fire", audioUrl: "/uploads/textbook-audio/fire-starter-cp4.mp3" },
+    { id: 1, title: "Chapter 1: When God Answers with Fire", audioUrl: "/uploads/firestarter-audio/fire-starter-cp1.mp3" },
+    { id: 2, title: "Chapter 2: It's Fire or Nothing!", audioUrl: "/uploads/firestarter-audio/fire-starter-cp2.mp3" },
+    { id: 3, title: "Chapter 3: Fuel for the Fire", audioUrl: "/uploads/firestarter-audio/fire-starter-cp3.mp3" },
+    { id: 4, title: "Chapter 4: Keep Your Eyes on the Fire", audioUrl: "/uploads/firestarter-audio/fire-starter-cp4.mp3" },
     { id: 5, title: "Chapter 5: Tested by Fire", audioUrl: "/uploads/firestarter-audio/fire-starter-cp5.mp3" },
     { id: 6, title: "Chapter 6: The Consuming Fire", audioUrl: "/uploads/firestarter-audio/fire-starter-cp6.mp3" },
     { id: 7, title: "Chapter 7: Fasting for Fire", audioUrl: "/uploads/firestarter-audio/fire-starter-cp7.mp3" },

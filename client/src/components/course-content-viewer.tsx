@@ -1718,7 +1718,10 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                                     contentId: video.id,
                                     completed: true
                                   }).then(() => {
+                                    // Force refresh the content progress query
+                                    setForceRefresh(prev => prev + 1);
                                     queryClient.invalidateQueries({ queryKey: [`/api/content-progress/${courseId}`] });
+                                    queryClient.refetchQueries({ queryKey: [`/api/content-progress/${courseId}`] });
                                   }).catch(error => {
                                     console.error('Failed to update video progress:', error);
                                     toast({
