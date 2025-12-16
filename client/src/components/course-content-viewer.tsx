@@ -1120,21 +1120,39 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
     if (!hasVideos) return true;
     
     // For courses with videos, check if ALL videos for this week are completed
-      const weekVideos = videos.filter((v: CourseVideo) => {
-        const videoWeek = extractWeekNumber(v.title);
-        // Only include videos that have a proper week number in their title
-        // This excludes test videos or videos without week numbers
-        const hasWeekNumber = /Week \d+/i.test(v.title);
-        return videoWeek === weekNumber && v.isPublished && hasWeekNumber;
-      });
+    const weekVideos = videos.filter((v: CourseVideo) => {
+      const videoWeek = extractWeekNumber(v.title);
+      // Only include videos that have a proper week number in their title
+      // This excludes test videos or videos without week numbers
+      const hasWeekNumber = /Week \d+/i.test(v.title);
+      return videoWeek === weekNumber && v.isPublished && hasWeekNumber;
+    });
       
     // If no videos exist for this week, readings are accessible
     if (weekVideos.length === 0) return true;
     
     // Check if ALL videos for this week are completed
-    return weekVideos.every((video: CourseVideo) => 
-        isContentCompleted('video', video.id)
-      );
+    const allCompleted = weekVideos.every((video: CourseVideo) => 
+      isContentCompleted('video', video.id)
+    );
+    
+    // Debug logging for Week 1
+    if (weekNumber === 1 && courseId === 1) {
+      console.log('[Week 1 Reading Unlock Debug]', {
+        weekNumber,
+        weekVideos: weekVideos.map(v => ({ id: v.id, title: v.title })),
+        videoCompletions: weekVideos.map(v => ({
+          videoId: v.id,
+          completed: isContentCompleted('video', v.id)
+        })),
+        contentProgress: contentProgress.filter(p => 
+          p.courseId === courseId && p.contentType === 'video'
+        ),
+        allCompleted
+      });
+    }
+    
+    return allCompleted;
   };
 
   // Get hardcoded reading IDs for Course 1 (Acts in Action)
