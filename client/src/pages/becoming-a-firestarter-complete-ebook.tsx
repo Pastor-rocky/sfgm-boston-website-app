@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Play, Pause, SkipBack, SkipForward, ArrowLeft, Volume2, Download } from "lucide-react";
+import { getAudioUrl } from "@/lib/audio-storage";
 import {
   Paragraph,
   BlueSection,
@@ -36,16 +37,16 @@ export default function BecomingAFireStarterCompleteEbook() {
   const [currentChapter, setCurrentChapter] = useState(1);
 
   const chapters = [
-    { id: 1, title: "Chapter 1: When God Answers with Fire", audioUrl: "/uploads/textbook-audio/fire-starter-cp1.mp3" },
-    { id: 2, title: "Chapter 2: It's Fire or Nothing!", audioUrl: "/uploads/textbook-audio/fire-starter-cp2.mp3" },
-    { id: 3, title: "Chapter 3: Fuel for the Fire", audioUrl: "/uploads/textbook-audio/fire-starter-cp3.mp3" },
-    { id: 4, title: "Chapter 4: Keep Your Eyes on the Fire", audioUrl: "/uploads/textbook-audio/fire-starter-cp4.mp3" },
-    { id: 5, title: "Chapter 5: Tested by Fire", audioUrl: "/uploads/textbook-audio/fire-starter-cp5.mp3" },
-    { id: 6, title: "Chapter 6: The Consuming Fire", audioUrl: "/uploads/textbook-audio/fire-starter-cp6.mp3" },
-    { id: 7, title: "Chapter 7: Fasting for Fire", audioUrl: "/uploads/textbook-audio/fire-starter-cp7.mp3" },
-    { id: 8, title: "Chapter 8: Fellowship of Fire", audioUrl: "/uploads/textbook-audio/fire-starter-cp8.mp3" },
-    { id: 9, title: "Chapter 9: Fan the Fire", audioUrl: "/uploads/textbook-audio/fire-starter-cp9.mp3" },
-    { id: 10, title: "Chapter 10: Conclusion", audioUrl: "/uploads/textbook-audio/fire-starter-cp10.mp3" }
+    { id: 1, title: "Chapter 1: When God Answers with Fire", audioUrl: getAudioUrl('firestarter/fire-starter-cp1.mp3') },
+    { id: 2, title: "Chapter 2: It's Fire or Nothing!", audioUrl: getAudioUrl('firestarter/fire-starter-cp2.mp3') },
+    { id: 3, title: "Chapter 3: Fuel for the Fire", audioUrl: getAudioUrl('firestarter/fire-starter-cp3.mp3') },
+    { id: 4, title: "Chapter 4: Keep Your Eyes on the Fire", audioUrl: getAudioUrl('firestarter/fire-starter-cp4.mp3') },
+    { id: 5, title: "Chapter 5: Tested by Fire", audioUrl: getAudioUrl('firestarter/fire-starter-cp5.mp3') },
+    { id: 6, title: "Chapter 6: The Consuming Fire", audioUrl: getAudioUrl('firestarter/fire-starter-cp6.mp3') },
+    { id: 7, title: "Chapter 7: Fasting for Fire", audioUrl: getAudioUrl('firestarter/fire-starter-cp7.mp3') },
+    { id: 8, title: "Chapter 8: Fellowship of Fire", audioUrl: getAudioUrl('firestarter/fire-starter-cp8.mp3') },
+    { id: 9, title: "Chapter 9: Fan the Fire", audioUrl: getAudioUrl('firestarter/fire-starter-cp9.mp3') },
+    { id: 10, title: "Chapter 10: Conclusion", audioUrl: getAudioUrl('firestarter/fire-starter-cp10.mp3') }
   ];
 
   const currentChapterData = chapters[currentChapter - 1];
