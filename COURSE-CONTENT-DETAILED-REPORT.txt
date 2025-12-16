@@ -1,0 +1,1348 @@
+📚 DETAILED COURSE CONTENT REPORT
+
+================================================================================
+
+
+================================================================================
+COURSE 1: ACTS IN ACTION
+Duration: 11 weeks
+================================================================================
+
+📹 VIDEOS (11 total):
+   1. Test Video
+      Description: Test
+      URL: https://www.youtube.com/watch?v=kK_nCld8Jow
+      Duration: 30 minutes
+      Order: 0, Published: Yes
+
+   2. Week 1: The Birth of the Church - Acts 1-2
+      Description: Introduction to the Book of Acts and the birth of the church at Pentecost
+      URL: https://www.youtube.com/watch?v=U2wSdkXhWbc&list=PLXGq3BCCH8...
+      Duration: 45 minutes
+      Order: 0, Published: Yes
+
+   3. Week 2: Early Church Growth and Miracles - Acts 3-5
+      Description: The healing of the lame man, Peter's sermon, and the early church's unity
+      URL: https://www.youtube.com/watch?v=YakUCnANRLU&list=PLXGq3BCCH8...
+      Duration: 50 minutes
+      Order: 1, Published: Yes
+
+   4. Week 3: Stephen's Martyrdom and Gospel Spread - Acts 6-8
+      Description: Stephen's powerful testimony, martyrdom, and Philip's ministry in Samaria
+      URL: https://www.youtube.com/watch?v=lr4eer0TIyE&list=PLXGq3BCCH8...
+      Duration: 48 minutes
+      Order: 2, Published: Yes
+
+   5. Week 4: Paul's Conversion and Peter's Vision - Acts 9-11
+      Description: Saul's dramatic conversion to Paul and Peter's vision about reaching the Gentiles
+      URL: https://www.youtube.com/watch?v=YRBoH1P_XU8&list=PLXGq3BCCH8...
+      Duration: 52 minutes
+      Order: 3, Published: Yes
+
+   6. Week 5: Persecution and First Missionary Journey - Acts 12-14
+      Description: James's martyrdom, Peter's escape, and Paul's first missionary journey
+      URL: https://www.youtube.com/watch?v=wmi4MmeoTcY&list=PLXGq3BCCH8...
+      Duration: 55 minutes
+      Order: 4, Published: Yes
+
+   7. Week 6: Jerusalem Council and Second Journey - Acts 15-17
+      Description: The Jerusalem Council's decision and Paul's ministry in Europe
+      URL: https://www.youtube.com/watch?v=KsDhPlg1HPw&list=PLXGq3BCCH8...
+      Duration: 47 minutes
+      Order: 5, Published: Yes
+
+   8. Week 7: Ministry in Ephesus and Farewell - Acts 18-20
+      Description: Paul's extended ministry in Ephesus and farewell to the elders
+      URL: https://www.youtube.com/watch?v=CvUYK3TE_90&list=PLXGq3BCCH8...
+      Duration: 49 minutes
+      Order: 6, Published: Yes
+
+   9. Week 8: Paul's Arrest and Defense - Acts 21-23
+      Description: Paul's arrest in Jerusalem and defense before the Jewish council
+      URL: https://www.youtube.com/watch?v=v2SY1FdG4tM&list=PLXGq3BCCH8...
+      Duration: 46 minutes
+      Order: 7, Published: Yes
+
+   10. Week 9: Trials Before Roman Governors - Acts 24-26
+      Description: Paul's defense before Felix, Festus, and King Agrippa
+      URL: https://www.youtube.com/watch?v=JH4LvpDzmUg&list=PLXGq3BCCH8...
+      Duration: 51 minutes
+      Order: 8, Published: Yes
+
+   11. Week 10: Journey to Rome and House Arrest - Acts 27-28
+      Description: Paul's shipwreck and ministry in Rome under house arrest
+      URL: https://www.youtube.com/watch?v=Gc9-JSmGHaE&list=PLXGq3BCCH8...
+      Duration: 53 minutes
+      Order: 9, Published: Yes
+
+📖 READINGS (6 total):
+   1. Week 2: Acts in Action Textbook - Chapter 2
+      Type: combined
+      Content length: 312 characters
+      Order: 0, Active: Yes
+
+   2. Week 3: Acts in Action Textbook - Chapter 3
+      Type: combined
+      Content length: 312 characters
+      Order: 0, Active: Yes
+
+   3. Week 2: Acts in Action Textbook - Chapter 2
+      Type: combined
+      Content length: 312 characters
+      Order: 0, Active: Yes
+
+   4. Week 3: Acts in Action Textbook - Chapter 3
+      Type: combined
+      Content length: 312 characters
+      Order: 0, Active: Yes
+
+   5. Week 2: Acts in Action Textbook - Chapter 2
+      Type: combined
+      Content length: 312 characters
+      Order: 0, Active: Yes
+
+   6. Week 3: Acts in Action Textbook - Chapter 3
+      Type: combined
+      Content length: 312 characters
+      Order: 0, Active: Yes
+
+📝 QUIZZES (11 total):
+   1. Acts in Action Week 1 Quiz (ID: 13)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   2. Acts in Action Week 2 Quiz (ID: 14)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   3. Acts in Action Week 3 Quiz (ID: 15)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   4. Acts in Action Week 4 Quiz (ID: 16)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   5. Acts in Action Week 5 Quiz (ID: 17)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   6. Acts in Action Week 6 Quiz (ID: 18)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   7. Acts in Action Week 7 Quiz (ID: 19)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   8. Acts in Action Week 8 Quiz (ID: 20)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   9. Acts in Action Week 9 Quiz (ID: 21)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   10. Acts in Action Week 10 Quiz (ID: 22)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   11. Acts in Action Final Exam (ID: 23)
+      Time Limit: 75 minutes
+      Passing Score: 60%
+      Questions: 50
+      Final Exam: Yes
+      Published: Yes
+
+📑 COURSE MODULES (16 total):
+   1. Acts in Action - Week 1 Quiz
+      Description: Quiz module for Acts in Action
+      Type: quiz
+      Week: 1
+      Order: 1, Required: Yes
+
+   2. Acts in Action Course Content
+      Description: Main content module for Acts in Action course
+      Order: 1, Required: Yes
+
+   3. Week 2 Quiz
+      Description: Quiz covering Acts chapters 3-5
+      Type: quiz
+      Week: 2
+      Order: 2, Required: Yes
+
+   4. Week 2: The Early Church Grows
+      Description: Exploring the growth of the early church through healing, preaching, and community sharing.
+      Order: 2, Required: Yes
+
+   5. Week 3
+      Description: Acts Chapters 5-8
+      Week: 3
+      Order: 3, Required: Yes
+
+   6. Week 3: Stephen and the Spread of the Gospel
+      Description: Learning about Stephen's ministry, martyrdom, and how persecution led to the spread of the Gospel.
+      Order: 3, Required: Yes
+
+   7. Acts in Action - Week 3 Quiz
+      Description: Quiz module for Acts in Action
+      Type: quiz
+      Week: 3
+      Order: 3, Required: Yes
+
+   8. Acts in Action - Week 4 Quiz
+      Description: Quiz module for Acts in Action
+      Type: quiz
+      Week: 4
+      Order: 4, Required: Yes
+
+   9. Week 4
+      Description: Acts Chapters 9-11
+      Week: 4
+      Order: 4, Required: Yes
+
+   10. Acts in Action - Week 5 Quiz
+      Description: Quiz module for Acts in Action
+      Type: quiz
+      Week: 5
+      Order: 5, Required: Yes
+
+   11. Acts in Action - Week 6 Quiz
+      Description: Quiz module for Acts in Action
+      Type: quiz
+      Week: 6
+      Order: 6, Required: Yes
+
+   12. Acts in Action - Week 7 Quiz
+      Description: Quiz module for Acts in Action
+      Type: quiz
+      Week: 7
+      Order: 7, Required: Yes
+
+   13. Acts in Action - Week 8 Quiz
+      Description: Quiz module for Acts in Action
+      Type: quiz
+      Week: 8
+      Order: 8, Required: Yes
+
+   14. Acts in Action - Week 9 Quiz
+      Description: Quiz module for Acts in Action
+      Type: quiz
+      Week: 9
+      Order: 9, Required: Yes
+
+   15. Acts in Action - Week 10 Quiz
+      Description: Quiz module for Acts in Action
+      Type: quiz
+      Week: 10
+      Order: 10, Required: Yes
+
+   16. Acts in Action - Final Exam
+      Description: Quiz module for Acts in Action
+      Type: quiz
+      Week: 11
+      Order: 11, Required: Yes
+
+
+
+
+================================================================================
+COURSE 2: BECOMING A FIRE STARTER
+Duration: 11 weeks
+================================================================================
+
+📹 VIDEOS (10 total):
+   1. Firestarter - Week 1
+      Description: Week 1 video lesson
+      URL: https://www.youtube.com/watch?v=g7nL_PxvMdc&list=PLXGq3BCCH8...
+      Duration: 45 minutes
+      Order: 1, Published: Yes
+
+   2. Firestarter - Week 2
+      Description: Week 2 video lesson
+      URL: https://www.youtube.com/watch?v=IIhBSVbhFtE&list=PLXGq3BCCH8...
+      Duration: 45 minutes
+      Order: 2, Published: Yes
+
+   3. Firestarter - Week 3
+      Description: Week 3 video lesson
+      URL: https://www.youtube.com/watch?v=gKvJBODnFcw
+      Duration: 45 minutes
+      Order: 3, Published: Yes
+
+   4. Firestarter - Week 4
+      Description: Week 4 video lesson
+      URL: https://www.youtube.com/watch?v=DNzKAUIJv6I
+      Duration: 45 minutes
+      Order: 4, Published: Yes
+
+   5. Firestarter - Week 5
+      Description: Week 5 video lesson
+      URL: https://www.youtube.com/watch?v=rdr81bgE__U
+      Duration: 45 minutes
+      Order: 5, Published: Yes
+
+   6. Firestarter - Week 6
+      Description: Week 6 video lesson
+      URL: https://www.youtube.com/watch?v=DDP1OIhKwRM
+      Duration: 45 minutes
+      Order: 6, Published: Yes
+
+   7. Firestarter - Week 7
+      Description: Week 7 video lesson
+      URL: https://www.youtube.com/watch?v=H9bT_c5YHcA
+      Duration: 45 minutes
+      Order: 7, Published: Yes
+
+   8. Firestarter - Week 8
+      Description: Week 8 video lesson
+      URL: https://www.youtube.com/watch?v=rY__DK8TBV0
+      Duration: 45 minutes
+      Order: 8, Published: Yes
+
+   9. Firestarter - Week 9
+      Description: Week 9 video lesson
+      URL: https://www.youtube.com/watch?v=Y3XWYSCFKuo
+      Duration: 45 minutes
+      Order: 9, Published: Yes
+
+   10. Firestarter - Week 10
+      Description: Week 10 video lesson
+      URL: https://www.youtube.com/watch?v=Y3XWYSCFKuo
+      Duration: 45 minutes
+      Order: 10, Published: Yes
+
+📖 READINGS (0 total):
+   None
+
+📝 QUIZZES (11 total):
+   1. Fire Starter — Week 1 Quiz (ID: 48)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   2. Fire Starter — Week 2 Quiz (ID: 49)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   3. Fire Starter — Week 3 Quiz (ID: 50)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   4. Fire Starter — Week 4 Quiz (ID: 51)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   5. Fire Starter — Week 5 Quiz (ID: 52)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   6. Fire Starter — Week 6 Quiz (ID: 53)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   7. Fire Starter — Week 7 Quiz (ID: 54)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   8. Fire Starter — Week 8 Quiz (ID: 55)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   9. Fire Starter — Week 9 Quiz (ID: 56)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   10. Fire Starter — Week 10 Quiz (ID: 57)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   11. Fire Starter — Final Exam (ID: 58)
+      Time Limit: 75 minutes
+      Passing Score: 60%
+      Questions: 50
+      Final Exam: Yes
+      Published: Yes
+
+📑 COURSE MODULES (11 total):
+   1. Becoming a Fire Starter - Week 1 Quiz
+      Description: Quiz module for Becoming a Fire Starter
+      Type: quiz
+      Week: 1
+      Order: 1, Required: Yes
+
+   2. Becoming a Fire Starter - Week 2 Quiz
+      Description: Quiz module for Becoming a Fire Starter
+      Type: quiz
+      Week: 2
+      Order: 2, Required: Yes
+
+   3. Becoming a Fire Starter - Week 3 Quiz
+      Description: Quiz module for Becoming a Fire Starter
+      Type: quiz
+      Week: 3
+      Order: 3, Required: Yes
+
+   4. Becoming a Fire Starter - Week 4 Quiz
+      Description: Quiz module for Becoming a Fire Starter
+      Type: quiz
+      Week: 4
+      Order: 4, Required: Yes
+
+   5. Becoming a Fire Starter - Week 5 Quiz
+      Description: Quiz module for Becoming a Fire Starter
+      Type: quiz
+      Week: 5
+      Order: 5, Required: Yes
+
+   6. Becoming a Fire Starter - Week 6 Quiz
+      Description: Quiz module for Becoming a Fire Starter
+      Type: quiz
+      Week: 6
+      Order: 6, Required: Yes
+
+   7. Becoming a Fire Starter - Week 7 Quiz
+      Description: Quiz module for Becoming a Fire Starter
+      Type: quiz
+      Week: 7
+      Order: 7, Required: Yes
+
+   8. Becoming a Fire Starter - Week 8 Quiz
+      Description: Quiz module for Becoming a Fire Starter
+      Type: quiz
+      Week: 8
+      Order: 8, Required: Yes
+
+   9. Becoming a Fire Starter - Week 9 Quiz
+      Description: Quiz module for Becoming a Fire Starter
+      Type: quiz
+      Week: 9
+      Order: 9, Required: Yes
+
+   10. Becoming a Fire Starter - Week 10 Quiz
+      Description: Quiz module for Becoming a Fire Starter
+      Type: quiz
+      Week: 10
+      Order: 10, Required: Yes
+
+   11. Becoming a Fire Starter - Final Exam
+      Description: Quiz module for Becoming a Fire Starter
+      Type: quiz
+      Week: 11
+      Order: 11, Required: Yes
+
+
+
+
+================================================================================
+COURSE 3: DON'T BE A JONAH
+Duration: 12 weeks
+================================================================================
+
+📹 VIDEOS (10 total):
+   1. Week 1 Video
+      URL: https://www.youtube.com/watch?v=kK_nCld8Jow&list=PLXGq3BCCH8...
+      Order: 1, Published: Yes
+
+   2. Don't Be a Jonah - Week 1
+      Description: Week 1 lesson for Don't Be a Jonah course
+      Order: 1, Published: No
+
+   3. Don't Be a Jonah - Week 2
+      Description: Week 2 lesson for Don't Be a Jonah course
+      Order: 2, Published: No
+
+   4. Week 3 Video
+      URL: https://www.youtube.com/watch?v=ylrBLbgDVB8&list=PLXGq3BCCH8...
+      Order: 3, Published: Yes
+
+   5. Don't Be a Jonah - Week 3
+      Description: Week 3 lesson for Don't Be a Jonah course
+      Order: 3, Published: No
+
+   6. Don't Be a Jonah - Week 4
+      Description: Week 4 lesson for Don't Be a Jonah course
+      Order: 4, Published: No
+
+   7. Don't Be a Jonah - Week 5
+      Description: Week 5 lesson for Don't Be a Jonah course
+      Order: 5, Published: No
+
+   8. Week 5 Video
+      URL: https://www.youtube.com/watch?v=ugYvrQZmMqk&list=PLXGq3BCCH8...
+      Order: 5, Published: Yes
+
+   9. Week 7 Video
+      URL: https://www.youtube.com/watch?v=FXl-JGzu9Do&list=PLXGq3BCCH8...
+      Order: 7, Published: Yes
+
+   10. Week 9 Video
+      URL: https://www.youtube.com/watch?v=UiT0T8YRJB0&list=PLXGq3BCCH8...
+      Order: 9, Published: Yes
+
+📖 READINGS (0 total):
+   None
+
+📝 QUIZZES (12 total):
+   1. Don't Be a Jonah — Week 1 Quiz (ID: 26)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   2. Don't Be a Jonah — Week 3 Quiz (ID: 37)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   3. Don't Be a Jonah — Week 4 Quiz (ID: 38)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   4. Don't Be a Jonah — Week 5 Quiz (ID: 39)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   5. Don't Be a Jonah — Week 6 Quiz (ID: 40)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   6. Don't Be a Jonah — Week 7 Quiz (ID: 41)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   7. Don't Be a Jonah — Week 8 Quiz (ID: 42)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   8. Don't Be a Jonah — Week 9 Quiz (ID: 43)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   9. Don't Be a Jonah — Week 10 Quiz (ID: 44)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   10. Don't Be a Jonah — Week 11 Quiz (ID: 45)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   11. Don't Be a Jonah — Week 2 Quiz (ID: 46)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   12. Don't Be a Jonah — Final Exam (ID: 47)
+      Time Limit: 75 minutes
+      Passing Score: 60%
+      Questions: 50
+      Final Exam: Yes
+      Published: Yes
+
+📑 COURSE MODULES (12 total):
+   1. Don't Be a Jonah - Week 1 Quiz
+      Description: Quiz module for Don't Be a Jonah
+      Type: quiz
+      Week: 1
+      Order: 1, Required: Yes
+
+   2. Don't Be a Jonah - Week 2 Quiz
+      Description: Quiz module for Don't Be a Jonah
+      Type: quiz
+      Week: 2
+      Order: 2, Required: Yes
+
+   3. Don't Be a Jonah - Week 3 Quiz
+      Description: Quiz module for Don't Be a Jonah
+      Type: quiz
+      Week: 3
+      Order: 3, Required: Yes
+
+   4. Don't Be a Jonah - Week 4 Quiz
+      Description: Quiz module for Don't Be a Jonah
+      Type: quiz
+      Week: 4
+      Order: 4, Required: Yes
+
+   5. Don't Be a Jonah - Week 5 Quiz
+      Description: Quiz module for Don't Be a Jonah
+      Type: quiz
+      Week: 5
+      Order: 5, Required: Yes
+
+   6. Don't Be a Jonah - Week 6 Quiz
+      Description: Quiz module for Don't Be a Jonah
+      Type: quiz
+      Week: 6
+      Order: 6, Required: Yes
+
+   7. Don't Be a Jonah - Week 7 Quiz
+      Description: Quiz module for Don't Be a Jonah
+      Type: quiz
+      Week: 7
+      Order: 7, Required: Yes
+
+   8. Don't Be a Jonah - Week 8 Quiz
+      Description: Quiz module for Don't Be a Jonah
+      Type: quiz
+      Week: 8
+      Order: 8, Required: Yes
+
+   9. Don't Be a Jonah - Week 9 Quiz
+      Description: Quiz module for Don't Be a Jonah
+      Type: quiz
+      Week: 9
+      Order: 9, Required: Yes
+
+   10. Don't Be a Jonah - Week 10 Quiz
+      Description: Quiz module for Don't Be a Jonah
+      Type: quiz
+      Week: 10
+      Order: 10, Required: Yes
+
+   11. Don't Be a Jonah - Week 11 Quiz
+      Description: Quiz module for Don't Be a Jonah
+      Type: quiz
+      Week: 11
+      Order: 11, Required: Yes
+
+   12. Don't Be a Jonah - Final Exam
+      Description: Quiz module for Don't Be a Jonah
+      Type: quiz
+      Week: 12
+      Order: 12, Required: Yes
+
+
+
+
+================================================================================
+COURSE 4: G.R.O.W
+Duration: 5 weeks
+================================================================================
+
+📹 VIDEOS (0 total):
+   None
+
+📖 READINGS (0 total):
+   None
+
+📝 QUIZZES (5 total):
+   1. G.R.O.W Week 1 Quiz (ID: 71)
+      Time Limit: 30 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   2. G.R.O.W Week 2 Quiz (ID: 72)
+      Time Limit: 30 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   3. G.R.O.W Week 3 Quiz (ID: 73)
+      Time Limit: 30 minutes
+      Passing Score: 60%
+      Questions: 18
+      Final Exam: No
+      Published: Yes
+
+   4. G.R.O.W Week 4 Quiz (ID: 74)
+      Time Limit: 30 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   5. G.R.O.W Final Exam (ID: 75)
+      Time Limit: 45 minutes
+      Passing Score: 60%
+      Questions: 25
+      Final Exam: Yes
+      Published: Yes
+
+📑 COURSE MODULES (5 total):
+   1. G.R.O.W - Week 1 Quiz
+      Description: Quiz module for G.R.O.W
+      Type: quiz
+      Week: 1
+      Order: 1, Required: Yes
+
+   2. G.R.O.W - Week 2 Quiz
+      Description: Quiz module for G.R.O.W
+      Type: quiz
+      Week: 2
+      Order: 2, Required: Yes
+
+   3. G.R.O.W - Week 3 Quiz
+      Description: Quiz module for G.R.O.W
+      Type: quiz
+      Week: 3
+      Order: 3, Required: Yes
+
+   4. G.R.O.W - Week 4 Quiz
+      Description: Quiz module for G.R.O.W
+      Type: quiz
+      Week: 4
+      Order: 4, Required: Yes
+
+   5. G.R.O.W - Final Exam
+      Description: Quiz module for G.R.O.W
+      Type: quiz
+      Week: 5
+      Order: 5, Required: Yes
+
+
+
+
+================================================================================
+COURSE 5: STUDYING FOR SERVICE
+Duration: 13 weeks
+================================================================================
+
+📹 VIDEOS (11 total):
+   1. Studying for Service - Week 1
+      Description: Introduction to Bible Study Methods
+      URL: https://www.youtube.com/watch?v=ktV2iZDZlIU
+      Duration: 60 minutes
+      Order: 1, Published: Yes
+
+   2. Studying for Service - Week 2
+      Description: Week 2 Teaching
+      URL: https://www.youtube.com/watch?v=UpQNhwfM8ig
+      Duration: 60 minutes
+      Order: 2, Published: Yes
+
+   3. Studying for Service - Week 3
+      Description: Week 3 Teaching
+      URL: https://www.youtube.com/watch?v=Yxkau7pwx-E
+      Duration: 60 minutes
+      Order: 3, Published: Yes
+
+   4. Studying for Service - Week 4
+      Description: Week 4 Teaching
+      URL: https://www.youtube.com/watch?v=TzCBPh1NUUw
+      Duration: 60 minutes
+      Order: 4, Published: Yes
+
+   5. Studying for Service - Week 5
+      Description: Week 5 Teaching
+      URL: https://www.youtube.com/watch?v=SNL5DQixtNQ
+      Duration: 60 minutes
+      Order: 5, Published: Yes
+
+   6. Studying for Service - Week 6
+      Description: Week 6 Teaching
+      URL: https://www.youtube.com/watch?v=KePlk_uMXo8
+      Duration: 60 minutes
+      Order: 6, Published: Yes
+
+   7. Studying for Service - Week 7
+      Description: Week 7 Teaching
+      URL: https://www.youtube.com/watch?v=lLbKrJCWKRA
+      Duration: 60 minutes
+      Order: 7, Published: Yes
+
+   8. Studying for Service - Week 8-9
+      Description: Combined Week 8 & 9 Teaching
+      URL: https://www.youtube.com/watch?v=INIcb3QjfsI
+      Duration: 90 minutes
+      Order: 8, Published: Yes
+
+   9. Studying for Service - Week 10
+      Description: Week 10 Teaching
+      URL: https://www.youtube.com/watch?v=IPt0NZZ6kfc
+      Duration: 60 minutes
+      Order: 10, Published: Yes
+
+   10. Studying for Service - Week 11
+      Description: Week 11 Teaching
+      URL: https://www.youtube.com/watch?v=Hc8AMplF1a0
+      Duration: 60 minutes
+      Order: 11, Published: Yes
+
+   11. Studying for Service - Week 12
+      Description: Week 12 Teaching - Course Conclusion
+      URL: https://www.youtube.com/watch?v=it3fcuh1mg0
+      Duration: 60 minutes
+      Order: 12, Published: Yes
+
+📖 READINGS (0 total):
+   None
+
+📝 QUIZZES (12 total):
+   1. Studying for Service — Week 1 Quiz (ID: 59)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   2. Studying for Service — Week 2 Quiz (ID: 60)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   3. Studying for Service — Week 3 Quiz (ID: 61)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   4. Studying for Service — Week 4 Quiz (ID: 62)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   5. Studying for Service — Week 5 Quiz (ID: 63)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   6. Studying for Service — Week 6 Quiz (ID: 64)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   7. Studying for Service — Week 7 Quiz (ID: 65)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   8. Studying for Service — Week 8 Quiz (ID: 66)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   9. Studying for Service — Week 9 Quiz (ID: 67)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   10. Studying for Service — Week 10 Quiz (ID: 68)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   11. Studying for Service — Week 11 Quiz (ID: 69)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   12. Studying for Service — Final Exam Quiz (ID: 70)
+      Time Limit: 60 minutes
+      Passing Score: 60%
+      Questions: 50
+      Final Exam: Yes
+      Published: Yes
+
+📑 COURSE MODULES (12 total):
+   1. Studying for Service - Week 1 Quiz
+      Description: Quiz module for Studying for Service
+      Type: quiz
+      Week: 1
+      Order: 1, Required: Yes
+
+   2. Studying for Service - Week 2 Quiz
+      Description: Quiz module for Studying for Service
+      Type: quiz
+      Week: 2
+      Order: 2, Required: Yes
+
+   3. Studying for Service - Week 3 Quiz
+      Description: Quiz module for Studying for Service
+      Type: quiz
+      Week: 3
+      Order: 3, Required: Yes
+
+   4. Studying for Service - Week 4 Quiz
+      Description: Quiz module for Studying for Service
+      Type: quiz
+      Week: 4
+      Order: 4, Required: Yes
+
+   5. Studying for Service - Week 5 Quiz
+      Description: Quiz module for Studying for Service
+      Type: quiz
+      Week: 5
+      Order: 5, Required: Yes
+
+   6. Studying for Service - Week 6 Quiz
+      Description: Quiz module for Studying for Service
+      Type: quiz
+      Week: 6
+      Order: 6, Required: Yes
+
+   7. Studying for Service - Week 7 Quiz
+      Description: Quiz module for Studying for Service
+      Type: quiz
+      Week: 7
+      Order: 7, Required: Yes
+
+   8. Studying for Service - Week 8 Quiz
+      Description: Quiz module for Studying for Service
+      Type: quiz
+      Week: 8
+      Order: 8, Required: Yes
+
+   9. Studying for Service - Week 9 Quiz
+      Description: Quiz module for Studying for Service
+      Type: quiz
+      Week: 9
+      Order: 9, Required: Yes
+
+   10. Studying for Service - Week 10 Quiz
+      Description: Quiz module for Studying for Service
+      Type: quiz
+      Week: 10
+      Order: 10, Required: Yes
+
+   11. Studying for Service - Week 11 Quiz
+      Description: Quiz module for Studying for Service
+      Type: quiz
+      Week: 11
+      Order: 11, Required: Yes
+
+   12. Studying for Service - Final Exam
+      Description: Quiz module for Studying for Service
+      Type: quiz
+      Week: 12
+      Order: 12, Required: Yes
+
+
+
+
+================================================================================
+COURSE 6: DEACON COURSE
+Duration: 6 weeks
+================================================================================
+
+📹 VIDEOS (0 total):
+   None
+
+📖 READINGS (0 total):
+   None
+
+📝 QUIZZES (6 total):
+   1. Deacon Course - Week 1 Quiz (ID: 76)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   2. Deacon Course - Week 2 Quiz (ID: 77)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   3. Deacon Course - Week 3 Quiz (ID: 78)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   4. Deacon Course - Week 4 Quiz (ID: 79)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   5. Deacon Course - Week 5 Quiz (ID: 80)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   6. Deacon Course - Final Exam (ID: 82)
+      Time Limit: 60 minutes
+      Passing Score: 60%
+      Questions: 25
+      Final Exam: Yes
+      Published: Yes
+
+📑 COURSE MODULES (6 total):
+   1. Deacon Course - Week 1 Quiz
+      Description: Quiz module for Deacon Course
+      Type: quiz
+      Week: 1
+      Order: 1, Required: Yes
+
+   2. Deacon Course - Week 2 Quiz
+      Description: Quiz module for Deacon Course
+      Type: quiz
+      Week: 2
+      Order: 2, Required: Yes
+
+   3. Deacon Course - Week 3 Quiz
+      Description: Quiz module for Deacon Course
+      Type: quiz
+      Week: 3
+      Order: 3, Required: Yes
+
+   4. Deacon Course - Week 4 Quiz
+      Description: Quiz module for Deacon Course
+      Type: quiz
+      Week: 4
+      Order: 4, Required: Yes
+
+   5. Deacon Course - Week 5 Quiz
+      Description: Quiz module for Deacon Course
+      Type: quiz
+      Week: 5
+      Order: 5, Required: Yes
+
+   6. Deacon Course - Final Exam
+      Description: Quiz module for Deacon Course
+      Type: quiz
+      Week: 6
+      Order: 6, Required: Yes
+
+
+
+
+================================================================================
+COURSE 7: LEVEL UP LEADERSHIP
+Duration: 6 weeks
+================================================================================
+
+📹 VIDEOS (7 total):
+   1. Level Up Leadership - Week 1: Position Leadership
+      Description: Understanding the foundation of leadership through positional authority
+      URL: https://www.youtube.com/watch?v=2JJJUi_HKsg
+      Duration: 45 minutes
+      Order: 1, Published: Yes
+
+   2. Level Up Leadership - Week 2: Permission Leadership
+      Description: Building relationships and earning the right to influence others
+      URL: https://www.youtube.com/watch?v=j9MKj5aas_o
+      Duration: 45 minutes
+      Order: 2, Published: Yes
+
+   3. Level Up Leadership - Week 3: Production Leadership
+      Description: Achieving results and demonstrating leadership through productivity
+      URL: https://www.youtube.com/watch?v=5oJrxyh3N_s
+      Duration: 45 minutes
+      Order: 3, Published: Yes
+
+   4. Level Up Leadership - Week 4: People Development Leadership
+      Description: Multiplying your influence by developing and reproducing other leaders
+      URL: https://www.youtube.com/watch?v=tmfmcGFgVtg
+      Duration: 45 minutes
+      Order: 4, Published: Yes
+
+   5. Level Up Leadership - Week 5: Pinnacle Leadership
+      Description: Achieving the highest level of leadership through respect and reputation
+      URL: https://www.youtube.com/watch?v=hWZWZxjfakc
+      Duration: 45 minutes
+      Order: 5, Published: Yes
+
+   6. Level Up Leadership - Week 6: Integration & Application
+      Description: Combining all five levels and creating your personal leadership development plan
+      URL: https://www.youtube.com/watch?v=gmU7mxMD2K8
+      Duration: 45 minutes
+      Order: 6, Published: Yes
+
+   7. Level Up Leadership - Week 7: Final Exam Preparation
+      Description: Comprehensive review and preparation for the final examination
+      URL: https://www.youtube.com/watch?v=yFmIcu36maU
+      Duration: 45 minutes
+      Order: 7, Published: Yes
+
+📖 READINGS (0 total):
+   None
+
+📝 QUIZZES (6 total):
+   1. Level Up Leadership - Week 1 Quiz: Position Leadership (ID: 200)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 20
+      Final Exam: No
+      Published: Yes
+
+   2. Level Up Leadership - Week 2 Quiz: Permission Leadership (ID: 201)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 20
+      Final Exam: No
+      Published: Yes
+
+   3. Level Up Leadership - Week 3 Quiz: Production Leadership (ID: 202)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 20
+      Final Exam: No
+      Published: Yes
+
+   4. Level Up Leadership - Week 4 Quiz: People Development Leadership (ID: 203)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 20
+      Final Exam: No
+      Published: Yes
+
+   5. Level Up Leadership - Week 5 Quiz: Pinnacle Leadership (ID: 204)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 20
+      Final Exam: No
+      Published: Yes
+
+   6. Level Up Leadership - Final Examination (ID: 206)
+      Time Limit: 60 minutes
+      Passing Score: 60%
+      Questions: 50
+      Final Exam: Yes
+      Published: Yes
+
+📑 COURSE MODULES (7 total):
+   1. Week 1 Quiz: Position Leadership
+      Description: Test your understanding of Level 1 Position Leadership principles from John Maxwell's "The 5 Levels ...
+      Type: quiz
+      Week: 1
+      Order: 1, Required: Yes
+
+   2. Week 1 Quiz: Position Leadership
+      Description: Test your understanding of Level 1 Position Leadership principles from John Maxwell's "The 5 Levels ...
+      Type: quiz
+      Week: 1
+      Order: 1, Required: Yes
+
+   3. Week 2 Quiz: Permission Leadership
+      Description: Test your understanding of Level 2 Permission Leadership principles from John Maxwell's "The 5 Level...
+      Type: quiz
+      Week: 2
+      Order: 2, Required: Yes
+
+   4. Week 3 Quiz: Production Leadership
+      Description: Test your understanding of Level 3 Production Leadership principles from John Maxwell's "The 5 Level...
+      Type: quiz
+      Week: 3
+      Order: 3, Required: Yes
+
+   5. Week 4 Quiz: People Development Leadership
+      Description: Test your understanding of Level 4 People Development Leadership principles from John Maxwell's "The...
+      Type: quiz
+      Week: 4
+      Order: 4, Required: Yes
+
+   6. Week 5 Quiz: Pinnacle Leadership
+      Description: Test your understanding of Level 5 Pinnacle Leadership principles from John Maxwell's "The 5 Levels ...
+      Type: quiz
+      Week: 5
+      Order: 5, Required: Yes
+
+   7. Final Exam: Complete Leadership Assessment
+      Description: Comprehensive final examination covering all five levels of leadership from John Maxwell's "The 5 Le...
+      Type: quiz
+      Week: 6
+      Order: 6, Required: Yes
+
+
+
+
+================================================================================
+COURSE 8: YOUTH MINISTRY TRAINING
+Duration: 6 weeks
+================================================================================
+
+📹 VIDEOS (0 total):
+   None
+
+📖 READINGS (0 total):
+   None
+
+📝 QUIZZES (6 total):
+   1. Youth Ministry — Week 1 Quiz (ID: 207)
+      Time Limit: 15 minutes
+      Passing Score: 70%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   2. Youth Ministry — Week 2 Quiz (ID: 208)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   3. Youth Ministry — Week 3 Quiz (ID: 209)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   4. Youth Ministry — Week 4 Quiz (ID: 210)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   5. Youth Ministry — Week 5 Quiz (ID: 211)
+      Time Limit: 15 minutes
+      Passing Score: 60%
+      Questions: 10
+      Final Exam: No
+      Published: Yes
+
+   6. Youth Ministry — Final Exam (ID: 212)
+      Time Limit: 60 minutes
+      Passing Score: 60%
+      Questions: 50
+      Final Exam: Yes
+      Published: Yes
+
+📑 COURSE MODULES (5 total):
+   1. Chapter 1: The Calling
+      Description: Understanding your calling to youth ministry and the foundational principles of serving in this capa...
+      Type: video
+      Order: 1, Required: Yes
+
+   2. Chapter 2: Requirements
+      Description: Essential requirements and qualifications for effective youth ministry leadership.
+      Type: video
+      Order: 2, Required: Yes
+
+   3. Chapter 3: Responsibilities
+      Description: Core responsibilities and duties of youth ministry leaders in serving their students.
+      Type: video
+      Order: 3, Required: Yes
+
+   4. Chapter 4: Accountability
+      Description: Building systems of accountability and maintaining integrity in youth ministry.
+      Type: video
+      Order: 4, Required: Yes
+
+   5. Chapter 5: Making New Disciples
+      Description: Strategies for evangelism, discipleship, and multiplying the impact of youth ministry.
+      Type: video
+      Order: 5, Required: Yes
+
+
+
+================================================================================
+SUMMARY
+================================================================================
+
+Total Courses: 8
+Total Videos: 49
+Total Readings: 6
+Total Quizzes: 81
+Total Quiz Questions: 1108
+Total Course Modules: 74

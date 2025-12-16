@@ -122,3 +122,4 @@ async function populateCourses() {
 
 populateCourses();
 
+

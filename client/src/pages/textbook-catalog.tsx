@@ -115,29 +115,15 @@ export default function TextbookCatalog() {
   const { data: textbooks, isLoading, error } = useQuery({
     queryKey: ['/api/textbooks'],
     queryFn: async () => {
-      // For now, we'll use the known textbooks from the database
+      // Fetch courses from database - they now use IDs 1-8 directly
       const response = await fetch('/api/courses');
       const courses = await response.json();
       
-      // Map database course IDs to expected course IDs
-      // Database: 20=G.R.O.W, 21=Acts, 22=Fire Starter, 23=Jonah, 24=Studying, 25=Deacon, 26=Level Up, 27=Youth
-      // Expected: 1=Acts, 2=Fire Starter, 3=Jonah, 4=G.R.O.W, 5=Studying, 6=Deacon, 7=Level Up, 8=Youth
-      const courseIdMap: Record<number, number> = {
-        20: 4, // G.R.O.W
-        21: 1, // Acts in Action
-        22: 2, // Fire Starter
-        23: 3, // Don't Be a Jonah
-        24: 5, // Studying for Service
-        25: 6, // Deacon Course
-        26: 7, // Level Up Leadership
-        27: 8, // Youth Ministry
-      };
-      
-      // Create ordered textbooks array - display in course ID order 0, 1-10
+      // Create ordered textbooks array - display in course ID order 1-8
       const completeTextbooks: Textbook[] = [];
       
-      // Course 1: "Acts In Action Course" textbook (database ID 21)
-      const actsCourse = courses.find((c: any) => c.id === 21);
+      // Course 1: "Acts In Action Course" (database ID 1)
+      const actsCourse = courses.find((c: any) => c.id === 1);
       if (actsCourse) {
         completeTextbooks.push({
           id: 1, // Display order 1
@@ -156,8 +142,8 @@ export default function TextbookCatalog() {
         });
       }
 
-      // Course 2: "Becoming a Fire Starter" textbook (database ID 22)
-      const fireStarterCourse = courses.find((c: any) => c.id === 22);
+      // Course 2: "Becoming a Fire Starter" textbook (database ID 2)
+      const fireStarterCourse = courses.find((c: any) => c.id === 2);
       if (fireStarterCourse) {
         completeTextbooks.push({
           id: 2, // Display order 2
@@ -176,8 +162,8 @@ export default function TextbookCatalog() {
         });
       }
       
-      // Course 3: "Don't Be A Jonah" textbook (database ID 23)
-      const jonahCourse = courses.find((c: any) => c.id === 23);
+      // Course 3: "Don't Be A Jonah" textbook (database ID 3)
+      const jonahCourse = courses.find((c: any) => c.id === 3);
       if (jonahCourse) {
         completeTextbooks.push({
           id: 3, // Display order 3
@@ -196,8 +182,8 @@ export default function TextbookCatalog() {
         });
       }
 
-      // Course 4: G.R.O.W Beginner Course textbook (database ID 20)
-      const growCourse = courses.find((c: any) => c.id === 20);
+      // Course 4: G.R.O.W Beginner Course textbook (database ID 4)
+      const growCourse = courses.find((c: any) => c.id === 4);
       if (growCourse) {
         completeTextbooks.push({
           id: 4, // Display order 4
@@ -216,8 +202,8 @@ export default function TextbookCatalog() {
         });
       }
 
-      // Course 5: "Studying for Service" textbook (database ID 24)
-      const studyingCourse = courses.find((c: any) => c.id === 24);
+      // Course 5: "Studying for Service" textbook (database ID 5)
+      const studyingCourse = courses.find((c: any) => c.id === 5);
       if (studyingCourse) {
         completeTextbooks.push({
           id: 5, // Display order 5
@@ -236,8 +222,8 @@ export default function TextbookCatalog() {
         });
       }
 
-      // Course 6: "Deaconship Course" textbook (database ID 25)
-      const deaconCourse = courses.find((c: any) => c.id === 25);
+      // Course 6: "Deaconship Course" textbook (database ID 6)
+      const deaconCourse = courses.find((c: any) => c.id === 6);
       if (deaconCourse) {
         completeTextbooks.push({
           id: 6, // Display order 6
@@ -256,8 +242,8 @@ export default function TextbookCatalog() {
         });
       }
 
-      // Course 7: "Level Up Leadership" textbook (database ID 26)
-      const levelUpCourse = courses.find((c: any) => c.id === 26);
+      // Course 7: "Level Up Leadership" textbook (database ID 7)
+      const levelUpCourse = courses.find((c: any) => c.id === 7);
       if (levelUpCourse) {
         completeTextbooks.push({
           id: 7,
@@ -276,8 +262,8 @@ export default function TextbookCatalog() {
         });
       }
 
-      // Course 8: "Youth Ministry Course" textbook (database ID 27)
-      const youthCourse = courses.find((c: any) => c.id === 27);
+      // Course 8: "Youth Ministry Course" textbook (database ID 8)
+      const youthCourse = courses.find((c: any) => c.id === 8);
       if (youthCourse) {
         completeTextbooks.push({
           id: 8,
@@ -451,8 +437,14 @@ export default function TextbookCatalog() {
       return;
     }
     
-    // For coming soon courses (courseId 16, 7, 9), show locked modal
-    if (textbook.courseId === 16 || textbook.courseId === 7 || textbook.courseId === 9) {
+    // For Level Up Leadership (courseId 7), navigate to course page (no e-book yet)
+    if (textbook.courseId === 7) {
+      setLocation(`/course/${textbook.courseId}`);
+      return;
+    }
+    
+    // For coming soon courses (courseId 16, 9), show locked modal
+    if (textbook.courseId === 16 || textbook.courseId === 9) {
       setSelectedTextbook(textbook);
       setShowModal(true);
       return;
@@ -649,7 +641,7 @@ export default function TextbookCatalog() {
                           <FaTimes className="text-lg" />
                         </button>
                         <div className="text-center">
-                          {(selectedTextbook?.courseId === 5 || selectedTextbook?.courseId === 16 || selectedTextbook?.courseId === 7 || selectedTextbook?.courseId === 8 || selectedTextbook?.courseId === 9) ? (
+                          {(selectedTextbook?.courseId === 5 || selectedTextbook?.courseId === 16 || selectedTextbook?.courseId === 8 || selectedTextbook?.courseId === 9) ? (
                             <>
                               <i className="fas fa-lock text-4xl text-orange-600 mb-4"></i>
                               <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
@@ -724,8 +716,8 @@ export default function TextbookCatalog() {
                   </span>
                 </div>
 
-                {/* Action Buttons - Hidden for Coming Soon courses */}
-                {!(textbook.courseId >= 101 && textbook.courseId <= 106) && (
+                {/* Action Buttons - Hidden for Coming Soon courses (IDs 101-106, 9, 16) */}
+                {!(textbook.courseId >= 101 && textbook.courseId <= 106) && textbook.courseId !== 9 && textbook.courseId !== 16 && (
                   <div className="space-y-2 mt-auto">
                     {/* Read E-Book Button */}
                     <Button 

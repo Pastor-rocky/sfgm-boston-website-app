@@ -1879,8 +1879,10 @@ After completing this chapter, proceed to the next module or assessment as direc
       } as any));
     }
 
-    // Special handling for Acts in Action course (courseId = 4) - Bible readings only
-    if (courseId === 4) {
+    // NOTE: Course 4 is G.R.O.W, not Acts in Action!
+    // This hardcoded fallback should be removed once readings are in database
+    // TODO: Remove this fallback after deploying course readings
+    if (false && courseId === 4) { // Disabled - use database readings instead
       const bibleReadings: CourseReading[] = [
         {
           id: 1001,
