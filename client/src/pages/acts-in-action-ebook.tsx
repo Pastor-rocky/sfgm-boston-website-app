@@ -1871,6 +1871,14 @@ export default function ActsInActionEbook() {
                 onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
                 onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
                 onEnded={() => setIsPlaying(false)}
+                onError={(e) => {
+                  console.error('Audio error:', e);
+                  console.error('Failed to load:', currentChapterData.audioUrl);
+                  alert(`Failed to load audio: ${currentChapterData.audioUrl}. Please check the file path.`);
+                }}
+                onLoadedData={() => {
+                  console.log('Audio loaded successfully:', currentChapterData.audioUrl);
+                }}
               />
             </div>
           </CardContent>
