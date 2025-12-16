@@ -404,7 +404,14 @@ export function registerMediaRoutes(app: Express) {
   });
 
   app.use("/pdfs", express.static(path.join(process.cwd(), "public/pdfs")));
-  app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+  // Try public/uploads first, then fallback to root uploads
+  const publicUploadsPath = path.join(process.cwd(), "public", "uploads");
+  const rootUploadsPath = path.join(process.cwd(), "uploads");
+  if (fs.existsSync(publicUploadsPath)) {
+    app.use("/uploads", express.static(publicUploadsPath));
+  } else if (fs.existsSync(rootUploadsPath)) {
+    app.use("/uploads", express.static(rootUploadsPath));
+  }
   app.use("/api", router);
 }
 
