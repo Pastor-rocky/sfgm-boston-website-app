@@ -34,32 +34,37 @@ export const getAudioUrl = (filename: string): string => {
     return filename;
   }
   
-  // If using R2, handle R2 paths (may include subfolder like "firestarter/")
-  if (baseUrl.startsWith('http')) {
-    // R2 URL - encode the full path for URL (handles spaces, emoji, subfolders, etc.)
-    // For firestarter, keep the path: firestarter/fire-starter-cp1.mp3
-    // For Acts, filename is already correct
-    const encodedPath = filename.split('/').map(part => encodeURIComponent(part)).join('/');
-    const fullUrl = `${baseUrl}/${encodedPath}`;
-    console.log('[Audio Storage] Generated R2 URL:', fullUrl);
-    return fullUrl;
-  }
-  
   // For local files, convert paths and emoji names to URL-safe names
   let localFilename = filename;
+  let r2Filename = filename;
   
-  // Handle Fire Starter files from R2 (firestarter/fire-starter-cpX.mp3) -> local (fire-starter-cpX.mp3)
+  // Handle Fire Starter files - strip firestarter/ prefix for both R2 and local
+  // In R2, files are at root level (fire-starter-cpX.mp3)
+  // For local files, they're in /uploads/textbook-audio/ (fire-starter-cpX.mp3)
   if (filename.startsWith('firestarter/')) {
-    localFilename = filename.replace('firestarter/', '');
+    const cleanFilename = filename.replace('firestarter/', '');
+    r2Filename = cleanFilename; // R2 uses root level
+    localFilename = cleanFilename; // Local also uses just filename
   }
   // Handle Acts in Action emoji names
   else if (filename.includes('Act in Action') && filename.includes('🎬')) {
     const match = filename.match(/Act in Action 🎬  Cp(\d+)\.mp3/i);
     if (match && match[1]) {
       localFilename = `acts-in-action-cp${match[1]}.mp3`;
+      r2Filename = filename; // R2 uses emoji name
     }
   }
   
+  // If using R2, encode the filename for URL
+  if (baseUrl.startsWith('http')) {
+    // R2 URL - encode filename (handles spaces, emoji, etc.)
+    const encodedFilename = encodeURIComponent(r2Filename);
+    const fullUrl = `${baseUrl}/${encodedFilename}`;
+    console.log('[Audio Storage] Generated R2 URL:', fullUrl);
+    return fullUrl;
+  }
+  
+  // Local URL
   const fullUrl = `${baseUrl}/${localFilename}`;
   console.log('[Audio Storage] Generated local URL:', fullUrl);
   return fullUrl;
