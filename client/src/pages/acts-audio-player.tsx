@@ -109,7 +109,7 @@ const ActsAudioPlayer: React.FC = () => {
               />
               <div>
                 <h3 className="text-white text-2xl font-bold">🎶 Acts in Action</h3>
-                <p className="text-white/90 text-xl font-semibold">Intro 🎬</p>
+                <p className="text-white/90 text-xl font-semibold">Chapter 1: Preparation and Launch 🎬</p>
               </div>
             </div>
             <div className="space-y-4">
@@ -151,7 +151,7 @@ const ActsAudioPlayer: React.FC = () => {
 
               <audio
                 ref={audioRef}
-                src="/uploads/textbook-audio/acts-in-action-intro.mp3"
+                src="/uploads/textbook-audio/Act in Action 🎬  Cp1.mp3"
                 preload="auto"
                 onLoadedMetadata={() => {
                   if (audioRef.current) {
@@ -164,7 +164,7 @@ const ActsAudioPlayer: React.FC = () => {
                   }
                 }}
                 onLoadedData={() => {
-                  console.log('Audio loaded successfully:', '/uploads/textbook-audio/acts-in-action-intro.mp3');
+                  console.log('Audio loaded successfully:', '/uploads/textbook-audio/Act in Action 🎬  Cp1.mp3');
                 }}
                 onError={(e) => {
                   console.error('Audio loading error:', e);
