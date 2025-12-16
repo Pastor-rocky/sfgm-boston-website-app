@@ -94,7 +94,7 @@ export const ebookRoutes: RouteDefinition[] = [
 
 export const audioAndCourseContentRoutes: RouteDefinition[] = [
   createRoute("/acts-audio-player", () => import("@/pages/acts-audio-player")),
-  createRoute("/acts-audio-player-ch1", () => import("@/pages/acts-audio-player-ch1")),
+  createRoute("/acts-audio-player-ch1", () => import("@/pages/acts-audio-player")),
   createRoute("/acts-audio-player-ch2", () => import("@/pages/acts-audio-player-ch2")),
   createRoute("/acts-audio-player-ch3", () => import("@/pages/acts-audio-player-ch3")),
   createRoute("/acts-audio-player-ch4", () => import("@/pages/acts-audio-player-ch4")),

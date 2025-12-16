@@ -2687,7 +2687,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </div>
                       <Button
                         disabled={!canAccessReadings(1)}
-                        onClick={createReadingProgressHandler(2, () => window.location.href = '/acts-audio-player-ch1')}
+                        onClick={createReadingProgressHandler(2, () => window.location.href = '/acts-audio-player')}
                         className={`${!canAccessReadings(1) 
                           ? 'bg-gray-400 text-gray-600 cursor-not-allowed' 
                           : isContentCompleted('reading', 2)
