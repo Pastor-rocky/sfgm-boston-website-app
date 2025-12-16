@@ -1,0 +1,66 @@
+===========================================
+COPY-PASTE DNS RECORDS FOR NAMECHEAP
+===========================================
+
+STEP 1: DELETE ALL OLD RECORDS
+--------------------------------
+Delete any existing records for:
+- @ (root domain)
+- www
+
+STEP 2: ADD THESE 2 RECORDS
+----------------------------
+
+RECORD 1 - Root Domain (sfgmboston.com)
+----------------------------------------
+Type: ALIAS Record
+Host: @
+Value: sfgm-boston-website-app.onrender.com
+TTL: Automatic
+
+RECORD 2 - WWW Subdomain (www.sfgmboston.com)
+----------------------------------------------
+Type: CNAME Record
+Host: www
+Value: sfgm-boston-website-app.onrender.com
+TTL: Automatic
+
+===========================================
+IF ALIAS RECORD NOT AVAILABLE, USE THIS:
+===========================================
+
+RECORD 1 - Root Domain (sfgmboston.com)
+----------------------------------------
+Type: A Record
+Host: @
+Value: 216.24.57.1
+TTL: Automatic
+
+RECORD 2 - WWW Subdomain (www.sfgmboston.com)
+----------------------------------------------
+Type: CNAME Record
+Host: www
+Value: sfgm-boston-website-app.onrender.com
+TTL: Automatic
+
+===========================================
+EXACT VALUES TO COPY:
+===========================================
+
+For ALIAS Record:
+-----------------
+Host: @
+Value: sfgm-boston-website-app.onrender.com
+
+For CNAME Record:
+-----------------
+Host: www
+Value: sfgm-boston-website-app.onrender.com
+
+For A Record (if ALIAS not available):
+--------------------------------------
+Host: @
+Value: 216.24.57.1
+
+===========================================
+

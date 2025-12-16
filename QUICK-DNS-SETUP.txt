@@ -1,0 +1,40 @@
+===========================================
+QUICK DNS SETUP FOR sfgmboston.com
+===========================================
+
+RECORD 1 - Root Domain (sfgmboston.com)
+-----------------------------------------
+Type: ALIAS Record
+Host: @
+Value: sfgm-boston-website-app.onrender.com
+TTL: Automatic
+
+RECORD 2 - WWW Subdomain (www.sfgmboston.com)
+---------------------------------------------
+Type: CNAME Record
+Host: www
+Value: sfgm-boston-website-app.onrender.com
+TTL: Automatic
+
+===========================================
+IF ALIAS NOT AVAILABLE, USE A RECORD:
+=========================================
+
+Type: A Record
+Host: @
+Value: 216.24.57.1
+TTL: Automatic
+
+===========================================
+STEPS IN NAMECHEAP:
+===========================================
+1. Login → Domain List → Manage → Advanced DNS
+2. Add Record 1 (ALIAS for @)
+3. Add Record 2 (CNAME for www)
+4. Save both records
+5. Wait 5-30 minutes
+6. Go to Render → Click "Verify" next to domain
+7. SSL will activate automatically
+
+===========================================
+

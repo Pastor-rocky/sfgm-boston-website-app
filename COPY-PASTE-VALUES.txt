@@ -1,0 +1,42 @@
+===========================================
+RENDER ENVIRONMENT VARIABLES - COPY & PASTE
+===========================================
+
+VARIABLE 1 - DATABASE_URL
+--------------------------
+Name:
+DATABASE_URL
+
+Value (copy entire line below):
+postgresql://neondb_owner:npg_lAvmtxr7R6ED@ep-ancient-shadow-a42j3ko0-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require
+
+
+VARIABLE 2 - NODE_ENV
+----------------------
+Name:
+NODE_ENV
+
+Value:
+production
+
+
+VARIABLE 3 - PORT
+-----------------
+Name:
+PORT
+
+Value:
+55555
+
+
+===========================================
+INSTRUCTIONS:
+===========================================
+1. In Render, click "Add Environment Variable"
+2. Copy the Name above and paste in "Name" field
+3. Copy the Value above and paste in "Value" field
+4. Click "Save"
+5. Repeat for all 3 variables
+
+===========================================
+

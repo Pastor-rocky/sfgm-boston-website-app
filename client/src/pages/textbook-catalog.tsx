@@ -119,11 +119,25 @@ export default function TextbookCatalog() {
       const response = await fetch('/api/courses');
       const courses = await response.json();
       
+      // Map database course IDs to expected course IDs
+      // Database: 20=G.R.O.W, 21=Acts, 22=Fire Starter, 23=Jonah, 24=Studying, 25=Deacon, 26=Level Up, 27=Youth
+      // Expected: 1=Acts, 2=Fire Starter, 3=Jonah, 4=G.R.O.W, 5=Studying, 6=Deacon, 7=Level Up, 8=Youth
+      const courseIdMap: Record<number, number> = {
+        20: 4, // G.R.O.W
+        21: 1, // Acts in Action
+        22: 2, // Fire Starter
+        23: 3, // Don't Be a Jonah
+        24: 5, // Studying for Service
+        25: 6, // Deacon Course
+        26: 7, // Level Up Leadership
+        27: 8, // Youth Ministry
+      };
+      
       // Create ordered textbooks array - display in course ID order 0, 1-10
       const completeTextbooks: Textbook[] = [];
       
-      // Course 1: "Acts In Action Course" textbook
-      const actsCourse = courses.find((c: any) => c.id === 1);
+      // Course 1: "Acts In Action Course" textbook (database ID 21)
+      const actsCourse = courses.find((c: any) => c.id === 21);
       if (actsCourse) {
         completeTextbooks.push({
           id: 1, // Display order 1
@@ -142,8 +156,8 @@ export default function TextbookCatalog() {
         });
       }
 
-      // Course 2: "Becoming a Fire Starter" textbook
-      const fireStarterCourse = courses.find((c: any) => c.id === 2);
+      // Course 2: "Becoming a Fire Starter" textbook (database ID 22)
+      const fireStarterCourse = courses.find((c: any) => c.id === 22);
       if (fireStarterCourse) {
         completeTextbooks.push({
           id: 2, // Display order 2
@@ -162,8 +176,8 @@ export default function TextbookCatalog() {
         });
       }
       
-      // Course 3: "Don't Be A Jonah" textbook (project_id = 3, courseId = 3)
-      const jonahCourse = courses.find((c: any) => c.id === 3);
+      // Course 3: "Don't Be A Jonah" textbook (database ID 23)
+      const jonahCourse = courses.find((c: any) => c.id === 23);
       if (jonahCourse) {
         completeTextbooks.push({
           id: 3, // Display order 3
@@ -182,8 +196,8 @@ export default function TextbookCatalog() {
         });
       }
 
-      // Course 4: G.R.O.W Beginner Course textbook (project_id = 4, courseId = 4)
-      const growCourse = courses.find((c: any) => c.id === 4); // G.R.O.W is courseId 4
+      // Course 4: G.R.O.W Beginner Course textbook (database ID 20)
+      const growCourse = courses.find((c: any) => c.id === 20);
       if (growCourse) {
         completeTextbooks.push({
           id: 4, // Display order 4
@@ -202,8 +216,8 @@ export default function TextbookCatalog() {
         });
       }
 
-      // Course 5: "Studying for Service" textbook
-      const studyingCourse = courses.find((c: any) => c.id === 5);
+      // Course 5: "Studying for Service" textbook (database ID 24)
+      const studyingCourse = courses.find((c: any) => c.id === 24);
       if (studyingCourse) {
         completeTextbooks.push({
           id: 5, // Display order 5
@@ -222,8 +236,8 @@ export default function TextbookCatalog() {
         });
       }
 
-      // Course 6: "Deaconship Course" textbook
-      const deaconCourse = courses.find((c: any) => c.id === 6);
+      // Course 6: "Deaconship Course" textbook (database ID 25)
+      const deaconCourse = courses.find((c: any) => c.id === 25);
       if (deaconCourse) {
         completeTextbooks.push({
           id: 6, // Display order 6
@@ -242,7 +256,47 @@ export default function TextbookCatalog() {
         });
       }
 
-      // Course 9: "Theology 101" textbook (switched from courseId 6 to 9)
+      // Course 7: "Level Up Leadership" textbook (database ID 26)
+      const levelUpCourse = courses.find((c: any) => c.id === 26);
+      if (levelUpCourse) {
+        completeTextbooks.push({
+          id: 7,
+          title: "Level Up Leadership",
+          author: "John Maxwell & Bishop Anthony Lee",
+          description: "The SFGM Level Up leadership class is an in depth 7 week course that will teach you how to lead better by serving more. This course will be taught by Bishop Anthony Lee as he breaks down each level of leadership with all its biblical principles, application and truths.",
+          bookCoverUrl: "/level-up-leadership-cover.png",
+          category: "Leadership Development",
+          difficulty: "Advanced",
+          chapterCount: levelUpCourse.duration || 7,
+          estimatedReadingTime: "6-8 hours",
+          isComplete: false,
+          courseId: 7,
+          courseName: "Level Up Leadership",
+          isUpdated: levelUpCourse.isUpdated || false
+        });
+      }
+
+      // Course 8: "Youth Ministry Course" textbook (database ID 27)
+      const youthCourse = courses.find((c: any) => c.id === 27);
+      if (youthCourse) {
+        completeTextbooks.push({
+          id: 8,
+          title: "Youth Ministry Course",
+          author: "SFGM Boston University",
+          description: "A 5-chapter foundational course for youth ministry development and discipleship. Learn the calling, requirements, responsibilities, accountability, and disciple-making strategies needed for effective youth ministry.",
+          bookCoverUrl: "/sfgm-youth-ministry-cover.png",
+          category: "Ministry Leadership",
+          difficulty: "Beginner",
+          chapterCount: youthCourse.duration || 5,
+          estimatedReadingTime: "2-3 hours",
+          isComplete: true,
+          courseId: 8,
+          courseName: "Youth Ministry Course",
+          isUpdated: youthCourse.isUpdated || false
+        });
+      }
+
+      // Course 9: "Theology 101" textbook (not in database yet - coming soon)
       const theologyCourse = courses.find((c: any) => c.id === 9);
       if (theologyCourse) {
         completeTextbooks.push({
@@ -286,36 +340,6 @@ export default function TextbookCatalog() {
       
       // Add "Coming Soon" textbooks that don't exist in the database yet
       const comingSoonTextbooks = [
-        {
-          id: 10,
-          title: "Youth Ministry Course",
-          author: "SFGM Boston University",
-          description: "A 5-chapter foundational course for youth ministry development and discipleship. Learn the calling, requirements, responsibilities, accountability, and disciple-making strategies needed for effective youth ministry.",
-          bookCoverUrl: "/sfgm-youth-ministry-cover.png",
-          category: "Ministry Leadership",
-          difficulty: "Beginner",
-          chapterCount: 5,
-          estimatedReadingTime: "2-3 hours",
-          isComplete: true,
-          courseId: 8,
-          courseName: "Youth Ministry Course",
-          isUpdated: false
-        },
-        {
-          id: 101, // Display order 101
-          title: "Level Up Leadership",
-          author: "John Maxwell & Bishop Anthony Lee",
-          description: "The SFGM Level Up leadership class is an in depth 5 week course that will teach you how to lead better by serving more. This course will be taught by Bishop Anthony Lee as he breaks down each level of leadership with all its biblical principles, application and truths.",
-          bookCoverUrl: "/level-up-leadership-cover.png",
-          category: "Leadership Development",
-          difficulty: "Intermediate",
-          chapterCount: 5,
-          estimatedReadingTime: "6-8 hours",
-          isComplete: false,
-          courseId: 7, // Maps to Course 7
-          courseName: "Level Up Leadership",
-          isUpdated: false
-        },
         {
           id: 102, // Display order 102
           title: "The Watchmen Series",
