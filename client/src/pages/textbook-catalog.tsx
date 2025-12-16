@@ -150,7 +150,7 @@ export default function TextbookCatalog() {
           title: "Becoming a Fire Starter",
           author: "Bishop Anthony Lee",
           description: "If you are tired of burning low and burning out, this is the book for you. Becoming a Fire Starter will instill in your walk of discipleship seven powerful principles that will enable you to not only be filled with the fire of the Holy Spirit, but to remain burning with passion for the Gospel of Jesus Christ and lost people. You should only read this book if you want your life changed by the fire of God!",
-          bookCoverUrl: "/becoming-a-fire-starter-cover.jpeg",
+          bookCoverUrl: "/fire-starter-cover.jpg",
           category: "Ministry",
           difficulty: "Intermediate",
           chapterCount: fireStarterCourse.duration || 11,
