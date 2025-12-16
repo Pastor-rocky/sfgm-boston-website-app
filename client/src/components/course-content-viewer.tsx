@@ -1021,7 +1021,10 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
     // Get all videos and readings for the specific week
     const weekVideos = videos.filter((v: CourseVideo) => {
       const videoWeek = extractWeekNumber(v.title);
-      return videoWeek === weekNumber && v.isPublished;
+      // Only include videos that have a proper week number in their title
+      // This excludes test videos or videos without week numbers
+      const hasWeekNumber = /Week \d+/i.test(v.title);
+      return videoWeek === weekNumber && v.isPublished && hasWeekNumber;
     });
     
     const weekReadings = readings.filter((r: CourseReading) => {
