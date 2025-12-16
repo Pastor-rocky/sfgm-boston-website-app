@@ -91,7 +91,7 @@ export default function DeaconCourseCh3() {
               </div>
             </div>
 
-            <audio ref={audioRef} src="/deacon-course-ch3.mp3" onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)} onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)} onPlay={() => setIsPlaying(true)} onPause={() => setIsPlaying(false)} onEnded={() => setIsPlaying(false)} />
+            <audio ref={audioRef} src="/uploads/textbook-audio/deacon-course-ch3.mp3" onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)} onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)} onPlay={() => setIsPlaying(true)} onPause={() => setIsPlaying(false)} onEnded={() => setIsPlaying(false)} />
           </CardContent>
         </Card>
 

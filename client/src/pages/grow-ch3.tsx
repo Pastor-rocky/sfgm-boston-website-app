@@ -134,7 +134,7 @@ export default function GrowCh3() {
 
             <audio
               ref={audioRef}
-              src="/grow-ch3.mp3"
+              src="/uploads/textbook-audio/grow-ch3.mp3"
               onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
               onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
               onPlay={() => setIsPlaying(true)}

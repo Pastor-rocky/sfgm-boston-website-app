@@ -140,7 +140,7 @@ export default function StudyingForServiceCh3() {
 
             <audio
               ref={audioRef}
-              src="/studying-for-service-ch3.mp3"
+              src="/uploads/textbook-audio/studying-for-service-ch3.mp3"
               onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
               onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
               onPlay={() => setIsPlaying(true)}

@@ -136,7 +136,7 @@ export default function DeaconCourseCh1() {
 
             <audio
               ref={audioRef}
-              src="/deacon-course-ch1.mp3"
+              src="/uploads/textbook-audio/deacon-course-ch1.mp3"
               onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
               onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
               onPlay={() => setIsPlaying(true)}
