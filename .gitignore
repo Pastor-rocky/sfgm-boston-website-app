@@ -1,0 +1,12 @@
+node_modules
+dist
+.DS_Store
+server/public
+vite.config.ts.*
+*.tar.gz
+
+# Exclude source course folders - only public/uploads/ files are needed for website
+SFGM Orlando Courses/
+SFGM Boston Courses/
+SFGM Orlando Courses/
+SFGM Boston Courses/

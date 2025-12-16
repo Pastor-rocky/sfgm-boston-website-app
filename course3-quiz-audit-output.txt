@@ -1,0 +1,1413 @@
+[dotenv@17.2.2] injecting env (8) from .env -- tip: 📡 auto-backup env with Radar: https://dotenvx.com/radar
+📚 Course 3: Don't Be a Jonah - Quiz Question Audit
+====================================================================================================
+Checking all quiz questions to ensure they reflect the correct chapter content.
+
+
+📋 QUIZ SUMMARY
+====================================================================================================
+
+📖 WEEK 1 - Chapter 1 (Quiz ID: 26)
+   Title: Don't Be a Jonah — Week 1 Quiz
+   Questions: 10
+   Should cover: Chapter 1 of "Don't Be a Jonah"
+
+📖 WEEK 2 - Chapter 2 (Quiz ID: 46)
+   Title: Don't Be a Jonah — Week 2 Quiz
+   Questions: 10
+   Should cover: Chapter 2 of "Don't Be a Jonah"
+
+📖 WEEK 3 - Chapter 3 (Quiz ID: 37)
+   Title: Don't Be a Jonah — Week 3 Quiz
+   Questions: 10
+   Should cover: Chapter 3 of "Don't Be a Jonah"
+
+📖 WEEK 4 - Chapter 4 (Quiz ID: 38)
+   Title: Don't Be a Jonah — Week 4 Quiz
+   Questions: 10
+   Should cover: Chapter 4 of "Don't Be a Jonah"
+
+📖 WEEK 5 - Chapter 5 (Quiz ID: 39)
+   Title: Don't Be a Jonah — Week 5 Quiz
+   Questions: 10
+   Should cover: Chapter 5 of "Don't Be a Jonah"
+
+📖 WEEK 6 - Chapter 6 (Quiz ID: 40)
+   Title: Don't Be a Jonah — Week 6 Quiz
+   Questions: 10
+   Should cover: Chapter 6 of "Don't Be a Jonah"
+
+📖 WEEK 7 - Chapter 7 (Quiz ID: 41)
+   Title: Don't Be a Jonah — Week 7 Quiz
+   Questions: 10
+   Should cover: Chapter 7 of "Don't Be a Jonah"
+
+📖 WEEK 8 - Chapter 8 (Quiz ID: 42)
+   Title: Don't Be a Jonah — Week 8 Quiz
+   Questions: 10
+   Should cover: Chapter 8 of "Don't Be a Jonah"
+
+📖 WEEK 9 - Chapter 9 (Quiz ID: 43)
+   Title: Don't Be a Jonah — Week 9 Quiz
+   Questions: 10
+   Should cover: Chapter 9 of "Don't Be a Jonah"
+
+📖 WEEK 10 - Chapter 10 (Quiz ID: 44)
+   Title: Don't Be a Jonah — Week 10 Quiz
+   Questions: 10
+   Should cover: Chapter 10 of "Don't Be a Jonah"
+
+📖 WEEK 11 - Chapter 11 (Quiz ID: 45)
+   Title: Don't Be a Jonah — Week 11 Quiz
+   Questions: 10
+   Should cover: Chapter 11 of "Don't Be a Jonah"
+
+🎓 FINAL EXAM (Quiz ID: 47)
+   Title: Don't Be a Jonah — Final Exam
+   Questions: 50
+   Covers: All 11 chapters
+
+
+📝 DETAILED QUESTION LIST
+====================================================================================================
+
+
+📖 WEEK 1 - CHAPTER 1 - ALL 10 QUESTIONS
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+1. According to Psalms 127:1, what happens when the Lord doesn't build the house?
+   Type: multiple_choice
+   Options:
+      A) Its builders labor in vain ✓ (Correct)
+      B) The house will eventually fall down
+      C) The builders become discouraged
+      D) Nothing good can come from it
+
+2. What does the Hebrew word for "vain" in Psalms 127:1 include in its definitions?
+   Type: multiple_choice
+   Options:
+      A) Confusion, doubt, fear, and anxiety
+      B) Worthlessness, nothingness, disaster, and emptiness ✓ (Correct)
+      C) Pride, rebellion, stubbornness, and anger
+      D) Temporary, fleeting, unstable, and uncertain
+
+3. What was God's message to Jonah regarding Nineveh?
+   Type: multiple_choice
+   Options:
+      A) Go and establish a church there for the righteous people
+      B) Travel there to learn about their customs and culture
+      C) Get up and go announce God's judgment against their wickedness ✓ (Correct)
+      D) Move there permanently to serve as their spiritual leader
+
+4. What does the Hebrew word "Joppa" mean?
+   Type: multiple_choice
+   Options:
+      A) Beautiful ✓ (Correct)
+      B) Peaceful
+      C) Safe harbor
+      D) Temporary refuge
+
+5. According to the text, what was the rich young ruler unwilling to do?
+   Type: multiple_choice
+   Options:
+      A) Follow the Ten Commandments from his youth
+      B) Let go of the beautiful things holding him back from Jesus' call ✓ (Correct)
+      C) Acknowledge Jesus as a good teacher
+      D) Kneel down before Jesus in respect
+
+6. What does the Hebrew word "Tarshish" mean?
+   Type: multiple_choice
+   Options:
+      A) Far away place or distant land
+      B) Safe haven or place of refuge
+      C) To break or fight against ✓ (Correct)
+      D) Ships and maritime commerce
+
+7. Who was Saul of Tarsus before his conversion?
+   Type: multiple_choice
+   Options:
+      A) A tax collector who cheated people
+      B) A fisherman who worked with Peter
+      C) A religious leader who killed Christians ✓ (Correct)
+      D) A Roman soldier who persecuted Jews
+
+8. What was a "goad" used for according to the text?
+   Type: multiple_choice
+   Options:
+      A) A weapon used by soldiers in battle
+      B) A shepherd's stick with spikes used to discipline stubborn sheep and oxen ✓ (Correct)
+      C) A tool used by farmers to harvest crops
+      D) A musical instrument used in worship services
+
+9. According to Proverbs 12:1, what kind of person hates correction?
+   Type: multiple_choice
+   Options:
+      A) Proud
+      B) Stupid ✓ (Correct)
+      C) Rebellious
+      D) Ignorant
+
+10. What is the clinical definition of insanity mentioned in the text?
+   Type: multiple_choice
+   Options:
+      A) Being unable to distinguish between right and wrong
+      B) Having delusions and hearing voices that aren't there
+      C) Doing the same thing expecting a different result ✓ (Correct)
+      D) Losing touch with reality and living in a fantasy world
+
+
+📖 WEEK 2 - CHAPTER 2 - ALL 10 QUESTIONS
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+1. According to the chapter, why was Jonah opposed to God's mission for him?
+   Type: multiple_choice
+   Options:
+      A) He was bitter toward the Assyrians ✓ (Correct)
+      B) He was afraid of the journey
+      C) He didn't understand God's instructions
+      D) He was too busy with other work
+
+2. The Greek word "skandalon" mentioned in the chapter refers to:.
+   Type: multiple_choice
+   Options:
+      A) A type of ancient weapon
+      B) A lever that sets off a trap ✓ (Correct)
+      C) A Greek philosopher
+      D) A biblical manuscript
+
+3. According to the text, the Assyrians in Jonah's day were compared to:.
+   Type: multiple_choice
+   Options:
+      A) Modern-day ISIS ✓ (Correct)
+      B) Roman soldiers
+      C) Greek warriors
+      D) Egyptian pharaohs
+
+4. Who wrote the book "The Bait of Satan" mentioned in the chapter?
+   Type: multiple_choice
+   Options:
+      A) C.S. Lewis
+      B) John Bevere ✓ (Correct)
+      C) Max Lucado
+      D) Rick Warren
+
+5. According to Ephesians 4:27 cited in the chapter, anger gives:.
+   Type: multiple_choice
+   Options:
+      A) Strength to overcome enemies
+      B) Wisdom for difficult decisions
+      C) A foothold to the devil ✓ (Correct)
+      D) Peace in troubled times
+
+6. The chapter states that Cain's anger resulted in:.
+   Type: multiple_choice
+   Options:
+      A) The first murder ✓ (Correct)
+      B) His exile from Eden
+      C) The great flood
+      D) The tower of Babel
+
+7. When Peter asked Jesus how many times to forgive, Jesus replied:?
+   Type: multiple_choice
+   Options:
+      A) Seven times
+      B) Forty-nine times
+      C) Seventy times seven ✓ (Correct)
+      D) Until they stop sinning
+
+8. According to the chapter, a bitter root doesn't develop overnight but starts with:.
+   Type: multiple_choice
+   Options:
+      A) Jealousy
+      B) Being offended ✓ (Correct)
+      C) Pride
+      D) Fear
+
+9. The parable Jesus told about forgiveness involved a king and servants with debts of:.
+   Type: multiple_choice
+   Options:
+      A) Thousands and hundreds of dollars
+      B) Millions and thousands of dollars ✓ (Correct)
+      C) Gold and silver coins
+      D) Livestock and property
+
+10. The chapter mentions that expired milk becomes:.
+   Type: multiple_choice
+   Options:
+      A) Sour
+      B) Bitter ✓ (Correct)
+      C) Sweet
+      D) Thick
+
+
+📖 WEEK 3 - CHAPTER 3 - ALL 10 QUESTIONS
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+1. According to the Britannica definition quoted, depression is marked by which of the following?
+   Type: multiple_choice
+   Options:
+      A) A) Feelings of low self-worth or guilt and reduced ability to enjoy life ✓ (Correct)
+      B) B) Persistent delusions and hallucinations
+      C) C) Elevated mood and increased energy
+      D) D) Exclusively a response to bereavement
+
+2. The chapter notes that depression differs from simple grief or mourning primarily because:.
+   Type: multiple_choice
+   Options:
+      A) A) Grief involves only physical symptoms
+      B) B) Depression can be disproportionately long or severe relative to the event ✓ (Correct)
+      C) C) Mourning never includes sadness
+      D) D) Depression always has no identifiable cause
+
+3. Which is listed as a type of depression in the excerpt?
+   Type: multiple_choice
+   Options:
+      A) A) Post-traumatic amnesia
+      B) B) Generalized anxiety disorder
+      C) C) Seasonal affective disorder ✓ (Correct)
+      D) D) Obsessive-compulsive disorder
+
+4. Which of the following "solutions" does the chapter list as worldly attempts to fix depression?
+   Type: multiple_choice
+   Options:
+      A) A) Fasting only
+      B) B) Mission trips
+      C) C) Memorizing Scripture
+      D) D) Psychiatrists, drugs, drinking, relationships, even suicide ✓ (Correct)
+
+5. In Jonah 1:3-5, what did Jonah do after boarding the ship?
+   Type: multiple_choice
+   Options:
+      A) A) Went down into the sides of the ship and fell asleep ✓ (Correct)
+      B) B) Led the mariners in prayer to the Lord
+      C) C) Calmed the storm with a word
+      D) D) Turned back immediately to Nineveh
+
+6. The chapter uses Jonah's actions to illustrate that a common side effect of depression is:.
+   Type: multiple_choice
+   Options:
+      A) A) Excessive eating
+      B) B) Wanting to sleep to avoid facing life ✓ (Correct)
+      C) C) Compulsive exercise
+      D) D) Hyper-social behavior
+
+7. Ephesians 5:13-16 is quoted to say, "Awake, O sleeper..." This is used to encourage believers to:.
+   Type: multiple_choice
+   Options:
+      A) A) Hide from trials
+      B) B) Ignore their emotions
+      C) C) Live wisely and make the most of every opportunity ✓ (Correct)
+      D) D) Depend only on human strength
+
+8. The chapter compares "valleys" to depression and "hills" to:.
+   Type: multiple_choice
+   Options:
+      A) A) Punishment
+      B) B) Ordinary life
+      C) C) Uncertainty
+      D) D) Victory and God's blessing ✓ (Correct)
+
+9. Which prophetic vision is cited as an illustration of people stuck in a "valley" who are restored?
+   Type: multiple_choice
+   Options:
+      A) A) Isaiah's coal on the lips ✓ (Correct)
+      B) B) Daniel's handwriting on the wall
+      C) C) Ezekiel's valley of dry bones (Ezekiel 37)
+      D) D) Zechariah's flying scroll
+
+10. According to the chapter, the Hebrew term dĕ'agah refers to:.
+   Type: multiple_choice
+   Options:
+      A) A) Joy and peace
+      B) B) Pride and envy
+      C) C) Anxiety, fear, heaviness, or sorrow ✓ (Correct)
+      D) D) Anger and wrath
+
+
+📖 WEEK 4 - CHAPTER 4 - ALL 10 QUESTIONS
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+1. According to Proverbs 18:1 quoted in the chapter, a man who isolates himself does what?
+   Type: multiple_choice
+   Options:
+      A) A) Seeks his own desire and rages against all wise judgment ✓ (Correct)
+      B) B) Gains instant wisdom
+      C) C) Avoids every temptation
+      D) D) Becomes stronger than before
+
+2. The Hebrew word for "isolation" discussed (parad) primarily means:.
+   Type: multiple_choice
+   Options:
+      A) A) To gather and unite
+      B) B) To separate, divide, break into pieces ✓ (Correct)
+      C) C) To heal and restore
+      D) D) To celebrate publicly
+
+3. Which prophet, after being threatened by Jezebel, became isolated and asked to die?
+   Type: multiple_choice
+   Options:
+      A) A) Jeremiah
+      B) B) Isaiah
+      C) C) Elijah ✓ (Correct)
+      D) D) Amos
+
+4. When Elijah felt alone, God told him there were still how many who had not bowed to idolatry?
+   Type: multiple_choice
+   Options:
+      A) A) 300
+      B) B) 3,000
+      C) C) 5,000
+      D) D) 7,000 ✓ (Correct)
+
+5. In the chapter's example, isolation contributed to King David's:.
+   Type: multiple_choice
+   Options:
+      A) A) Adultery with Bathsheba and the arranged death of Uriah ✓ (Correct)
+      B) B) Decision to abdicate the throne
+      C) C) Exile from Israel for seven years
+      D) D) Refusal to ever repent
+
+6. The chapter teaches that the enemy seeks to isolate believers in order to:.
+   Type: multiple_choice
+   Options:
+      A) A) Improve their discipline
+      B) B) Expand their influence
+      C) C) Whisper lies and make them feel nobody cares ✓ (Correct)
+      D) D) Teach them secret wisdom
+
+7. Which passage is quoted to emphasize Jesus' presence among gathered believers?
+   Type: multiple_choice
+   Options:
+      A) A) Hebrews 10:24-25
+      B) B) Ecclesiastes 4:9-12
+      C) C) Psalm 88:4-8
+      D) D) Matthew 18:19-20 ✓ (Correct)
+
+8. Ecclesiastes 4:9-12 is used to show that:.
+   Type: multiple_choice
+   Options:
+      A) A) One is always stronger than two
+      B) B) Isolation guarantees purity
+      C) C) Two are better than one: they lift each other, keep warm, and resist attack ✓ (Correct)
+      D) D) Companionship prevents all suffering
+
+9. After the altar call testimony, what turning point did the person experience?
+   Type: multiple_choice
+   Options:
+      A) A) She decided to move to another city
+      B) B) She recognized the enemy's trap and chose to do what God wanted ✓ (Correct)
+      C) C) She committed to permanent isolation for "peace"
+      D) D) She rejected all church community
+
+10. The Psalm cited to describe the darkness of isolation during Jesus' passion is:.
+   Type: multiple_choice
+   Options:
+      A) A) Psalm 88:4-8 ✓ (Correct)
+      B) B) Psalm 27:1-3
+      C) C) Psalm 121:1-4
+      D) D) Psalm 51:10-12
+
+
+📖 WEEK 5 - CHAPTER 5 - ALL 10 QUESTIONS
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+1. According to the chapter, why was the storm against the ship in Jonah 1?
+   Type: multiple_choice
+   Options:
+      A) Because the sailors worshiped idols
+      B) Because God wanted to test the sailors
+      C) Because of Jonah’s disobedience ✓ (Correct)
+      D) Because of seasonal weather patterns
+
+2. The chapter warns that some hardships people face are actually:.
+   Type: multiple_choice
+   Options:
+      A) God’s discipline for ongoing disobedience ✓ (Correct)
+      B) Random chance with no meaning
+      C) Punishment for others’ sins only
+      D) Permanent curses that cannot change
+
+3. What key idea about suffering is highlighted from 1 Peter 4:15-19?
+   Type: multiple_choice
+   Options:
+      A) Suffering always means God is angry
+      B) Christians should never expect suffering
+      C) Only leaders suffer for righteousness
+      D) Do not suffer for wrongdoing, but if you suffer as a Christian, glorify God ✓ (Correct)
+
+4. The chapter teaches that choices we make:.
+   Type: multiple_choice
+   Options:
+      A) Don’t affect our future if we repent later
+      B) Become the future we didn’t want if we choose wrongly ✓ (Correct)
+      C) Are mostly reversible without consequence
+      D) Only matter for leaders, not ordinary believers
+
+5. Which principle from Galatians 6:7-9 is emphasized?
+   Type: multiple_choice
+   Options:
+      A) Mercy triumphs over judgment
+      B) Faith without works is dead
+      C) You reap what you sow; don’t grow weary in doing good ✓ (Correct)
+      D) Perfect love casts out fear
+
+6. According to the chapter, why might God “send storms” into His people’s lives (Psalm 83:15-16)?
+   Type: multiple_choice
+   Options:
+      A) To prove He is stronger than other gods ✓ (Correct)
+      B) To punish permanently without purpose
+      C) To expose the sailors’ lack of skill
+      D) To wake them up so they submit to His name
+
+7. What collateral effect of “unnecessary storms” does the chapter stress?
+   Type: multiple_choice
+   Options:
+      A) They only affect the person disobeying
+      B) They always lead to quick blessings for others
+      C) They are limited to finances
+      D) They also impact innocent people around us ✓ (Correct)
+
+8. In the Jonah account, what finally calmed the storm?
+   Type: multiple_choice
+   Options:
+      A) Throwing cargo overboard
+      B) Praying to the sailors’ gods
+      C) Throwing Jonah into the sea ✓ (Correct)
+      D) Lowering the sails and waiting it out
+
+9. What mistake did the sailors initially make when trying to stop the storm?
+   Type: multiple_choice
+   Options:
+      A) They turned the ship toward Tarshish
+      B) They threw out cargo instead of obeying what God required ✓ (Correct)
+      C) They jumped overboard themselves
+      D) They arrested Jonah below deck
+
+10. What repeated application does the chapter make from Jonah 1:10-15?
+   Type: multiple_choice
+   Options:
+      A) Partial obedience is acceptable during storms ✓ (Correct)
+      B) Personal vows end storms
+      C) Ignore convictions during crises
+      D) We must fully obey God and throw out everything He says to remove
+
+
+📖 WEEK 6 - CHAPTER 6 - ALL 10 QUESTIONS
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+1. In the chapter, Jonah’s description of “the belly of hell” most directly refers to which Hebrew concept?
+   Type: multiple_choice
+   Options:
+      A) Sheol ✓ (Correct)
+      B) Gehenna
+      C) Paradise
+      D) Abaddon
+
+2. According to the chapter, God sometimes withholds rain, sends locusts, or allows pestilence for what purpose?
+   Type: multiple_choice
+   Options:
+      A) To end the Old Covenant
+      B) To wake His people so they turn back to Him ✓ (Correct)
+      C) To punish the nations permanently
+      D) To display angelic power
+
+3. The chapter emphasizes that Jonah’s turnaround happened when he did what?
+   Type: multiple_choice
+   Options:
+      A) Promised to sacrifice his belongings
+      B) Blamed the sailors for his condition
+      C) Cried out to God because of his affliction and remembered the Lord ✓ (Correct)
+      D) Swore never to prophesy again
+
+4. The narrative notes Jonah’s ordeal likely included which of the following physical conditions?
+   Type: multiple_choice
+   Options:
+      A) Freezing temperatures and starvation
+      B) Blinding sunlight within the fish
+      C) Broken bones and immobilization
+      D) Acid irritation, near-drowning, and pressure at sea depths ✓ (Correct)
+
+5. In the chapter’s explanation, “those who hold on to lying vanities (idols) forsake their own mercy” means:.
+   Type: multiple_choice
+   Options:
+      A) Clinging to idols causes us to abandon the grace and mercy offered to us ✓ (Correct)
+      B) God’s mercy is too limited to reach idolaters
+      C) Idols can mediate mercy apart from God
+      D) Mercy is earned by self-denial alone
+
+6. According to the author, Revelation 2:4–5 (“you have left your first love”) teaches that:.
+   Type: multiple_choice
+   Options:
+      A) People can never lose their zeal once saved
+      B) Believers must remember, repent, and return to former deeds ✓ (Correct)
+      C) Lampstands symbolize civil authority only
+      D) Repentance is unnecessary under grace
+
+7. Titus 2:11–15 is used to show that grace:.
+   Type: multiple_choice
+   Options:
+      A) Permits more freedom to indulge
+      B) Only guarantees future forgiveness
+      C) Trains us to deny ungodliness and live righteously now ✓ (Correct)
+      D) Is mainly about ritual purity
+
+8. Ephesians 2:8–10 is cited to stress that salvation is:.
+   Type: multiple_choice
+   Options:
+      A) Earned by good works to gain boasting rights
+      B) Secured by circumcision and law-keeping
+      C) Achieved by human willpower and discipline
+      D) A gift of grace through faith, resulting in good works we walk in ✓ (Correct)
+
+9. What immediate outcome followed Jonah’s vow and thanksgiving to God?
+   Type: multiple_choice
+   Options:
+      A) The fish vomited him onto dry land ✓ (Correct)
+      B) The storm returned and intensified
+      C) The sailors imprisoned him
+      D) He remained in the fish until Nineveh repented
+
+10. The chapter’s central exhortation regarding “hell experiences” is to:.
+   Type: multiple_choice
+   Options:
+      A) Seek harsher trials to grow faster
+      B) Wait passively for circumstances to change
+      C) Let go of rebellion and idols and call on God first, not last ✓ (Correct)
+      D) Avoid prayer until desperation forces it
+
+
+📖 WEEK 7 - CHAPTER 7 - ALL 10 QUESTIONS
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+1. According to Jonah 3, how many days’ journey was Nineveh in size?
+   Type: multiple_choice
+   Options:
+      A) Three days’ journey ✓ (Correct)
+      B) One day’s journey
+      C) Seven days’ journey
+      D) Forty days’ journey
+
+2. What immediate response did the people of Nineveh have to Jonah’s message?
+   Type: multiple_choice
+   Options:
+      A) They expelled Jonah from the city
+      B) They built an altar and sacrificed animals
+      C) They believed God, proclaimed a fast, and put on sackcloth ✓ (Correct)
+      D) They ignored him for thirty-nine days
+
+3. Which specific element did the king’s decree include for both man and beast?
+   Type: multiple_choice
+   Options:
+      A) Pilgrimage to Jerusalem
+      B) Wearing of purple robes
+      C) Daily singing of psalms
+      D) No food or water; covered with sackcloth; cry mightily to God ✓ (Correct)
+
+4. On what basis did God relent from the disaster against Nineveh (Jonah 3:10)?
+   Type: multiple_choice
+   Options:
+      A) Their offerings
+      B) He saw their works—that they turned from their evil way ✓ (Correct)
+      C) The prophet’s complaints
+      D) A sign in the heavens
+
+5. The chapter uses Isaiah 1:18 to teach that “though your sins are scarlet” God can make them white. What vivid background detail is given about the color.
+   Type: multiple_choice
+   Options:
+      A) It came from rare desert flowers
+      B) It was painted with crushed gemstones
+      C) It was produced from the blood of squashed maggots (a deep, stubborn dye) ✓ (Correct)
+      D) It was only a metaphor, not a real dye
+
+6. How does the chapter connect Psalm 22’s “I am a worm” and the image of the bringing new birth?
+   Type: multiple_choice
+   Options:
+      A) The silk worm attaches to a tree, dies in giving life—pointing to Christ’s death ✓ (Correct)
+      B) Worms symbolize earthly wisdom and long life
+      C) Silk worms were used to weave priestly garments only
+      D) The phrase simply means “I feel small,” with no further symbolism
+
+7. In Jonah 4, which combination did God use to illustrate a lesson to Jonah?
+   Type: multiple_choice
+   Options:
+      A) A lion, a drought, and a river
+      B) A chariot, a storm, and a rainbow
+      C) A fig tree, a temple, and an earthquake
+      D) A plant, a worm, and a scorching east wind ✓ (Correct)
+
+8. What heart issue did God expose in Jonah after Nineveh repented?
+   Type: multiple_choice
+   Options:
+      A) Ignorance of prophecy
+      B) Lack of courage
+      C) Misplaced compassion; he cared more for his shade plant than for 120,000 ✓ (Correct)
+      D) Doubts about God’s existence
+
+9. What is the chapter’s core message about God’s character toward those who have fallen or never served Him?
+   Type: multiple_choice
+   Options:
+      A) God is a God of second chances ✓ (Correct)
+      B) God abandons those who stumble
+      C) God only restores leaders
+      D) God helps only the innocent
+
+10. What practical application does the chapter give after listing many flawed biblical figures God used?
+   Type: multiple_choice
+   Options:
+      A) Delay serving until fully perfect
+      B) No more excuses—stop running and start serving ✓ (Correct)
+      C) Compare your failures to others’ failures
+      D) Wait for a sign of fire from heaven
+
+
+📖 WEEK 8 - CHAPTER 8 - ALL 10 QUESTIONS
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+1. The chapter opens with which promise from Scripture?
+   Type: multiple_choice
+   Options:
+      A) God works all things together for the good of those who love Him (Romans ✓ (Correct)
+      B) The Lord is my shepherd; I shall not want
+      C) Blessed are the poor in spirit
+      D) Be strong and courageous
+
+2. Which phenomenon is mentioned as one possible reason Nineveh was primed?
+   Type: multiple_choice
+   Options:
+      A) A great earthquake that split the city
+      B) A plague that swept the land
+      C) A solar eclipse—“signs in the heavens”—that stirred fear and reflection ✓ (Correct)
+      D) A famine lasting forty days
+
+3. What cultural factor could have made Ninevites especially attentive to Jonah’s by a great fish?
+   Type: multiple_choice
+   Options:
+      A) Their annual Day of Atonement
+      B) Their reverence for Jerusalem’s temple
+      C) Their recent peace treaty with Israel
+      D) Their worship of Dagon, a half-man/half-fish deity, then seeing Jonah expelled ✓ (Correct)
+
+4. In the chapter’s imagery, the eclipse symbolized:.
+   Type: multiple_choice
+   Options:
+      A) God’s permanent rejection of Nineveh
+      B) Nineveh shutting out the light—allowing evil to bring darkness and disaster ✓ (Correct)
+      C) A natural event unrelated to spiritual reality
+      D) The end of prophecy in Israel
+
+5. The core refrain of the chapter is that God will:.
+   Type: multiple_choice
+   Options:
+      A) Remove all consequences for choices
+      B) Spare believers from all suffering
+      C) Turn your mess into a message for His glory ✓ (Correct)
+      D) Keep your past hidden from all people
+
+6. The genealogy of Jesus is used to show that:.
+   Type: multiple_choice
+   Options:
+      A) God can weave deeply flawed people into His redemptive plan ✓ (Correct)
+      B) Only priests were included in Messiah’s lineage
+      C) Perfect morality was a requirement for inclusion
+      D) Gentiles were excluded from His lineage
+
+7. According to Revelation 12:11 (as cited), believers overcome by:.
+   Type: multiple_choice
+   Options:
+      A) Angelic visions alone
+      B) Self-discipline and secrecy
+      C) Strict adherence to dietary laws
+      D) The blood of the Lamb and the word of their testimony ✓ (Correct)
+
+8. “Turning your whale into a taxi cab” means: destination.
+   Type: multiple_choice
+   Options:
+      A) God can use what threatened to destroy you to deliver you into His will and ✓ (Correct)
+      B) You must avoid hard situations at all costs
+      C) You should depend only on personal strength
+      D) God never uses past pain for present purpose
+
+9. Why, according to the chapter, do some people respond most powerfully to the gospel through certain messengers? opens their heart?
+   Type: multiple_choice
+   Options:
+      A) They prefer eloquence over authenticity
+      B) They only trust famous preachers
+      C) They hear from someone who endured the same struggles, whose testimony ✓ (Correct)
+      D) They respond only to miraculous signs
+
+10. What practical step does the chapter urge in light of Romans 8:28?
+   Type: multiple_choice
+   Options:
+      A) Hide your story until you’re perfect
+      B) Give your present mess to God so He can work it for good, making it your ✓ (Correct)
+      C) Wait for another sign in the heavens
+      D) Compare your pain to others before sharing
+
+
+📖 WEEK 9 - CHAPTER 9 - ALL 10 QUESTIONS
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+1. What modern location does the chapter highlight to contrast the world’s “glitz and glamor” with God’s calling?
+   Type: multiple_choice
+   Options:
+      A) Joppa (modern-day party hub) ✓ (Correct)
+      B) Nineveh (modern Mosul nightlife)
+      C) Jerusalem’s Western Wall plaza
+      D) Caesarea Maritima amphitheater
+
+2. The name “Jonah” is explained to carry a dual meaning. What are the two senses given?
+   Type: multiple_choice
+   Options:
+      A) Mercy and Judgment
+      B) Prophet and King
+      C) Fisherman and Sailor
+      D) Dove and Destruction ✓ (Correct)
+
+3. Which biblical principle is used to frame the outcomes of Jonah’s choices?
+   Type: multiple_choice
+   Options:
+      A) “Man does not live by bread alone” (Deut 8)
+      B) “You reap what you sow” (Galatians 6:7–9) ✓ (Correct)
+      C) “The just shall live by faith” (Hab 2:4)
+      D) “Perfect love casts out fear” (1 John 4:18)
+
+4. When Jonah ultimately obeyed, how does the chapter say his ministry functioned? deliverance?
+   Type: multiple_choice
+   Options:
+      A) As an example of royal leadership
+      B) As a model of temple worship
+      C) As sowing the incorruptible seed of God’s Word that led to Nineveh’s ✓ (Correct)
+      D) As a lesson in military strategy
+
+5. According to the chapter, what did Jesus say about “the sign of the times” in Matthew 16?
+   Type: multiple_choice
+   Options:
+      A) No sign would be given except the sign of the prophet Jonah ✓ (Correct)
+      B) A sign would be given through fire from heaven
+      C) A sign would be given via new temple construction
+      D) Only the wise would see signs
+
+6. Which prophetic passage is cited about “the sun turned to darkness and the moon to blood”?
+   Type: multiple_choice
+   Options:
+      A) Isaiah 40
+      B) Amos 5
+      C) Zechariah 9
+      D) Joel 2:29–31 ✓ (Correct)
+
+7. The chapter connects darkness during the crucifixion (Luke 23:44) with which historical backdrop for Jonah’s day?
+   Type: multiple_choice
+   Options:
+      A) A volcanic eruption in Italy
+      B) A drought in Judah
+      C) A total solar eclipse affecting Assyria/Nineveh (763 BCE) ✓ (Correct)
+      D) A locust invasion in Egypt
+
+8. What does the metaphor “turn your whale into a taxi cab” imply within this chapter’s context?
+   Type: multiple_choice
+   Options:
+      A) God can repurpose what threatened to destroy you to carry you into His will ✓ (Correct)
+      B) Avoid testimonies about past failures
+      C) Run from dangerous assignments
+      D) Depend on earthly status for ministry
+
+9. What contemporary event does the chapter cite as a “sign of Jonah” in our?
+   Type: multiple_choice
+   Options:
+      A) Restoration of the Sanhedrin
+      B) Discovery of the Ark of the Covenant
+      C) ISIS destroying Jonah’s tomb in Mosul ✓ (Correct)
+      D) Rebuilding of Jericho’s walls
+
+10. How does Luke 21:25–28 shape the chapter’s call to action? get ready and help others be ready?
+   Type: multiple_choice
+   Options:
+      A) Ignore cosmic signs; they are distractions
+      B) When these things begin to happen, look up—your redemption draws near—so ✓ (Correct)
+      C) Predict exact dates of the Lord’s return
+      D) Withdraw from culture entirely
+
+
+📖 WEEK 10 - CHAPTER 10 - ALL 10 QUESTIONS
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+1. According to 2 Corinthians 5:20 (as cited in the chapter), believers are called:.
+   Type: multiple_choice
+   Options:
+      A) Ambassadors for Christ ✓ (Correct)
+      B) Priests of Levi
+      C) Judges over the nations
+      D) Kings of Israel
+
+2. In the chapter’s ambassador analogy, who determines an ambassador’s assignment?
+   Type: multiple_choice
+   Options:
+      A) The ambassador himself
+      B) The president (and, by analogy, Jesus for believers) ✓ (Correct)
+      C) The embassy staff
+      D) The ambassador’s family
+
+3. Which function of an ambassador is used in the chapter to illustrate the gospel?
+   Type: multiple_choice
+   Options:
+      A) Drafting trade tariffs
+      B) Leading military escorts
+      C) Granting immunity—stopping prosecution/penalties ✓ (Correct)
+      D) Hosting state banquets
+
+4. Framed as heaven’s “ambassador,” Jesus’ mission accomplished what? hell, and the grave).
+   Type: multiple_choice
+   Options:
+      A) Abolished Roman law
+      B) Established an earthly monarchy
+      C) Revealed angelic hierarchies
+      D) Pleaded for the guilty and, by His death, grants salvation (immunity from death, ✓ (Correct)
+
+5. Ephesians 2:19 is cited to show believers are:.
+   Type: multiple_choice
+   Options:
+      A) Fellow citizens with the saints and members of God’s household ✓ (Correct)
+      B) Permanent residents of this world
+      C) Exempt from all suffering
+      D) Guaranteed public honor
+
+6. From John 15:16–17, the chapter emphasizes that Jesus:.
+   Type: multiple_choice
+   Options:
+      A) Merely observes our choices
+      B) Assigns only comfortable posts
+      C) Chooses and appoints us to go bear lasting fruit and love one another ✓ (Correct)
+      D) Releases us from any specific calling
+
+7. The Hebrew meaning of Jonah’s hometown “Gath Hepher” is given as:.
+   Type: multiple_choice
+   Options:
+      A) Fortress
+      B) Watchtower
+      C) Field of reeds
+      D) Winepress ✓ (Correct)
+
+8. The chapter notes “Nineveh” can mean:.
+   Type: multiple_choice
+   Options:
+      A) Sanctuary of kings
+      B) Refuge, a fleeing one, fugitive ✓ (Correct)
+      C) City of priests
+      D) Garden of vines
+
+9. In practical terms, the chapter portrays modern “Ninevehs” as:.
+   Type: multiple_choice
+   Options:
+      A) Quiet retreat centers
+      B) Politically powerful capitals
+      C) Dark, rejected places (inner cities, outcasts) where people least want to go ✓ (Correct)
+      D) Wealthy suburbs seeking guest speakers
+
+10. What is a “peacemaker,” as applied in this chapter?
+   Type: multiple_choice
+   Options:
+      A) One who brings rebels to reconciliation with God through the gospel ✓ (Correct)
+      B) One who avoids hard conversations
+      C) One who settles only civil disputes
+      D) One who withdraws from society
+
+
+📖 WEEK 11 - CHAPTER 11 - ALL 10 QUESTIONS
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+1. According to Proverbs 3:35 (as cited), what do the wise inherit?
+   Type: multiple_choice
+   Options:
+      A) Glory ✓ (Correct)
+      B) Wealth
+      C) Long life
+      D) Influence
+
+2. The chapter contrasts legacies: Jonah’s ends with a question mark, while Jesus’.
+   Type: multiple_choice
+   Options:
+      A) Ends in tragedy
+      B) Is limited to the apostles
+      C) Continues, commissioning disciples to change the world ✓ (Correct)
+      D) Stops at the Ascension
+
+3. Which statement best captures the author’s desired legacy?
+   Type: multiple_choice
+   Options:
+      A) To be remembered for humanitarian awards
+      B) To be known as a fearless traveler
+      C) To be celebrated for political reform
+      D) That teachings and life continue to point many to Christ after death ✓ (Correct)
+
+4. Which shocking OT event illustrates a legacy that gives life after death (2 Kings?
+   Type: multiple_choice
+   Options:
+      A) A corpse revived when it touched Elisha’s bones ✓ (Correct)
+      B) Manna fell from heaven again
+      C) The Red Sea re-opened
+      D) Jericho’s walls fell twice
+
+5. How many miracles are attributed to Elijah and Elisha respectively in the chapter’s count?
+   Type: multiple_choice
+   Options:
+      A) Elijah 10; Elisha 20
+      B) Elijah 14; Elisha 28 (double portion fulfilled at Elisha’s tomb) ✓ (Correct)
+      C) Elijah 12; Elisha 24
+      D) Elijah 7; Elisha 14
+
+6. The chapter’s call about how to “punctuate” your life’s end is to:.
+   Type: multiple_choice
+   Options:
+      A) Leave a mystery that provokes curiosity
+      B) Leave a will with strict conditions
+      C) Leave an exclamation point—living so your testimony inspires faith ✓ (Correct)
+      D) Leave a quiet life no one talks about
+
+7. What daily practice does the epilogue recommend as “only 1% of your day”?
+   Type: multiple_choice
+   Options:
+      A) Reading the Bible 15 minutes daily ✓ (Correct)
+      B) Fasting weekly
+      C) Memorizing an entire chapter daily
+      D) Attending a service twice a day
+
+8. Reading “a chapter a day” would complete the Bible in about:.
+   Type: multiple_choice
+   Options:
+      A) One year
+      B) Six months
+      C) Three and a half years ✓ (Correct)
+      D) Ten years
+
+9. The epilogue’s ambassador analogy emphasizes we must:.
+   Type: multiple_choice
+   Options:
+      A) Study international politics
+      B) Know the kingdom’s law—God’s Word—to guide others in a foreign land
+      C) Specialize in ancient languages
+      D) Master diplomatic etiquette first ✓ (Correct)
+
+10. Which contrast is NOT one of the listed Jonah–Jesus parallels?
+   Type: multiple_choice
+   Options:
+      A) Jonah’s disobedient storm vs. Jesus calming the storm
+      B) Jonah angry at grace vs. Jesus embodying grace ✓ (Correct)
+      C) Jonah causing death vs. Jesus avoiding the cross
+      D) Jonah in fish for sin vs. Jesus in the earth for our sin
+
+
+🎓 FINAL EXAM - ALL 50 QUESTIONS
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+1. According to Psalms 127:1, what happens when the Lord doesn't build the house?
+   Type: multiple_choice
+   Options:
+      A) Its builders labor in vain ✓ (Correct)
+      B) The house will eventually fall down
+      C) The builders become discouraged
+      D) Nothing good can come from it
+
+2. What does the Hebrew word for "vain" in Psalms 127:1 include in its definitions?
+   Type: multiple_choice
+   Options:
+      A) Confusion, doubt, fear, and anxiety
+      B) Worthlessness, nothingness, disaster, and emptiness ✓ (Correct)
+      C) Pride, rebellion, stubbornness, and anger
+      D) Temporary, fleeting, unstable, and uncertain
+
+3. What was God's message to Jonah regarding Nineveh?
+   Type: multiple_choice
+   Options:
+      A) Go and establish a church there for the righteous people
+      B) Travel there to learn about their customs and culture
+      C) Get up and go announce God's judgment against their wickedness ✓ (Correct)
+      D) Move there permanently to serve as their spiritual leader
+
+4. What does the Hebrew word "Joppa" mean?
+   Type: multiple_choice
+   Options:
+      A) Beautiful ✓ (Correct)
+      B) Peaceful
+      C) Safe harbor
+      D) Temporary refuge
+
+5. According to the text, what was the rich young ruler unwilling to do?
+   Type: multiple_choice
+   Options:
+      A) Follow the Ten Commandments from his youth
+      B) Let go of the beautiful things holding him back from Jesus' call ✓ (Correct)
+      C) Acknowledge Jesus as a good teacher
+      D) Kneel down before Jesus in respect
+
+6. According to the chapter, why was Jonah opposed to God's mission for him?
+   Type: multiple_choice
+   Options:
+      A) He was bitter toward the Assyrians ✓ (Correct)
+      B) He was afraid of the journey
+      C) He didn't understand God's instructions
+      D) He was too busy with other work
+
+7. The Greek word "skandalon" mentioned in the chapter refers to:.
+   Type: multiple_choice
+   Options:
+      A) A type of ancient weapon
+      B) A lever that sets off a trap ✓ (Correct)
+      C) A Greek philosopher
+      D) A biblical manuscript
+
+8. According to the text, the Assyrians in Jonah's day were compared to:.
+   Type: multiple_choice
+   Options:
+      A) Modern-day ISIS ✓ (Correct)
+      B) Roman soldiers
+      C) Greek warriors
+      D) Egyptian pharaohs
+
+9. Who wrote the book "The Bait of Satan" mentioned in the chapter?
+   Type: multiple_choice
+   Options:
+      A) C.S. Lewis
+      B) John Bevere ✓ (Correct)
+      C) Max Lucado
+      D) Rick Warren
+
+10. According to Ephesians 4:27 cited in the chapter, anger gives:.
+   Type: multiple_choice
+   Options:
+      A) Strength to overcome enemies
+      B) Wisdom for difficult decisions
+      C) A foothold to the devil ✓ (Correct)
+      D) Peace in troubled times
+
+11. According to the Britannica definition quoted, depression is marked by which of the following?
+   Type: multiple_choice
+   Options:
+      A) A) Feelings of low self-worth or guilt and reduced ability to enjoy life ✓ (Correct)
+      B) B) Persistent delusions and hallucinations
+      C) C) Elevated mood and increased energy
+      D) D) Exclusively a response to bereavement
+
+12. The chapter notes that depression differs from simple grief or mourning primarily because:.
+   Type: multiple_choice
+   Options:
+      A) A) Grief involves only physical symptoms
+      B) B) Depression can be disproportionately long or severe relative to the event ✓ (Correct)
+      C) C) Mourning never includes sadness
+      D) D) Depression always has no identifiable cause
+
+13. Which is listed as a type of depression in the excerpt?
+   Type: multiple_choice
+   Options:
+      A) A) Post-traumatic amnesia
+      B) B) Generalized anxiety disorder
+      C) C) Seasonal affective disorder ✓ (Correct)
+      D) D) Obsessive-compulsive disorder
+
+14. Which of the following "solutions" does the chapter list as worldly attempts to fix depression?
+   Type: multiple_choice
+   Options:
+      A) A) Fasting only
+      B) B) Mission trips
+      C) C) Memorizing Scripture
+      D) D) Psychiatrists, drugs, drinking, relationships, even suicide ✓ (Correct)
+
+15. In Jonah 1:3-5, what did Jonah do after boarding the ship?
+   Type: multiple_choice
+   Options:
+      A) A) Went down into the sides of the ship and fell asleep ✓ (Correct)
+      B) B) Led the mariners in prayer to the Lord
+      C) C) Calmed the storm with a word
+      D) D) Turned back immediately to Nineveh
+
+16. According to Proverbs 18:1 quoted in the chapter, a man who isolates himself does what?
+   Type: multiple_choice
+   Options:
+      A) A) Seeks his own desire and rages against all wise judgment ✓ (Correct)
+      B) B) Gains instant wisdom
+      C) C) Avoids every temptation
+      D) D) Becomes stronger than before
+
+17. The Hebrew word for "isolation" discussed (parad) primarily means:.
+   Type: multiple_choice
+   Options:
+      A) A) To gather and unite
+      B) B) To separate, divide, break into pieces ✓ (Correct)
+      C) C) To heal and restore
+      D) D) To celebrate publicly
+
+18. Which prophet, after being threatened by Jezebel, became isolated and asked to die?
+   Type: multiple_choice
+   Options:
+      A) A) Jeremiah
+      B) B) Isaiah
+      C) C) Elijah ✓ (Correct)
+      D) D) Amos
+
+19. When Elijah felt alone, God told him there were still how many who had not bowed to idolatry?
+   Type: multiple_choice
+   Options:
+      A) A) 300
+      B) B) 3,000
+      C) C) 5,000
+      D) D) 7,000 ✓ (Correct)
+
+20. In the chapter's example, isolation contributed to King David's:.
+   Type: multiple_choice
+   Options:
+      A) A) Adultery with Bathsheba and the arranged death of Uriah ✓ (Correct)
+      B) B) Decision to abdicate the throne
+      C) C) Exile from Israel for seven years
+      D) D) Refusal to ever repent
+
+21. According to the chapter, why was the storm against the ship in Jonah 1?
+   Type: multiple_choice
+   Options:
+      A) Because the sailors worshiped idols
+      B) Because God wanted to test the sailors
+      C) Because of Jonah’s disobedience ✓ (Correct)
+      D) Because of seasonal weather patterns
+
+22. The chapter warns that some hardships people face are actually:.
+   Type: multiple_choice
+   Options:
+      A) God’s discipline for ongoing disobedience ✓ (Correct)
+      B) Random chance with no meaning
+      C) Punishment for others’ sins only
+      D) Permanent curses that cannot change
+
+23. What key idea about suffering is highlighted from 1 Peter 4:15-19?
+   Type: multiple_choice
+   Options:
+      A) Suffering always means God is angry
+      B) Christians should never expect suffering
+      C) Only leaders suffer for righteousness
+      D) Do not suffer for wrongdoing, but if you suffer as a Christian, glorify God ✓ (Correct)
+
+24. The chapter teaches that choices we make:.
+   Type: multiple_choice
+   Options:
+      A) Don’t affect our future if we repent later
+      B) Become the future we didn’t want if we choose wrongly ✓ (Correct)
+      C) Are mostly reversible without consequence
+      D) Only matter for leaders, not ordinary believers
+
+25. Which principle from Galatians 6:7-9 is emphasized?
+   Type: multiple_choice
+   Options:
+      A) Mercy triumphs over judgment
+      B) Faith without works is dead
+      C) You reap what you sow; don’t grow weary in doing good ✓ (Correct)
+      D) Perfect love casts out fear
+
+26. In the chapter, Jonah’s description of “the belly of hell” most directly refers to which Hebrew concept?
+   Type: multiple_choice
+   Options:
+      A) Sheol ✓ (Correct)
+      B) Gehenna
+      C) Paradise
+      D) Abaddon
+
+27. According to the chapter, God sometimes withholds rain, sends locusts, or allows pestilence for what purpose?
+   Type: multiple_choice
+   Options:
+      A) To end the Old Covenant
+      B) To wake His people so they turn back to Him ✓ (Correct)
+      C) To punish the nations permanently
+      D) To display angelic power
+
+28. The chapter emphasizes that Jonah’s turnaround happened when he did what?
+   Type: multiple_choice
+   Options:
+      A) Promised to sacrifice his belongings
+      B) Blamed the sailors for his condition
+      C) Cried out to God because of his affliction and remembered the Lord ✓ (Correct)
+      D) Swore never to prophesy again
+
+29. The narrative notes Jonah’s ordeal likely included which of the following physical conditions?
+   Type: multiple_choice
+   Options:
+      A) Freezing temperatures and starvation
+      B) Blinding sunlight within the fish
+      C) Broken bones and immobilization
+      D) Acid irritation, near-drowning, and pressure at sea depths ✓ (Correct)
+
+30. In the chapter’s explanation, “those who hold on to lying vanities (idols) forsake their own mercy” means:.
+   Type: multiple_choice
+   Options:
+      A) Clinging to idols causes us to abandon the grace and mercy offered to us ✓ (Correct)
+      B) God’s mercy is too limited to reach idolaters
+      C) Idols can mediate mercy apart from God
+      D) Mercy is earned by self-denial alone
+
+31. According to Jonah 3, how many days’ journey was Nineveh in size?
+   Type: multiple_choice
+   Options:
+      A) Three days’ journey ✓ (Correct)
+      B) One day’s journey
+      C) Seven days’ journey
+      D) Forty days’ journey
+
+32. What immediate response did the people of Nineveh have to Jonah’s message?
+   Type: multiple_choice
+   Options:
+      A) They expelled Jonah from the city
+      B) They built an altar and sacrificed animals
+      C) They believed God, proclaimed a fast, and put on sackcloth ✓ (Correct)
+      D) They ignored him for thirty-nine days
+
+33. Which specific element did the king’s decree include for both man and beast?
+   Type: multiple_choice
+   Options:
+      A) Pilgrimage to Jerusalem
+      B) Wearing of purple robes
+      C) Daily singing of psalms
+      D) No food or water; covered with sackcloth; cry mightily to God ✓ (Correct)
+
+34. On what basis did God relent from the disaster against Nineveh (Jonah 3:10)?
+   Type: multiple_choice
+   Options:
+      A) Their offerings
+      B) He saw their works—that they turned from their evil way ✓ (Correct)
+      C) The prophet’s complaints
+      D) A sign in the heavens
+
+35. The chapter uses Isaiah 1:18 to teach that “though your sins are scarlet” God can make them white. What vivid background detail is given about the color.
+   Type: multiple_choice
+   Options:
+      A) It came from rare desert flowers
+      B) It was painted with crushed gemstones
+      C) It was produced from the blood of squashed maggots (a deep, stubborn dye) ✓ (Correct)
+      D) It was only a metaphor, not a real dye
+
+36. The chapter opens with which promise from Scripture?
+   Type: multiple_choice
+   Options:
+      A) God works all things together for the good of those who love Him (Romans ✓ (Correct)
+      B) The Lord is my shepherd; I shall not want
+      C) Blessed are the poor in spirit
+      D) Be strong and courageous
+
+37. Which phenomenon is mentioned as one possible reason Nineveh was primed?
+   Type: multiple_choice
+   Options:
+      A) A great earthquake that split the city
+      B) A plague that swept the land
+      C) A solar eclipse—“signs in the heavens”—that stirred fear and reflection ✓ (Correct)
+      D) A famine lasting forty days
+
+38. What cultural factor could have made Ninevites especially attentive to Jonah’s by a great fish?
+   Type: multiple_choice
+   Options:
+      A) Their annual Day of Atonement
+      B) Their reverence for Jerusalem’s temple
+      C) Their recent peace treaty with Israel
+      D) Their worship of Dagon, a half-man/half-fish deity, then seeing Jonah expelled ✓ (Correct)
+
+39. In the chapter’s imagery, the eclipse symbolized:.
+   Type: multiple_choice
+   Options:
+      A) God’s permanent rejection of Nineveh
+      B) Nineveh shutting out the light—allowing evil to bring darkness and disaster ✓ (Correct)
+      C) A natural event unrelated to spiritual reality
+      D) The end of prophecy in Israel
+
+40. The core refrain of the chapter is that God will:.
+   Type: multiple_choice
+   Options:
+      A) Remove all consequences for choices
+      B) Spare believers from all suffering
+      C) Turn your mess into a message for His glory ✓ (Correct)
+      D) Keep your past hidden from all people
+
+41. What modern location does the chapter highlight to contrast the world’s “glitz and glamor” with God’s calling?
+   Type: multiple_choice
+   Options:
+      A) Joppa (modern-day party hub) ✓ (Correct)
+      B) Nineveh (modern Mosul nightlife)
+      C) Jerusalem’s Western Wall plaza
+      D) Caesarea Maritima amphitheater
+
+42. The name “Jonah” is explained to carry a dual meaning. What are the two senses given?
+   Type: multiple_choice
+   Options:
+      A) Mercy and Judgment
+      B) Prophet and King
+      C) Fisherman and Sailor
+      D) Dove and Destruction ✓ (Correct)
+
+43. Which biblical principle is used to frame the outcomes of Jonah’s choices?
+   Type: multiple_choice
+   Options:
+      A) “Man does not live by bread alone” (Deut 8)
+      B) “You reap what you sow” (Galatians 6:7–9) ✓ (Correct)
+      C) “The just shall live by faith” (Hab 2:4)
+      D) “Perfect love casts out fear” (1 John 4:18)
+
+44. When Jonah ultimately obeyed, how does the chapter say his ministry functioned? deliverance?
+   Type: multiple_choice
+   Options:
+      A) As an example of royal leadership
+      B) As a model of temple worship
+      C) As sowing the incorruptible seed of God’s Word that led to Nineveh’s ✓ (Correct)
+      D) As a lesson in military strategy
+
+45. According to the chapter, what did Jesus say about “the sign of the times” in Matthew 16?
+   Type: multiple_choice
+   Options:
+      A) No sign would be given except the sign of the prophet Jonah ✓ (Correct)
+      B) A sign would be given through fire from heaven
+      C) A sign would be given via new temple construction
+      D) Only the wise would see signs
+
+46. According to 2 Corinthians 5:20 (as cited in the chapter), believers are called:.
+   Type: multiple_choice
+   Options:
+      A) Ambassadors for Christ ✓ (Correct)
+      B) Priests of Levi
+      C) Judges over the nations
+      D) Kings of Israel
+
+47. In the chapter’s ambassador analogy, who determines an ambassador’s assignment?
+   Type: multiple_choice
+   Options:
+      A) The ambassador himself
+      B) The president (and, by analogy, Jesus for believers) ✓ (Correct)
+      C) The embassy staff
+      D) The ambassador’s family
+
+48. Which function of an ambassador is used in the chapter to illustrate the gospel?
+   Type: multiple_choice
+   Options:
+      A) Drafting trade tariffs
+      B) Leading military escorts
+      C) Granting immunity—stopping prosecution/penalties ✓ (Correct)
+      D) Hosting state banquets
+
+49. Framed as heaven’s “ambassador,” Jesus’ mission accomplished what? hell, and the grave).
+   Type: multiple_choice
+   Options:
+      A) Abolished Roman law
+      B) Established an earthly monarchy
+      C) Revealed angelic hierarchies
+      D) Pleaded for the guilty and, by His death, grants salvation (immunity from death, ✓ (Correct)
+
+50. Ephesians 2:19 is cited to show believers are:.
+   Type: multiple_choice
+   Options:
+      A) Fellow citizens with the saints and members of God’s household ✓ (Correct)
+      B) Permanent residents of this world
+      C) Exempt from all suffering
+      D) Guaranteed public honor
+
+
+📊 AUDIT SUMMARY
+====================================================================================================
+✅ Total Weekly Quizzes: 11
+✅ Total Final Exam: 1
+✅ Total Questions: 160
+
+📝 Next Steps:
+   1. Review each week's questions to ensure they match the corresponding chapter
+   2. Verify that questions accurately reflect chapter content
+   3. If questions don't match, provide the textbook chapters for review
+   4. Questions can be updated based on the actual chapter content
