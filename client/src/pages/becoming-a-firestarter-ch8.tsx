@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Play, Pause, SkipBack, SkipForward, Volume2 } from "lucide-react";
+import { getAudioUrl } from "@/lib/audio-storage";
 import {
   Paragraph,
   BlueSection,
@@ -24,7 +25,7 @@ export default function BecomingAFireStarterCh8() {
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
   const audioRef = useRef<HTMLAudioElement>(null);
-  const audioSrc = "/uploads/firestarter-audio/fire-starter-cp8.mp3";
+  const audioSrc = getAudioUrl('firestarter/fire-starter-cp8.mp3');
 
   useEffect(() => {
     const audio = audioRef.current;

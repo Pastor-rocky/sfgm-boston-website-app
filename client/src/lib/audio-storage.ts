@@ -27,15 +27,6 @@ const getAudioBaseUrl = (): string => {
 export const getAudioUrl = (filename: string): string => {
   const baseUrl = getAudioBaseUrl();
   
-  // If using R2, ensure filename is just the filename (no path)
-  if (baseUrl.startsWith('http')) {
-    // R2 URL - encode filename for URL (handles spaces, emoji, etc.)
-    const encodedFilename = encodeURIComponent(filename);
-    const fullUrl = `${baseUrl}/${encodedFilename}`;
-    console.log('[Audio Storage] Generated R2 URL:', fullUrl);
-    return fullUrl;
-  }
-  
   // Local URL - use the path as-is
   // If filename already includes path, use it; otherwise prepend baseUrl
   if (filename.startsWith('/')) {
@@ -43,11 +34,26 @@ export const getAudioUrl = (filename: string): string => {
     return filename;
   }
   
-  // For local files, convert emoji names to URL-safe names
-  // R2 uses emoji names, but local files use URL-safe names
-  // Match pattern: "Act in Action 🎬  Cp" followed by digits and ".mp3"
+  // If using R2, handle R2 paths (may include subfolder like "firestarter/")
+  if (baseUrl.startsWith('http')) {
+    // R2 URL - encode the full path for URL (handles spaces, emoji, subfolders, etc.)
+    // For firestarter, keep the path: firestarter/fire-starter-cp1.mp3
+    // For Acts, filename is already correct
+    const encodedPath = filename.split('/').map(part => encodeURIComponent(part)).join('/');
+    const fullUrl = `${baseUrl}/${encodedPath}`;
+    console.log('[Audio Storage] Generated R2 URL:', fullUrl);
+    return fullUrl;
+  }
+  
+  // For local files, convert paths and emoji names to URL-safe names
   let localFilename = filename;
-  if (filename.includes('Act in Action') && filename.includes('🎬')) {
+  
+  // Handle Fire Starter files from R2 (firestarter/fire-starter-cpX.mp3) -> local (fire-starter-cpX.mp3)
+  if (filename.startsWith('firestarter/')) {
+    localFilename = filename.replace('firestarter/', '');
+  }
+  // Handle Acts in Action emoji names
+  else if (filename.includes('Act in Action') && filename.includes('🎬')) {
     const match = filename.match(/Act in Action 🎬  Cp(\d+)\.mp3/i);
     if (match && match[1]) {
       localFilename = `acts-in-action-cp${match[1]}.mp3`;
