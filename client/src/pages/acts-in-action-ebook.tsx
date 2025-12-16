@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Play, Pause, SkipBack, SkipForward, ArrowLeft, Volume2, Download } from "lucide-react";
+import { getAudioUrl } from "@/lib/audio-storage";
 import {
   SectionHeading,
   BlueSection,
@@ -36,16 +37,16 @@ export default function ActsInActionEbook() {
   const [currentChapter, setCurrentChapter] = useState(1);
 
   const chapters = [
-    { id: 1, title: "Chapter 1: Preparation and Launch", audioUrl: "/uploads/textbook-audio/acts-in-action-cp1.mp3" },
-    { id: 2, title: "Chapter 2: Power and Opposition", audioUrl: "/uploads/textbook-audio/acts-in-action-cp2.mp3" },
-    { id: 3, title: "Chapter 3: Crisis and Growth", audioUrl: "/uploads/textbook-audio/acts-in-action-cp3.mp3" },
-    { id: 4, title: "Chapter 4: Expansion and Conversion", audioUrl: "/uploads/textbook-audio/acts-in-action-cp4.mp3" },
-    { id: 5, title: "Chapter 5: Breaking Barriers", audioUrl: "/uploads/textbook-audio/acts-in-action-cp5.mp3" },
-    { id: 6, title: "Chapter 6: The First Missionary Journey", audioUrl: "/uploads/textbook-audio/acts-in-action-cp6.mp3" },
-    { id: 7, title: "Chapter 7: European Expansion", audioUrl: "/uploads/textbook-audio/acts-in-action-cp7.mp3" },
-    { id: 8, title: "Chapter 8: Ephesian Ministry", audioUrl: "/uploads/textbook-audio/acts-in-action-cp8.mp3" },
-    { id: 9, title: "Chapter 9: Trials and Testimony", audioUrl: "/uploads/textbook-audio/acts-in-action-cp9.mp3" },
-    { id: 10, title: "Chapter 10: Rome and Beyond", audioUrl: "/uploads/textbook-audio/acts-in-action-cp10.mp3" }
+    { id: 1, title: "Chapter 1: Preparation and Launch", audioUrl: getAudioUrl('acts-in-action-cp1.mp3') },
+    { id: 2, title: "Chapter 2: Power and Opposition", audioUrl: getAudioUrl('acts-in-action-cp2.mp3') },
+    { id: 3, title: "Chapter 3: Crisis and Growth", audioUrl: getAudioUrl('acts-in-action-cp3.mp3') },
+    { id: 4, title: "Chapter 4: Expansion and Conversion", audioUrl: getAudioUrl('acts-in-action-cp4.mp3') },
+    { id: 5, title: "Chapter 5: Breaking Barriers", audioUrl: getAudioUrl('acts-in-action-cp5.mp3') },
+    { id: 6, title: "Chapter 6: The First Missionary Journey", audioUrl: getAudioUrl('acts-in-action-cp6.mp3') },
+    { id: 7, title: "Chapter 7: European Expansion", audioUrl: getAudioUrl('acts-in-action-cp7.mp3') },
+    { id: 8, title: "Chapter 8: Ephesian Ministry", audioUrl: getAudioUrl('acts-in-action-cp8.mp3') },
+    { id: 9, title: "Chapter 9: Trials and Testimony", audioUrl: getAudioUrl('acts-in-action-cp9.mp3') },
+    { id: 10, title: "Chapter 10: Rome and Beyond", audioUrl: getAudioUrl('acts-in-action-cp10.mp3') }
   ];
 
   const currentChapterData = chapters[currentChapter - 1];
