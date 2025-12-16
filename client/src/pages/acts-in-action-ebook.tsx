@@ -1868,6 +1868,7 @@ export default function ActsInActionEbook() {
 
               <audio
                 ref={audioRef}
+                src={currentChapterData.audioUrl}
                 onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
                 onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
                 onEnded={() => setIsPlaying(false)}
