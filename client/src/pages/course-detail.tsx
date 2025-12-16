@@ -140,6 +140,52 @@ export default function CourseDetail() {
             )}
           </p>
 
+          {/* Audio Chapters Section for Fire Starter Course */}
+          {id === '2' && (
+            <div className="max-w-4xl mx-auto mb-8">
+              <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+                <CardHeader>
+                  <CardTitle className="text-white text-xl md:text-2xl text-center">📻 Audio Chapters</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+                    {[
+                      { num: 1, title: 'Ch 1' },
+                      { num: 2, title: 'Ch 2' },
+                      { num: 3, title: 'Ch 3' },
+                      { num: 4, title: 'Ch 4' },
+                      { num: 5, title: 'Ch 5' },
+                      { num: 6, title: 'Ch 6' },
+                      { num: 7, title: 'Ch 7' },
+                      { num: 8, title: 'Ch 8' },
+                      { num: 9, title: 'Ch 9' },
+                      { num: 10, title: 'Ch 10' },
+                    ].map((chapter) => {
+                      // Use R2 bucket path: firestarter/fire-starter-cpX.mp3
+                      const audioFileName = `firestarter/fire-starter-cp${chapter.num}.mp3`;
+                      const audioUrl = import.meta.env.VITE_R2_PUBLIC_URL 
+                        ? `${import.meta.env.VITE_R2_PUBLIC_URL}/${encodeURIComponent(audioFileName)}`
+                        : `/uploads/textbook-audio/fire-starter-cp${chapter.num}.mp3`;
+                      
+                      return (
+                        <a
+                          key={chapter.num}
+                          href={audioUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="bg-white/20 hover:bg-white/30 border border-white/30 rounded-lg p-3 text-center transition-all duration-200 hover:scale-105"
+                        >
+                          <div className="text-white font-semibold text-sm md:text-base">{chapter.title}</div>
+                          <div className="text-white/80 text-xs mt-1">🎵 Audio</div>
+                        </a>
+                      );
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
           {/* Enrollment Status & Quick Info Badges - Moved to top for prominence */}
           <div className="flex flex-col items-center gap-4 mb-8">
             {/* Enrollment Badge/Button */}
