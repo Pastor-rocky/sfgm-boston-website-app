@@ -48,18 +48,7 @@ export function registerCourseRoutes(app: Express) {
     }
   });
 
-  router.get("/api/courses/:courseId/videos", async (req: Request, res: Response) => {
-    try {
-      const courseId = parseInt(req.params.courseId);
-      const videos = await storage.getCourseVideos(courseId);
-      res.json(videos);
-    } catch (error) {
-      console.error("Error fetching videos:", error);
-      res.status(500).json({ message: "Failed to fetch videos" });
-    }
-  });
-
-  // Admin endpoint to remove incorrect videos from Course 1
+  // Admin endpoint to remove incorrect videos from Course 1 (must come before parameterized route)
   router.delete("/api/courses/1/videos/cleanup", requireAuth, async (req: Request, res: Response) => {
     try {
       const user = (req as any).user;
@@ -96,6 +85,17 @@ export function registerCourseRoutes(app: Express) {
     } catch (error: any) {
       console.error("Error removing videos:", error);
       res.status(500).json({ message: "Failed to remove videos", error: error?.message || String(error) });
+    }
+  });
+
+  router.get("/api/courses/:courseId/videos", async (req: Request, res: Response) => {
+    try {
+      const courseId = parseInt(req.params.courseId);
+      const videos = await storage.getCourseVideos(courseId);
+      res.json(videos);
+    } catch (error) {
+      console.error("Error fetching videos:", error);
+      res.status(500).json({ message: "Failed to fetch videos" });
     }
   });
 
