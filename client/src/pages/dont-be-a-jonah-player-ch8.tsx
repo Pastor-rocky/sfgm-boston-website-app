@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Play, Pause, SkipBack, SkipForward, ArrowLeft, Volume2 } from "lucide-react";
+import { getAudioUrl } from "@/lib/audio-storage";
 import chapter8Text from "./content/dont-be-a-jonah-ch8.txt?raw";
 
 export default function DontBeAJonahPlayerCh8() {
@@ -95,7 +96,7 @@ export default function DontBeAJonahPlayerCh8() {
 
               <audio
                 ref={audioRef}
-                src="/uploads/textbook-audio/dont-be-a-jonah-ch8.mp3"
+                src={getAudioUrl('dont-be-a-jonah-ch8.mp3')}
                 preload="auto"
                 onLoadedMetadata={() => setDuration(audioRef.current?.duration || 0)}
                 onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime || 0)}

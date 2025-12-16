@@ -6,6 +6,7 @@ import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Play, Pause, SkipBack, SkipForward, ArrowLeft, Volume2, Download } from "lucide-react";
 import { AudioPlayerTextTemplate } from "@/components/audio-player-text-template";
+import { getAudioUrl } from "@/lib/audio-storage";
 
 export default function DontBeAJonahCompleteBook() {
   const [, setLocation] = useLocation();
@@ -23,17 +24,17 @@ export default function DontBeAJonahCompleteBook() {
   const [currentChapter, setCurrentChapter] = useState(1);
 
   const chapters = [
-    { id: 1, title: "Chapter 1: Fighting Against God", audioUrl: "/uploads/textbook-audio/dont-be-a-jonah-ch1.mp3" },
-    { id: 2, title: "Chapter 2: The Bitter Root", audioUrl: "/uploads/textbook-audio/dont-be-a-jonah-ch2.mp3" },
-    { id: 3, title: "Chapter 3: Deep Depression", audioUrl: "/uploads/textbook-audio/dont-be-a-jonah-ch3.mp3" },
-    { id: 4, title: "Chapter 4: The Isolation Trap", audioUrl: "/uploads/textbook-audio/dont-be-a-jonah-ch4.mp3" },
-    { id: 5, title: "Chapter 5: Unnecessary Storms", audioUrl: "/uploads/textbook-audio/dont-be-a-jonah-ch5.mp3" },
-    { id: 6, title: "Chapter 6: Hell No, Let's Go", audioUrl: "/uploads/textbook-audio/dont-be-a-jonah-ch6.mp3" },
-    { id: 7, title: "Chapter 7: God of Second Chances", audioUrl: "/uploads/textbook-audio/dont-be-a-jonah-ch7.mp3" },
-    { id: 8, title: "Chapter 8: Your Mess is a Message", audioUrl: "/uploads/textbook-audio/dont-be-a-jonah-ch8.mp3" },
-    { id: 9, title: "Chapter 9: Signs of Jonah", audioUrl: "/uploads/textbook-audio/dont-be-a-jonah-ch9.mp3" },
-    { id: 10, title: "Chapter 10: Where is Your Nineveh?", audioUrl: "/uploads/textbook-audio/dont-be-a-jonah-ch10.mp3" },
-    { id: 11, title: "Chapter 11: Leaving a Legacy", audioUrl: "/uploads/textbook-audio/dont-be-a-jonah-ch11.mp3" }
+    { id: 1, title: "Chapter 1: Fighting Against God", audioUrl: getAudioUrl('dont-be-a-jonah-ch1.mp3') },
+    { id: 2, title: "Chapter 2: The Bitter Root", audioUrl: getAudioUrl('dont-be-a-jonah-ch2.mp3') },
+    { id: 3, title: "Chapter 3: Deep Depression", audioUrl: getAudioUrl('dont-be-a-jonah-ch3.mp3') },
+    { id: 4, title: "Chapter 4: The Isolation Trap", audioUrl: getAudioUrl('dont-be-a-jonah-ch4.mp3') },
+    { id: 5, title: "Chapter 5: Unnecessary Storms", audioUrl: getAudioUrl('dont-be-a-jonah-ch5.mp3') },
+    { id: 6, title: "Chapter 6: Hell No, Let's Go", audioUrl: getAudioUrl('dont-be-a-jonah-ch6.mp3') },
+    { id: 7, title: "Chapter 7: God of Second Chances", audioUrl: getAudioUrl('dont-be-a-jonah-ch7.mp3') },
+    { id: 8, title: "Chapter 8: Your Mess is a Message", audioUrl: getAudioUrl('dont-be-a-jonah-ch8.mp3') },
+    { id: 9, title: "Chapter 9: Signs of Jonah", audioUrl: getAudioUrl('dont-be-a-jonah-ch9.mp3') },
+    { id: 10, title: "Chapter 10: Where is Your Nineveh?", audioUrl: getAudioUrl('dont-be-a-jonah-ch10.mp3') },
+    { id: 11, title: "Chapter 11: Leaving a Legacy", audioUrl: getAudioUrl('dont-be-a-jonah-ch11.mp3') }
   ];
 
   const currentChapterData = chapters[currentChapter - 1];
