@@ -151,7 +151,7 @@ const ActsAudioPlayer: React.FC = () => {
 
               <audio
                 ref={audioRef}
-                src="/uploads/textbook-audio/acts-in-action-cp1.mp3"
+                src="/uploads/textbook-audio/acts-in-action-intro.mp3"
                 preload="auto"
                 onLoadedMetadata={() => {
                   if (audioRef.current) {
@@ -164,10 +164,12 @@ const ActsAudioPlayer: React.FC = () => {
                   }
                 }}
                 onLoadedData={() => {
-                  console.log('Audio loaded successfully:', '/uploads/textbook-audio/acts-in-action-cp1.mp3');
+                  console.log('Audio loaded successfully:', '/uploads/textbook-audio/acts-in-action-intro.mp3');
                 }}
                 onError={(e) => {
                   console.error('Audio loading error:', e);
+                  console.error('Audio element:', audioRef.current);
+                  console.error('Audio src:', audioRef.current?.src);
                   toast({
                     title: 'Audio Error',
                     description: 'Failed to load audio file. Please check your connection and try again.',
