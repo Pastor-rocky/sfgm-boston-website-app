@@ -115,7 +115,7 @@ export default function CourseDetail() {
                     id === "8" ? "/sfgm-youth-ministry-cover.png" :
                     "/course-cover-placeholder.png"} 
               alt={`${(course as any)?.name || 'Course'} Cover`}
-              className={`${id === "6" || id === "7" || id === "8" ? "w-48 h-48 md:w-72 md:h-72" : "w-40 h-52 md:w-48 md:h-64"} object-contain rounded-lg shadow-2xl border-4 border-white/20 mx-auto`}
+              className={`${id === "6" || id === "7" || id === "8" ? "w-48 h-48 md:w-72 md:h-72" : "w-48 h-64 md:w-56 md:h-80"} object-contain rounded-lg shadow-2xl border-4 border-white/20 mx-auto`}
             />
           </div>
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 md:mb-6 mobile-heading">
@@ -139,52 +139,6 @@ export default function CourseDetail() {
               (course as any)?.description || "No description available"
             )}
           </p>
-
-          {/* Audio Chapters Section for Fire Starter Course */}
-          {id === '2' && (
-            <div className="max-w-4xl mx-auto mb-8">
-              <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-                <CardHeader>
-                  <CardTitle className="text-white text-xl md:text-2xl text-center">📻 Audio Chapters</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-                    {[
-                      { num: 1, title: 'Ch 1' },
-                      { num: 2, title: 'Ch 2' },
-                      { num: 3, title: 'Ch 3' },
-                      { num: 4, title: 'Ch 4' },
-                      { num: 5, title: 'Ch 5' },
-                      { num: 6, title: 'Ch 6' },
-                      { num: 7, title: 'Ch 7' },
-                      { num: 8, title: 'Ch 8' },
-                      { num: 9, title: 'Ch 9' },
-                      { num: 10, title: 'Ch 10' },
-                    ].map((chapter) => {
-                      // Use R2 bucket path: firestarter/fire-starter-cpX.mp3
-                      const audioFileName = `firestarter/fire-starter-cp${chapter.num}.mp3`;
-                      const audioUrl = import.meta.env.VITE_R2_PUBLIC_URL 
-                        ? `${import.meta.env.VITE_R2_PUBLIC_URL}/${encodeURIComponent(audioFileName)}`
-                        : `/uploads/textbook-audio/fire-starter-cp${chapter.num}.mp3`;
-                      
-                      return (
-                        <a
-                          key={chapter.num}
-                          href={audioUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="bg-white/20 hover:bg-white/30 border border-white/30 rounded-lg p-3 text-center transition-all duration-200 hover:scale-105"
-                        >
-                          <div className="text-white font-semibold text-sm md:text-base">{chapter.title}</div>
-                          <div className="text-white/80 text-xs mt-1">🎵 Audio</div>
-                        </a>
-                      );
-                    })}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          )}
 
           {/* Enrollment Status & Quick Info Badges - Moved to top for prominence */}
           <div className="flex flex-col items-center gap-4 mb-8">
