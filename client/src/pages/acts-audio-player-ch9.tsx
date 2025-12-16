@@ -28,7 +28,7 @@ const ActsAudioPlayerCh9: React.FC = () => {
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const audioSrc = '/uploads/textbook-audio/Act in Action 🎬  Cp9.mp3';
+  const audioSrc = '/uploads/textbook-audio/acts-in-action-cp9.mp3';
   const localStorageKey = 'audio_progress_acts_ch9';
 
   useEffect(() => {

@@ -31,7 +31,7 @@ const ActsAudioPlayerCh2: React.FC = () => {
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
   // Single combined audio file
-  const audioSrc = '/uploads/textbook-audio/Act in Action 🎬  Cp2.mp3';
+  const audioSrc = '/uploads/textbook-audio/acts-in-action-cp2.mp3';
   const localStorageKey = 'audio_progress_acts_ch2';
   const [isLoading, setIsLoading] = useState(false);
 
