@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { getAudioUrl } from "@/lib/audio-storage";
 
 
 export default function CourseDetail() {
@@ -105,7 +106,7 @@ export default function CourseDetail() {
           <div className="flex justify-center mb-4 md:mb-6">
             <img 
               src={id === "1" ? "/acts-in-action-cover.png" : 
-                    id === "2" ? "/becoming-a-fire-starter-cover.jpeg" :
+                    id === "2" ? "/fire-starter-cover.jpg" :
                     id === "3" ? "/dont-be-a-jonah-cover.jpg" :
                     id === "4" ? "/grow-cover.png" :
                     id === "5" ? "/studying-for-service-cover.jpg" :
