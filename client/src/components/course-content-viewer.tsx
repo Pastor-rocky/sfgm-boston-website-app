@@ -513,6 +513,53 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
     }) => {
       return apiRequest('POST', '/api/content-progress', data);
     },
+    onMutate: async (variables) => {
+      // Cancel any outgoing refetches to avoid overwriting optimistic update
+      await queryClient.cancelQueries({ queryKey: [`/api/content-progress/${variables.courseId}`] });
+      
+      // Snapshot the previous value
+      const previousProgress = queryClient.getQueryData<ContentProgressItem[]>([`/api/content-progress/${variables.courseId}`]);
+      
+      // Optimistically update the cache immediately
+      queryClient.setQueryData<ContentProgressItem[]>([`/api/content-progress/${variables.courseId}`], (old = []) => {
+        // Check if this progress item already exists
+        const existingIndex = old.findIndex(
+          (p: ContentProgressItem) => 
+            p.courseId === variables.courseId &&
+            p.contentType === variables.contentType &&
+            p.contentId === variables.contentId
+        );
+        
+        if (existingIndex >= 0) {
+          // Update existing item
+          const updated = [...old];
+          updated[existingIndex] = {
+            ...updated[existingIndex],
+            completed: variables.completed
+          };
+          return updated;
+        } else {
+          // Add new item
+          return [...old, {
+            courseId: variables.courseId,
+            contentType: variables.contentType,
+            contentId: variables.contentId,
+            completed: variables.completed,
+            // Add placeholder fields that might be needed
+            id: Date.now(), // Temporary ID
+            userId: 0, // Will be set by server
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          } as ContentProgressItem];
+        }
+      });
+      
+      // Force a complete refresh by updating the force refresh counter
+      setForceRefresh(prev => prev + 1);
+      
+      // Return context with previous value for rollback
+      return { previousProgress };
+    },
     onSuccess: async (data, variables) => {
       console.log('[Progress Mutation Success]', {
         courseId: variables.courseId,
@@ -521,10 +568,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
         completed: variables.completed
       });
       
-      // Force a complete refresh by updating the force refresh counter
-      setForceRefresh(prev => prev + 1);
-      
-      // Invalidate and refetch content progress immediately
+      // Invalidate and refetch content progress to get server response
       await queryClient.invalidateQueries({ queryKey: [`/api/content-progress/${variables.courseId}`] });
       await queryClient.refetchQueries({ queryKey: [`/api/content-progress/${variables.courseId}`] });
       
@@ -533,13 +577,18 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
       
       console.log('[Progress Mutation] Query refreshed, UI should update');
     },
-    onError: (error) => {
+    onError: (error, variables, context) => {
       console.error('Progress mutation failed:', error);
       console.error('Full error details:', {
         message: error.message,
         stack: error.stack,
         name: error.name
       });
+      
+      // Rollback optimistic update on error
+      if (context?.previousProgress) {
+        queryClient.setQueryData([`/api/content-progress/${variables.courseId}`], context.previousProgress);
+      }
     },
   });
 
@@ -1745,16 +1794,9 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                                     contentType: 'video',
                                     contentId: video.id,
                                     completed: true
-                                  }).then(async () => {
-                                    // Force refresh the content progress query immediately
-                                    setForceRefresh(prev => prev + 1);
-                                    await queryClient.invalidateQueries({ queryKey: [`/api/content-progress/${courseId}`] });
-                                    await queryClient.refetchQueries({ queryKey: [`/api/content-progress/${courseId}`] });
-                                    // Force a second refresh after a short delay to ensure UI updates
-                                    setTimeout(() => {
-                                      setForceRefresh(prev => prev + 1);
-                                      queryClient.refetchQueries({ queryKey: [`/api/content-progress/${courseId}`] });
-                                    }, 500);
+                                  }).then(() => {
+                                    // Optimistic update handles immediate UI refresh
+                                    // Additional refresh will happen in onSuccess callback
                                   }).catch(error => {
                                     console.error('Failed to update video progress:', error);
                                     toast({
@@ -1872,7 +1914,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                                           completed: true,
                                         })
                                         .then(() => {
-                                          queryClient.invalidateQueries({ queryKey: [`/api/content-progress/${courseId}`] });
+                                          // Optimistic update handles immediate UI refresh
+                                          // Additional refresh will happen in onSuccess callback
                                         })
                                         .catch(error => {
                                           console.error('Failed to update video progress:', error);
@@ -1982,16 +2025,9 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                                         contentType: 'video',
                                         contentId: video.id,
                                         completed: true
-                                      }).then(async () => {
-                                        // Force refresh the content progress query immediately
-                                        setForceRefresh(prev => prev + 1);
-                                        await queryClient.invalidateQueries({ queryKey: [`/api/content-progress/${courseId}`] });
-                                        await queryClient.refetchQueries({ queryKey: [`/api/content-progress/${courseId}`] });
-                                        // Force a second refresh after a short delay to ensure UI updates
-                                        setTimeout(() => {
-                                          setForceRefresh(prev => prev + 1);
-                                          queryClient.refetchQueries({ queryKey: [`/api/content-progress/${courseId}`] });
-                                        }, 500);
+                                      }).then(() => {
+                                        // Optimistic update handles immediate UI refresh
+                                        // Additional refresh will happen in onSuccess callback
                                       }).catch(error => {
                                         console.error('Failed to update video progress:', error);
                                         toast({
