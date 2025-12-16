@@ -1119,7 +1119,10 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
     // For courses with videos, check if ALL videos for this week are completed
       const weekVideos = videos.filter((v: CourseVideo) => {
         const videoWeek = extractWeekNumber(v.title);
-        return videoWeek === weekNumber && v.isPublished;
+        // Only include videos that have a proper week number in their title
+        // This excludes test videos or videos without week numbers
+        const hasWeekNumber = /Week \d+/i.test(v.title);
+        return videoWeek === weekNumber && v.isPublished && hasWeekNumber;
       });
       
     // If no videos exist for this week, readings are accessible
