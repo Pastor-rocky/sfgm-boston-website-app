@@ -8,11 +8,14 @@
 // Get base URL from environment or use local
 const getAudioBaseUrl = (): string => {
   // In production, check for R2 URL
-  if (import.meta.env.VITE_R2_PUBLIC_URL) {
-    return import.meta.env.VITE_R2_PUBLIC_URL;
+  const r2Url = import.meta.env.VITE_R2_PUBLIC_URL;
+  if (r2Url) {
+    console.log('[Audio Storage] Using R2:', r2Url);
+    return r2Url;
   }
   
   // Default to local uploads
+  console.log('[Audio Storage] Using local files: /uploads/textbook-audio');
   return '/uploads/textbook-audio';
 };
 
@@ -28,12 +31,15 @@ export const getAudioUrl = (filename: string): string => {
   if (baseUrl.startsWith('http')) {
     // R2 URL - encode filename for URL (handles spaces, emoji, etc.)
     const encodedFilename = encodeURIComponent(filename);
-    return `${baseUrl}/${encodedFilename}`;
+    const fullUrl = `${baseUrl}/${encodedFilename}`;
+    console.log('[Audio Storage] Generated R2 URL:', fullUrl);
+    return fullUrl;
   }
   
   // Local URL - use the path as-is
   // If filename already includes path, use it; otherwise prepend baseUrl
   if (filename.startsWith('/')) {
+    console.log('[Audio Storage] Using provided path:', filename);
     return filename;
   }
   
@@ -48,7 +54,9 @@ export const getAudioUrl = (filename: string): string => {
     }
   }
   
-  return `${baseUrl}/${localFilename}`;
+  const fullUrl = `${baseUrl}/${localFilename}`;
+  console.log('[Audio Storage] Generated local URL:', fullUrl);
+  return fullUrl;
 };
 
 /**
