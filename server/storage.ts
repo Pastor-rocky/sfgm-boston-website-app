@@ -1845,6 +1845,40 @@ After completing this chapter, proceed to the next module or assessment as direc
   }
   
   async getCourseReadings(courseId: number): Promise<CourseReading[]> {
+    // First, check if there are course_readings in the database for this course
+    const dbReadings = await db
+      .select()
+      .from(courseReadings)
+      .where(and(eq(courseReadings.courseId, courseId), eq(courseReadings.isActive, true)))
+      .orderBy(courseReadings.orderIndex);
+    
+    if (dbReadings.length > 0) {
+      // Convert database readings to CourseReading format
+      return dbReadings.map((reading) => ({
+        id: reading.id,
+        courseId: reading.courseId,
+        title: reading.title,
+        description: reading.description,
+        readingType: (reading.readingType || 'textbook') as 'text' | 'book_chapter' | 'external_link',
+        content: reading.content,
+        bookTitle: reading.bookTitle,
+        bookAuthor: reading.bookAuthor,
+        bookCoverUrl: reading.bookCoverUrl,
+        chapterNumber: reading.chapterNumber,
+        chapterTitle: reading.title,
+        pageRange: null,
+        externalUrl: null,
+        pdfUrl: null,
+        hasAudioOption: false,
+        audioUrl: null,
+        estimatedTime: null,
+        orderIndex: reading.orderIndex,
+        isRequired: true,
+        isPublished: true,
+        isDeleted: false
+      } as any));
+    }
+
     // Special handling for Acts in Action course (courseId = 4) - Bible readings only
     if (courseId === 4) {
       const bibleReadings: CourseReading[] = [
