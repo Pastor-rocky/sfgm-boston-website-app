@@ -83,6 +83,12 @@ export function serveStatic(app: Express) {
 
   app.use(express.static(distPath));
 
+  // Serve uploads from public/uploads (for audio files, PDFs, etc.)
+  const uploadsPath = path.resolve(import.meta.dirname, "..", "public", "uploads");
+  if (fs.existsSync(uploadsPath)) {
+    app.use("/uploads", express.static(uploadsPath));
+  }
+
   // fall through to index.html if the file doesn't exist
   app.use("*", (_req, res) => {
     res.sendFile(path.resolve(distPath, "index.html"));
