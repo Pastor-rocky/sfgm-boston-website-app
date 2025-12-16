@@ -153,8 +153,32 @@ const ActsAudioPlayer: React.FC = () => {
                 ref={audioRef}
                 src="/uploads/textbook-audio/acts-in-action-intro.mp3"
                 preload="auto"
-                onLoadedMetadata={() => setDuration(audioRef.current?.duration || 0)}
-                onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime || 0)}
+                onLoadedMetadata={() => {
+                  if (audioRef.current) {
+                    setDuration(audioRef.current.duration || 0);
+                    // Restore saved progress if available
+                    const saved = localStorage.getItem('audio_progress_acts_intro');
+                    if (saved) {
+                      audioRef.current.currentTime = parseFloat(saved);
+                    }
+                  }
+                }}
+                onLoadedData={() => {
+                  console.log('Audio loaded successfully:', '/uploads/textbook-audio/acts-in-action-intro.mp3');
+                }}
+                onError={(e) => {
+                  console.error('Audio loading error:', e);
+                  toast({
+                    title: 'Audio Error',
+                    description: 'Failed to load audio file. Please check your connection and try again.',
+                    variant: 'destructive',
+                  });
+                }}
+                onTimeUpdate={() => {
+                  if (audioRef.current) {
+                    setCurrentTime(audioRef.current.currentTime || 0);
+                  }
+                }}
                 onEnded={() => setIsPlaying(false)}
               />
             </div>
