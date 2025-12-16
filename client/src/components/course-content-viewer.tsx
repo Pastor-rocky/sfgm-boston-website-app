@@ -1967,8 +1967,13 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </CardContent>
                 </Card>
               ) : (
-                // Render available videos only
+                // Render available videos only - filter published and remove duplicates
                 videos
+                    .filter((v: CourseVideo) => v.isPublished) // Only show published videos
+                    .filter((v: CourseVideo, index: number, self: CourseVideo[]) => 
+                      // Remove duplicates by ID (keep first occurrence)
+                      index === self.findIndex((other: CourseVideo) => other.id === v.id)
+                    )
                     .sort((a: CourseVideo, b: CourseVideo) => a.orderIndex - b.orderIndex)
                     .map((video: CourseVideo) => {
                       let weekNumber = extractWeekNumber(video.title);
@@ -1982,7 +1987,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       let displayDescription = video.description;
                       
                       if (courseId === 1 && weekNumber === 1) {
-                        displayTitle = 'Introduction';
+                        displayTitle = 'Week 1: Introduction';
                         displayDescription = "Bishop Anthony Lee's introduction to the Acts in Action course";
                       }
                       
@@ -2645,7 +2650,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                     <div className="flex items-center justify-between">
                       <div>
                         <h4 className="text-lg font-semibold text-gray-800">Required Reading</h4>
-                        <p className="text-sm text-gray-600">Acts in Action Introduction</p>
+                        <p className="text-sm text-gray-600">Week 1: Acts in Action Introduction</p>
                       </div>
                       <Button
                         disabled={!canAccessReadings(1)}
