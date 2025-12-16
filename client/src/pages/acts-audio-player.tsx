@@ -202,6 +202,7 @@ const ActsAudioPlayer: React.FC = () => {
                   onError={(e) => {
                     const audio = audioRef.current;
                     const error = audio?.error;
+                    const actualSrc = audio?.src || audioSrc;
                     let errorMessage = 'Failed to load audio file.';
                     
                     if (error) {
@@ -216,7 +217,7 @@ const ActsAudioPlayer: React.FC = () => {
                           errorMessage = 'Audio file could not be decoded.';
                           break;
                         case error.MEDIA_ERR_SRC_NOT_SUPPORTED:
-                          errorMessage = 'Audio format not supported or file not found.';
+                          errorMessage = 'Audio format not supported or file not found (404).';
                           break;
                         default:
                           errorMessage = `Audio error (code ${error.code}).`;
@@ -228,13 +229,19 @@ const ActsAudioPlayer: React.FC = () => {
                       code: error?.code,
                       message: error?.message,
                       src: audioSrc,
+                      actualSrc: actualSrc,
                       audioElement: audio,
+                      usingR2: !!import.meta.env.VITE_R2_PUBLIC_URL,
+                      r2Url: import.meta.env.VITE_R2_PUBLIC_URL,
                     });
+                    
+                    console.error('Audio element src:', actualSrc);
+                    console.error('Trying to load from:', actualSrc);
                     
                     setIsLoading(false);
                     toast({
                       title: 'Audio Error',
-                      description: `${errorMessage} File: ${audioSrc}. Check browser console for details.`,
+                      description: `${errorMessage} Trying to load: ${actualSrc}. Check browser console for details.`,
                       variant: 'destructive',
                     });
                   }}
