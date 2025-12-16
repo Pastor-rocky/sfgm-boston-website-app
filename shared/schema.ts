@@ -964,7 +964,7 @@ export const forumReplies = pgTable("forum_replies", {
 
 // Forum Post Likes (to track who liked what)
 export const forumPostLikes = pgTable("forum_post_likes", {
-  id: serial("id").primaryKey(),
+  id: serial("id"),
   postId: integer("post_id").notNull().references(() => forumPosts.id, { onDelete: "cascade" }),
   userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -974,7 +974,7 @@ export const forumPostLikes = pgTable("forum_post_likes", {
 
 // Forum Reply Likes
 export const forumReplyLikes = pgTable("forum_reply_likes", {
-  id: serial("id").primaryKey(),
+  id: serial("id"),
   replyId: integer("reply_id").notNull().references(() => forumReplies.id, { onDelete: "cascade" }),
   userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
