@@ -513,15 +513,25 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
     }) => {
       return apiRequest('POST', '/api/content-progress', data);
     },
-    onSuccess: async () => {
+    onSuccess: async (data, variables) => {
+      console.log('[Progress Mutation Success]', {
+        courseId: variables.courseId,
+        contentType: variables.contentType,
+        contentId: variables.contentId,
+        completed: variables.completed
+      });
       
       // Force a complete refresh by updating the force refresh counter
       setForceRefresh(prev => prev + 1);
       
-      // Prerequisites removed - no need to invalidate
+      // Invalidate and refetch content progress immediately
+      await queryClient.invalidateQueries({ queryKey: [`/api/content-progress/${variables.courseId}`] });
+      await queryClient.refetchQueries({ queryKey: [`/api/content-progress/${variables.courseId}`] });
       
       // Force refresh the readings data as well
       queryClient.invalidateQueries({ queryKey: [`/api/courses/${courseId}/readings`] });
+      
+      console.log('[Progress Mutation] Query refreshed, UI should update');
     },
     onError: (error) => {
       console.error('Progress mutation failed:', error);
