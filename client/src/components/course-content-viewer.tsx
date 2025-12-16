@@ -2656,12 +2656,12 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                     )}
                   </h3>
                   
-                  {/* Acts in Action Section - Introduction */}
+                  {/* Acts in Action Section - Introduction & Chapter 1 (Combined) */}
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
                         <h4 className="text-lg font-semibold text-gray-800">Required Reading</h4>
-                        <p className="text-sm text-gray-600">Week 1: Acts in Action Introduction</p>
+                        <p className="text-sm text-gray-600">Acts in Action: Introduction & Chapter 1</p>
                       </div>
                       <Button
                         disabled={!canAccessReadings(1)}
@@ -2674,28 +2674,6 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                         }`}
                       >
                         {!canAccessReadings(1) ? '🔒 Locked' : isContentCompleted('reading', 1) ? 'Complete' : 'E-book'}
-                      </Button>
-                    </div>
-                  </div>
-
-                  {/* Acts in Action Section - Chapter 1 */}
-                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="text-lg font-semibold text-gray-800">Required Reading</h4>
-                        <p className="text-sm text-gray-600">Acts in Action Chapter 1</p>
-                      </div>
-                      <Button
-                        disabled={!canAccessReadings(1)}
-                        onClick={createReadingProgressHandler(2, () => window.location.href = '/acts-audio-player')}
-                        className={`${!canAccessReadings(1) 
-                          ? 'bg-gray-400 text-gray-600 cursor-not-allowed' 
-                          : isContentCompleted('reading', 2)
-                            ? 'bg-green-600 hover:bg-green-700 text-white'
-                            : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white'
-                        }`}
-                      >
-                        {!canAccessReadings(1) ? '🔒 Locked' : isContentCompleted('reading', 2) ? 'Complete' : 'E-book'}
                       </Button>
                     </div>
                   </div>
