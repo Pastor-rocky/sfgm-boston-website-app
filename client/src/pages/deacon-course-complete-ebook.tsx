@@ -17,11 +17,11 @@ export default function DeaconCourseCompleteEbook() {
   const [currentChapter, setCurrentChapter] = useState(1);
 
   const chapters = [
-    { id: 1, title: "Introduction & Chapter 1: The Unignorable Nudge", audioUrl: "/deacon-course-ch1.mp3" },
-    { id: 2, title: "Chapter 2: Laying the Foundation", audioUrl: "/deacon-course-ch2.mp3" },
-    { id: 3, title: "Chapter 3: The Servant in Motion", audioUrl: "/deacon-course-ch3.mp3" },
-    { id: 4, title: "Chapter 4: The Spiritual Battlefield", audioUrl: "/deacon-course-ch4.mp3" },
-    { id: 5, title: "Chapter 5: Commissioned for Impact", audioUrl: "/deacon-course-ch5.mp3" }
+    { id: 1, title: "Introduction & Chapter 1: The Unignorable Nudge", audioUrl: "/uploads/textbook-audio/deacon-course-ch1.mp3" },
+    { id: 2, title: "Chapter 2: Laying the Foundation", audioUrl: "/uploads/textbook-audio/deacon-course-ch2.mp3" },
+    { id: 3, title: "Chapter 3: The Servant in Motion", audioUrl: "/uploads/textbook-audio/deacon-course-ch3.mp3" },
+    { id: 4, title: "Chapter 4: The Spiritual Battlefield", audioUrl: "/uploads/textbook-audio/deacon-course-ch4.mp3" },
+    { id: 5, title: "Chapter 5: Commissioned for Impact", audioUrl: "/uploads/textbook-audio/deacon-course-ch5.mp3" }
   ];
 
   const currentChapterData = chapters[currentChapter - 1];

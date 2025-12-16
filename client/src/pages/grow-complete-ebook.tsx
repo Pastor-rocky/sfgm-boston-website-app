@@ -17,10 +17,10 @@ export default function GrowCompleteEbook() {
   const [currentChapter, setCurrentChapter] = useState(1);
 
   const chapters = [
-    { id: 1, title: "Introduction & Chapter 1: Give - Time, Talents, Treasure", audioUrl: "/grow-ch1.mp3" },
-    { id: 2, title: "Chapter 2: Read - Feed Daily on God's Word", audioUrl: "/grow-ch2.mp3" },
-    { id: 3, title: "Chapter 3: Obey - Listen and Apply God's Word", audioUrl: "/grow-ch3.mp3" },
-    { id: 4, title: "Chapter 4: Win - Go, Witness, Make Disciples", audioUrl: "/grow-ch4.mp3" }
+    { id: 1, title: "Introduction & Chapter 1: Give - Time, Talents, Treasure", audioUrl: "/uploads/textbook-audio/grow-ch1.mp3" },
+    { id: 2, title: "Chapter 2: Read - Feed Daily on God's Word", audioUrl: "/uploads/textbook-audio/grow-ch2.mp3" },
+    { id: 3, title: "Chapter 3: Obey - Listen and Apply God's Word", audioUrl: "/uploads/textbook-audio/grow-ch3.mp3" },
+    { id: 4, title: "Chapter 4: Win - Go, Witness, Make Disciples", audioUrl: "/uploads/textbook-audio/grow-ch4.mp3" }
   ];
 
   const currentChapterData = chapters[currentChapter - 1];
