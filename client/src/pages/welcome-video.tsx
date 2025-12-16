@@ -4,16 +4,9 @@ import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import sfgmLogoBlue from "@/assets/sfgm-logo-new-blue.png";
 
-// Try to import video, but make it optional in case Git LFS fails
-let welcomeVideo: string | null = null;
-try {
-  // Dynamic import to handle missing file gracefully
-  welcomeVideo = new URL('/src/assets/welcome-video.mp4', import.meta.url).href;
-} catch (e) {
-  console.warn('Welcome video not available:', e);
-  // Fallback: use public path if available
-  welcomeVideo = '/assets/welcome-video.mp4';
-}
+// Use public path for video to avoid Git LFS build issues
+// Video should be in public/assets/ or served from CDN
+const welcomeVideo = '/assets/welcome-video.mp4';
 
 export default function WelcomeVideo() {
   const { toast } = useToast();
