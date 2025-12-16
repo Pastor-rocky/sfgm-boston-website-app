@@ -2093,8 +2093,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
             <div className="space-y-4">
               {/* Week 1 Required Reading for Don't Be a Jonah */}
               <Card>
-                <CardContent className="text-center py-8">
-                  <h3 className="text-2xl font-bold text-gray-800 text-center mb-6">Required Reading Week 1</h3>
+                <CardContent className="text-center py-4 md:py-8">
+                  <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 1</h3>
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2143,8 +2143,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
 
               {/* Week 2 Required Reading for Don't Be a Jonah */}
               <Card>
-                <CardContent className="text-center py-8">
-                  <h3 className="text-2xl font-bold text-gray-800 text-center mb-6">Required Reading Week 2</h3>
+                <CardContent className="text-center py-4 md:py-8">
+                  <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 2</h3>
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2193,8 +2193,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
 
               {/* Week 3 Required Reading for Don't Be a Jonah */}
               <Card>
-                <CardContent className="text-center py-8">
-                  <h3 className="text-2xl font-bold text-gray-800 text-center mb-6">Required Reading Week 3</h3>
+                <CardContent className="text-center py-4 md:py-8">
+                  <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 3</h3>
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2243,8 +2243,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
 
               {/* Week 4 Required Reading for Don't Be a Jonah */}
               <Card>
-                <CardContent className="text-center py-8">
-                  <h3 className="text-2xl font-bold text-gray-800 text-center mb-6">Required Reading Week 4</h3>
+                <CardContent className="text-center py-4 md:py-8">
+                  <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 4</h3>
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2293,8 +2293,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
 
               {/* Week 5 Required Reading for Don't Be a Jonah */}
               <Card>
-                <CardContent className="text-center py-8">
-                  <h3 className="text-2xl font-bold text-gray-800 text-center mb-6">Required Reading Week 5</h3>
+                <CardContent className="text-center py-4 md:py-8">
+                  <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 5</h3>
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2343,8 +2343,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
 
               {/* Week 6 Required Reading for Don't Be a Jonah */}
               <Card>
-                <CardContent className="text-center py-8">
-                  <h3 className="text-2xl font-bold text-gray-800 text-center mb-6">Required Reading Week 6</h3>
+                <CardContent className="text-center py-4 md:py-8">
+                  <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 6</h3>
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2393,8 +2393,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
 
               {/* Week 7 Required Reading for Don't Be a Jonah */}
               <Card>
-                <CardContent className="text-center py-8">
-                  <h3 className="text-2xl font-bold text-gray-800 text-center mb-6">Required Reading Week 7</h3>
+                <CardContent className="text-center py-4 md:py-8">
+                  <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 7</h3>
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2443,8 +2443,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
 
               {/* Week 8 Required Reading for Don't Be a Jonah */}
               <Card>
-                <CardContent className="text-center py-8">
-                  <h3 className="text-2xl font-bold text-gray-800 text-center mb-6">Required Reading Week 8</h3>
+                <CardContent className="text-center py-4 md:py-8">
+                  <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 8</h3>
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2493,8 +2493,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
 
               {/* Week 9 Required Reading for Don't Be a Jonah */}
               <Card>
-                <CardContent className="text-center py-8">
-                  <h3 className="text-2xl font-bold text-gray-800 text-center mb-6">Required Reading Week 9</h3>
+                <CardContent className="text-center py-4 md:py-8">
+                  <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 9</h3>
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2543,8 +2543,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
 
               {/* Week 10 Required Reading for Don't Be a Jonah */}
               <Card>
-                <CardContent className="text-center py-8">
-                  <h3 className="text-2xl font-bold text-gray-800 text-center mb-6">Required Reading Week 10</h3>
+                <CardContent className="text-center py-4 md:py-8">
+                  <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 10</h3>
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2593,8 +2593,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
 
               {/* Week 11 Required Reading for Don't Be a Jonah */}
               <Card>
-                <CardContent className="text-center py-8">
-                  <h3 className="text-2xl font-bold text-gray-800 text-center mb-6">Required Reading Week 11</h3>
+                <CardContent className="text-center py-4 md:py-8">
+                  <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 11</h3>
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2657,11 +2657,11 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </h3>
                   
                   {/* Acts in Action Section - Introduction & Chapter 1 (Combined) */}
-                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
-                    <div className="flex items-center justify-between">
+                  <div className="bg-blue-50 p-3 md:p-4 rounded-lg border border-blue-200 mb-3 md:mb-4">
+                    <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
-                        <h4 className="text-lg font-semibold text-gray-800">Required Reading</h4>
-                        <p className="text-sm text-gray-600">Acts in Action: Introduction & Chapter 1</p>
+                        <h4 className="text-base md:text-lg font-semibold text-gray-800">Required Reading</h4>
+                        <p className="text-xs md:text-sm text-gray-600">Acts in Action: Introduction & Chapter 1</p>
                       </div>
                       <Button
                         disabled={!canAccessReadings(1)}
@@ -2679,11 +2679,11 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </div>
                   
                   {/* Bible Reading Section */}
-                  <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                    <div className="flex items-center justify-between">
+                  <div className="bg-green-50 p-3 md:p-4 rounded-lg border border-green-200">
+                    <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
-                        <h4 className="text-lg font-semibold text-gray-800">Required Bible Reading</h4>
-                        <p className="text-sm text-gray-600">Acts Chapters 1-2</p>
+                        <h4 className="text-base md:text-lg font-semibold text-gray-800">Required Bible Reading</h4>
+                        <p className="text-xs md:text-sm text-gray-600">Acts Chapters 1-2</p>
                       </div>
                       <Button
                         disabled={!canAccessReadings(1)}
@@ -2717,11 +2717,11 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </h3>
                   
                   {/* Acts in Action Section - Chapter 2 */}
-                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
-                    <div className="flex items-center justify-between">
+                  <div className="bg-blue-50 p-3 md:p-4 rounded-lg border border-blue-200 mb-3 md:mb-4">
+                    <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
-                        <h4 className="text-lg font-semibold text-gray-800">Required Reading</h4>
-                        <p className="text-sm text-gray-600">Acts in Action Chapter 2</p>
+                        <h4 className="text-base md:text-lg font-semibold text-gray-800">Required Reading</h4>
+                        <p className="text-xs md:text-sm text-gray-600">Acts in Action Chapter 2</p>
                       </div>
                       <Button
                         disabled={!canAccessReadings(2)}
@@ -2739,11 +2739,11 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </div>
                   
                   {/* Bible Reading Section */}
-                  <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                    <div className="flex items-center justify-between">
+                  <div className="bg-green-50 p-3 md:p-4 rounded-lg border border-green-200">
+                    <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
-                        <h4 className="text-lg font-semibold text-gray-800">Required Bible Reading</h4>
-                        <p className="text-sm text-gray-600">Acts Chapters 3-5</p>
+                        <h4 className="text-base md:text-lg font-semibold text-gray-800">Required Bible Reading</h4>
+                        <p className="text-xs md:text-sm text-gray-600">Acts Chapters 3-5</p>
                       </div>
                       <Button
                         disabled={!canAccessReadings(2)}
@@ -2777,11 +2777,11 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </h3>
                   
                   {/* Acts in Action Section - Chapter 3 */}
-                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
-                    <div className="flex items-center justify-between">
+                  <div className="bg-blue-50 p-3 md:p-4 rounded-lg border border-blue-200 mb-3 md:mb-4">
+                    <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
-                        <h4 className="text-lg font-semibold text-gray-800">Required Reading</h4>
-                        <p className="text-sm text-gray-600">Acts in Action Chapter 3</p>
+                        <h4 className="text-base md:text-lg font-semibold text-gray-800">Required Reading</h4>
+                        <p className="text-xs md:text-sm text-gray-600">Acts in Action Chapter 3</p>
                       </div>
                       <Button
                         disabled={!canAccessReadings(3)}
@@ -2799,11 +2799,11 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </div>
                   
                   {/* Bible Reading Section */}
-                  <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                    <div className="flex items-center justify-between">
+                  <div className="bg-green-50 p-3 md:p-4 rounded-lg border border-green-200">
+                    <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
-                        <h4 className="text-lg font-semibold text-gray-800">Required Bible Reading</h4>
-                        <p className="text-sm text-gray-600">Acts Chapters 6-8</p>
+                        <h4 className="text-base md:text-lg font-semibold text-gray-800">Required Bible Reading</h4>
+                        <p className="text-xs md:text-sm text-gray-600">Acts Chapters 6-8</p>
                       </div>
                       <Button
                         disabled={!canAccessReadings(3)}
@@ -2837,11 +2837,11 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </h3>
                   
                   {/* Acts in Action Section - Chapter 4 */}
-                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
-                    <div className="flex items-center justify-between">
+                  <div className="bg-blue-50 p-3 md:p-4 rounded-lg border border-blue-200 mb-3 md:mb-4">
+                    <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
-                        <h4 className="text-lg font-semibold text-gray-800">Required Reading</h4>
-                        <p className="text-sm text-gray-600">Acts in Action Chapter 4</p>
+                        <h4 className="text-base md:text-lg font-semibold text-gray-800">Required Reading</h4>
+                        <p className="text-xs md:text-sm text-gray-600">Acts in Action Chapter 4</p>
                       </div>
                       <Button
                         disabled={!canAccessReadings(4)}
@@ -2859,11 +2859,11 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </div>
                   
                   {/* Bible Reading Section */}
-                  <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                    <div className="flex items-center justify-between">
+                  <div className="bg-green-50 p-3 md:p-4 rounded-lg border border-green-200">
+                    <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
-                        <h4 className="text-lg font-semibold text-gray-800">Required Bible Reading</h4>
-                        <p className="text-sm text-gray-600">Acts Chapters 9-11</p>
+                        <h4 className="text-base md:text-lg font-semibold text-gray-800">Required Bible Reading</h4>
+                        <p className="text-xs md:text-sm text-gray-600">Acts Chapters 9-11</p>
                       </div>
                       <Button
                         disabled={!canAccessReadings(4)}
@@ -2897,11 +2897,11 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </h3>
                   
                   {/* Acts in Action Section - Chapter 5 */}
-                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
-                    <div className="flex items-center justify-between">
+                  <div className="bg-blue-50 p-3 md:p-4 rounded-lg border border-blue-200 mb-3 md:mb-4">
+                    <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
-                        <h4 className="text-lg font-semibold text-gray-800">Required Reading</h4>
-                        <p className="text-sm text-gray-600">Acts in Action Chapter 5</p>
+                        <h4 className="text-base md:text-lg font-semibold text-gray-800">Required Reading</h4>
+                        <p className="text-xs md:text-sm text-gray-600">Acts in Action Chapter 5</p>
                       </div>
                       <Button
                         disabled={!canAccessReadings(5)}
@@ -2919,11 +2919,11 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </div>
                   
                   {/* Bible Reading Section */}
-                  <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                    <div className="flex items-center justify-between">
+                  <div className="bg-green-50 p-3 md:p-4 rounded-lg border border-green-200">
+                    <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
-                        <h4 className="text-lg font-semibold text-gray-800">Required Bible Reading</h4>
-                        <p className="text-sm text-gray-600">Acts Chapters 12-14</p>
+                        <h4 className="text-base md:text-lg font-semibold text-gray-800">Required Bible Reading</h4>
+                        <p className="text-xs md:text-sm text-gray-600">Acts Chapters 12-14</p>
                       </div>
                       <Button
                         disabled={!canAccessReadings(5)}
@@ -2957,11 +2957,11 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </h3>
                   
                   {/* Acts in Action Section - Chapter 6 */}
-                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
-                    <div className="flex items-center justify-between">
+                  <div className="bg-blue-50 p-3 md:p-4 rounded-lg border border-blue-200 mb-3 md:mb-4">
+                    <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
-                        <h4 className="text-lg font-semibold text-gray-800">Required Reading</h4>
-                        <p className="text-sm text-gray-600">Acts in Action Chapter 6</p>
+                        <h4 className="text-base md:text-lg font-semibold text-gray-800">Required Reading</h4>
+                        <p className="text-xs md:text-sm text-gray-600">Acts in Action Chapter 6</p>
                       </div>
                       <Button
                         disabled={!canAccessReadings(6)}
@@ -2979,11 +2979,11 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </div>
                   
                   {/* Bible Reading Section */}
-                  <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                    <div className="flex items-center justify-between">
+                  <div className="bg-green-50 p-3 md:p-4 rounded-lg border border-green-200">
+                    <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
-                        <h4 className="text-lg font-semibold text-gray-800">Required Bible Reading</h4>
-                        <p className="text-sm text-gray-600">Acts Chapters 15-17</p>
+                        <h4 className="text-base md:text-lg font-semibold text-gray-800">Required Bible Reading</h4>
+                        <p className="text-xs md:text-sm text-gray-600">Acts Chapters 15-17</p>
                       </div>
                       <Button
                         disabled={!canAccessReadings(6)}
@@ -3017,11 +3017,11 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </h3>
                   
                   {/* Acts in Action Section - Chapter 7 */}
-                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
-                    <div className="flex items-center justify-between">
+                  <div className="bg-blue-50 p-3 md:p-4 rounded-lg border border-blue-200 mb-3 md:mb-4">
+                    <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
-                        <h4 className="text-lg font-semibold text-gray-800">Required Reading</h4>
-                        <p className="text-sm text-gray-600">Acts in Action Chapter 7</p>
+                        <h4 className="text-base md:text-lg font-semibold text-gray-800">Required Reading</h4>
+                        <p className="text-xs md:text-sm text-gray-600">Acts in Action Chapter 7</p>
                       </div>
                       <Button
                         disabled={!canAccessReadings(7)}
@@ -3039,11 +3039,11 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </div>
                   
                   {/* Bible Reading Section */}
-                  <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                    <div className="flex items-center justify-between">
+                  <div className="bg-green-50 p-3 md:p-4 rounded-lg border border-green-200">
+                    <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
-                        <h4 className="text-lg font-semibold text-gray-800">Required Bible Reading</h4>
-                        <p className="text-sm text-gray-600">Acts Chapters 18-20</p>
+                        <h4 className="text-base md:text-lg font-semibold text-gray-800">Required Bible Reading</h4>
+                        <p className="text-xs md:text-sm text-gray-600">Acts Chapters 18-20</p>
                       </div>
                       <Button
                         disabled={!canAccessReadings(7)}
@@ -3077,11 +3077,11 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </h3>
                   
                   {/* Acts in Action Section - Chapter 8 */}
-                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
-                    <div className="flex items-center justify-between">
+                  <div className="bg-blue-50 p-3 md:p-4 rounded-lg border border-blue-200 mb-3 md:mb-4">
+                    <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
-                        <h4 className="text-lg font-semibold text-gray-800">Required Reading</h4>
-                        <p className="text-sm text-gray-600">Acts in Action Chapter 8</p>
+                        <h4 className="text-base md:text-lg font-semibold text-gray-800">Required Reading</h4>
+                        <p className="text-xs md:text-sm text-gray-600">Acts in Action Chapter 8</p>
                       </div>
                       <Button
                         disabled={!canAccessReadings(8)}
@@ -3099,11 +3099,11 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </div>
                   
                   {/* Bible Reading Section */}
-                  <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                    <div className="flex items-center justify-between">
+                  <div className="bg-green-50 p-3 md:p-4 rounded-lg border border-green-200">
+                    <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
-                        <h4 className="text-lg font-semibold text-gray-800">Required Bible Reading</h4>
-                        <p className="text-sm text-gray-600">Acts Chapters 21-23</p>
+                        <h4 className="text-base md:text-lg font-semibold text-gray-800">Required Bible Reading</h4>
+                        <p className="text-xs md:text-sm text-gray-600">Acts Chapters 21-23</p>
                       </div>
                       <Button
                         disabled={!canAccessReadings(8)}
@@ -3137,11 +3137,11 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </h3>
                   
                   {/* Acts in Action Section - Chapter 9 */}
-                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
-                    <div className="flex items-center justify-between">
+                  <div className="bg-blue-50 p-3 md:p-4 rounded-lg border border-blue-200 mb-3 md:mb-4">
+                    <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
-                        <h4 className="text-lg font-semibold text-gray-800">Required Reading</h4>
-                        <p className="text-sm text-gray-600">Acts in Action Chapter 9</p>
+                        <h4 className="text-base md:text-lg font-semibold text-gray-800">Required Reading</h4>
+                        <p className="text-xs md:text-sm text-gray-600">Acts in Action Chapter 9</p>
                       </div>
                       <Button
                         disabled={!canAccessReadings(9)}
@@ -3159,11 +3159,11 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </div>
                   
                   {/* Bible Reading Section */}
-                  <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                    <div className="flex items-center justify-between">
+                  <div className="bg-green-50 p-3 md:p-4 rounded-lg border border-green-200">
+                    <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
-                        <h4 className="text-lg font-semibold text-gray-800">Required Bible Reading</h4>
-                        <p className="text-sm text-gray-600">Acts Chapters 24-26</p>
+                        <h4 className="text-base md:text-lg font-semibold text-gray-800">Required Bible Reading</h4>
+                        <p className="text-xs md:text-sm text-gray-600">Acts Chapters 24-26</p>
                       </div>
                       <Button
                         disabled={!canAccessReadings(9)}
@@ -3197,11 +3197,11 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </h3>
                   
                   {/* Acts in Action Section - Chapter 10 */}
-                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
-                    <div className="flex items-center justify-between">
+                  <div className="bg-blue-50 p-3 md:p-4 rounded-lg border border-blue-200 mb-3 md:mb-4">
+                    <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
-                        <h4 className="text-lg font-semibold text-gray-800">Required Reading</h4>
-                        <p className="text-sm text-gray-600">Acts in Action Chapter 10</p>
+                        <h4 className="text-base md:text-lg font-semibold text-gray-800">Required Reading</h4>
+                        <p className="text-xs md:text-sm text-gray-600">Acts in Action Chapter 10</p>
                       </div>
                       <Button
                         disabled={!canAccessReadings(10)}
@@ -3219,11 +3219,11 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </div>
                   
                   {/* Bible Reading Section */}
-                  <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                    <div className="flex items-center justify-between">
+                  <div className="bg-green-50 p-3 md:p-4 rounded-lg border border-green-200">
+                    <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
-                        <h4 className="text-lg font-semibold text-gray-800">Required Bible Reading</h4>
-                        <p className="text-sm text-gray-600">Acts Chapters 27-28</p>
+                        <h4 className="text-base md:text-lg font-semibold text-gray-800">Required Bible Reading</h4>
+                        <p className="text-xs md:text-sm text-gray-600">Acts Chapters 27-28</p>
                       </div>
                       <Button
                         disabled={!canAccessReadings(10)}
@@ -3247,8 +3247,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
             <div className="space-y-4">
               {/* Week 1 Required Reading for Firestarter */}
               <Card>
-                <CardContent className="text-center py-8">
-                  <h3 className="text-2xl font-bold text-gray-800 text-center mb-6">Required Reading Week 1</h3>
+                <CardContent className="text-center py-4 md:py-8">
+                  <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 1</h3>
                       <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -3297,8 +3297,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
 
               {/* Week 2 Required Reading for Firestarter */}
               <Card>
-                <CardContent className="text-center py-8">
-                  <h3 className="text-2xl font-bold text-gray-800 text-center mb-6">Required Reading Week 2</h3>
+                <CardContent className="text-center py-4 md:py-8">
+                  <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 2</h3>
                       <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -3347,8 +3347,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
 
               {/* Week 3 Required Reading for Firestarter */}
               <Card>
-                <CardContent className="text-center py-8">
-                  <h3 className="text-2xl font-bold text-gray-800 text-center mb-6">Required Reading Week 3</h3>
+                <CardContent className="text-center py-4 md:py-8">
+                  <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 3</h3>
                       <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -3417,8 +3417,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
 
               {/* Week 4 Required Reading for Firestarter */}
               <Card>
-                <CardContent className="text-center py-8">
-                  <h3 className="text-2xl font-bold text-gray-800 text-center mb-6">Required Reading Week 4</h3>
+                <CardContent className="text-center py-4 md:py-8">
+                  <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 4</h3>
                       <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -3487,8 +3487,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
 
               {/* Week 5 Required Reading for Firestarter */}
               <Card>
-                <CardContent className="text-center py-8">
-                  <h3 className="text-2xl font-bold text-gray-800 text-center mb-6">Required Reading Week 5</h3>
+                <CardContent className="text-center py-4 md:py-8">
+                  <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 5</h3>
                       <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -3557,8 +3557,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
 
               {/* Week 6 Required Reading for Firestarter */}
               <Card>
-                <CardContent className="text-center py-8">
-                  <h3 className="text-2xl font-bold text-gray-800 text-center mb-6">Required Reading Week 6</h3>
+                <CardContent className="text-center py-4 md:py-8">
+                  <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 6</h3>
                       <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -3627,8 +3627,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
 
               {/* Week 7 Required Reading for Firestarter */}
               <Card>
-                <CardContent className="text-center py-8">
-                  <h3 className="text-2xl font-bold text-gray-800 text-center mb-6">Required Reading Week 7</h3>
+                <CardContent className="text-center py-4 md:py-8">
+                  <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 7</h3>
                       <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -3697,8 +3697,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
 
               {/* Week 8 Required Reading for Firestarter */}
               <Card>
-                <CardContent className="text-center py-8">
-                  <h3 className="text-2xl font-bold text-gray-800 text-center mb-6">Required Reading Week 8</h3>
+                <CardContent className="text-center py-4 md:py-8">
+                  <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 8</h3>
                       <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -3767,8 +3767,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
 
               {/* Week 9 Required Reading for Firestarter */}
               <Card>
-                <CardContent className="text-center py-8">
-                  <h3 className="text-2xl font-bold text-gray-800 text-center mb-6">Required Reading Week 9</h3>
+                <CardContent className="text-center py-4 md:py-8">
+                  <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 9</h3>
                       <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -3837,8 +3837,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
 
               {/* Week 10 Required Reading for Firestarter */}
               <Card>
-                <CardContent className="text-center py-8">
-                  <h3 className="text-2xl font-bold text-gray-800 text-center mb-6">Required Reading Week 10</h3>
+                <CardContent className="text-center py-4 md:py-8">
+                  <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 10</h3>
                       <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -5744,7 +5744,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
           {/* Dynamic Quiz Display */}
           {quizzes.length > 0 && (
             <div className="space-y-6">
-              <h3 className="text-2xl font-bold text-gray-800 text-center mb-6">
+              <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-4 md:mb-6">
                   {courseId === 1 ? 'Acts in Action Week Quizzes' : 'Course Quizzes'}
                 </h3>
               
@@ -5778,13 +5778,13 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                             <i className={`fas ${isFinalExam ? 'fa-graduation-cap text-red-600' : isAccessible ? 'fa-quiz text-purple-600' : 'fa-quiz text-gray-400'}`}></i>
                             {quiz.title}
                           </h4>
-                          <p className="text-sm text-gray-600 mt-1">
+                          <p className="text-xs md:text-sm text-gray-600 mt-1">
                             {isFinalExam 
                               ? `${quiz.questions?.length || 50} questions • 60 minutes • 60% passing score`
                               : `${quiz.questions?.length || 10} questions • 15 minutes • 60% passing score`}
                           </p>
                           {isFinalExam && (
-                            <div className="mt-2 text-sm text-gray-700">
+                            <div className="mt-2 text-xs md:text-sm text-gray-700">
                               <p className="font-medium text-red-700">📝 Includes Essay Component</p>
                               <p className="text-xs text-gray-600">• {quiz.questions?.length || 50} multiple choice questions covering all course material</p>
                               <p className="text-xs text-gray-600">• 100-word minimum essay reflection</p>
@@ -5793,7 +5793,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                             </div>
                           )}
                         </div>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 md:gap-3 flex-wrap md:flex-nowrap w-full md:w-auto justify-center md:justify-end">
                           {(() => {
                             if (!hasAttempts) return null;
                             return quizAttemptInfo.latestPassed ? (

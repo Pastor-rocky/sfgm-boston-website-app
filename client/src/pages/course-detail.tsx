@@ -277,24 +277,24 @@ export default function CourseDetail() {
               <div className="max-w-3xl mx-auto mb-12">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 justify-items-center">
                   <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300">
-                    <CardHeader className="text-center">
-                      <div className="text-4xl mb-2">📖</div>
-                      <CardTitle className="text-white text-xl">Read e-book</CardTitle>
+                    <CardHeader className="text-center py-3 md:py-6">
+                      <div className="text-2xl md:text-4xl mb-1 md:mb-2">📖</div>
+                      <CardTitle className="text-white text-base md:text-xl">Read e-book</CardTitle>
                     </CardHeader>
-                    <CardContent className="text-center">
-                      <p className="text-blue-200 text-sm">
+                    <CardContent className="text-center py-2 md:py-4">
+                      <p className="text-blue-200 text-xs md:text-sm">
                         Work through each leadership level chapter to develop essential leadership skills for ministry and life.
                       </p>
                     </CardContent>
                   </Card>
 
                   <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300">
-                    <CardHeader className="text-center">
-                      <div className="text-4xl mb-2">📝</div>
-                      <CardTitle className="text-white text-xl">Take the Quizzes</CardTitle>
+                    <CardHeader className="text-center py-3 md:py-6">
+                      <div className="text-2xl md:text-4xl mb-1 md:mb-2">📝</div>
+                      <CardTitle className="text-white text-base md:text-xl">Take the Quizzes</CardTitle>
                     </CardHeader>
-                    <CardContent className="text-center">
-                      <p className="text-blue-200 text-sm">
+                    <CardContent className="text-center py-2 md:py-4">
+                      <p className="text-blue-200 text-xs md:text-sm">
                         Assess your understanding each week and unlock the final exam once all chapters are complete.
                       </p>
                     </CardContent>
@@ -313,12 +313,12 @@ export default function CourseDetail() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center">
                   {/* Watch Videos */}
                   <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300">
-                    <CardHeader className="text-center">
-                      <div className="text-4xl mb-2">📺</div>
-                      <CardTitle className="text-white text-xl">Watch the Videos</CardTitle>
+                    <CardHeader className="text-center py-3 md:py-6">
+                      <div className="text-2xl md:text-4xl mb-1 md:mb-2">📺</div>
+                      <CardTitle className="text-white text-base md:text-xl">Watch the Videos</CardTitle>
                     </CardHeader>
-                    <CardContent className="text-center">
-                      <p className="text-blue-200 text-sm">
+                    <CardContent className="text-center py-2 md:py-4">
+                      <p className="text-blue-200 text-xs md:text-sm">
                         Engaging video lessons covering the seven powerful principles of becoming a Fire Starter
                       </p>
                     </CardContent>
@@ -339,12 +339,12 @@ export default function CourseDetail() {
 
                   {/* Take Quiz */}
                   <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300">
-                    <CardHeader className="text-center">
-                      <div className="text-4xl mb-2">📝</div>
-                      <CardTitle className="text-white text-xl">Take the Quiz</CardTitle>
+                    <CardHeader className="text-center py-3 md:py-6">
+                      <div className="text-2xl md:text-4xl mb-1 md:mb-2">📝</div>
+                      <CardTitle className="text-white text-base md:text-xl">Take the Quiz</CardTitle>
                     </CardHeader>
-                    <CardContent className="text-center">
-                      <p className="text-blue-200 text-sm">
+                    <CardContent className="text-center py-2 md:py-4">
+                      <p className="text-blue-200 text-xs md:text-sm">
                         Test your understanding with interactive quizzes and assessments
                       </p>
                     </CardContent>
@@ -365,12 +365,12 @@ export default function CourseDetail() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center">
                   {/* Watch Videos */}
                   <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300">
-                    <CardHeader className="text-center">
-                      <div className="text-4xl mb-2">📺</div>
-                      <CardTitle className="text-white text-xl">Watch the Videos</CardTitle>
+                    <CardHeader className="text-center py-3 md:py-6">
+                      <div className="text-2xl md:text-4xl mb-1 md:mb-2">📺</div>
+                      <CardTitle className="text-white text-base md:text-xl">Watch the Videos</CardTitle>
                     </CardHeader>
-                    <CardContent className="text-center">
-                      <p className="text-blue-200 text-sm">
+                    <CardContent className="text-center py-2 md:py-4">
+                      <p className="text-blue-200 text-xs md:text-sm">
                         Engaging video lessons covering effective Bible study methods and ministry preparation
                       </p>
                     </CardContent>
@@ -391,12 +391,12 @@ export default function CourseDetail() {
 
                   {/* Take Quiz */}
                   <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300">
-                    <CardHeader className="text-center">
-                      <div className="text-4xl mb-2">📝</div>
-                      <CardTitle className="text-white text-xl">Take the Quiz</CardTitle>
+                    <CardHeader className="text-center py-3 md:py-6">
+                      <div className="text-2xl md:text-4xl mb-1 md:mb-2">📝</div>
+                      <CardTitle className="text-white text-base md:text-xl">Take the Quiz</CardTitle>
                     </CardHeader>
-                    <CardContent className="text-center">
-                      <p className="text-blue-200 text-sm">
+                    <CardContent className="text-center py-2 md:py-4">
+                      <p className="text-blue-200 text-xs md:text-sm">
                         Test your understanding with interactive quizzes and assessments
                       </p>
                     </CardContent>
@@ -416,12 +416,12 @@ export default function CourseDetail() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 justify-items-center">
                   {/* Read Course Chapters */}
                   <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300">
-                    <CardHeader className="text-center">
-                      <div className="text-4xl mb-2">📖</div>
-                      <CardTitle className="text-white text-xl">Read e-book</CardTitle>
+                    <CardHeader className="text-center py-3 md:py-6">
+                      <div className="text-2xl md:text-4xl mb-1 md:mb-2">📖</div>
+                      <CardTitle className="text-white text-base md:text-xl">Read e-book</CardTitle>
                     </CardHeader>
-                    <CardContent className="text-center">
-                      <p className="text-blue-200 text-sm">
+                    <CardContent className="text-center py-2 md:py-4">
+                      <p className="text-blue-200 text-xs md:text-sm">
                         Explore G.R.O.W ministry principles: Give, Read, Obey, Win Souls through weekly chapter readings
                       </p>
                     </CardContent>
@@ -429,12 +429,12 @@ export default function CourseDetail() {
 
                   {/* Take Quizzes */}
                   <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300">
-                    <CardHeader className="text-center">
-                      <div className="text-4xl mb-2">📝</div>
-                      <CardTitle className="text-white text-xl">Take Practice Quizzes</CardTitle>
+                    <CardHeader className="text-center py-3 md:py-6">
+                      <div className="text-2xl md:text-4xl mb-1 md:mb-2">📝</div>
+                      <CardTitle className="text-white text-base md:text-xl">Take Practice Quizzes</CardTitle>
                     </CardHeader>
-                    <CardContent className="text-center">
-                      <p className="text-blue-200 text-sm">
+                    <CardContent className="text-center py-2 md:py-4">
+                      <p className="text-blue-200 text-xs md:text-sm">
                         Practice quizzes to familiarize yourself with the platform (ungraded orientation course)
                       </p>
                     </CardContent>
@@ -452,24 +452,24 @@ export default function CourseDetail() {
               <div className="max-w-3xl mx-auto mb-12">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 justify-items-center">
                   <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300">
-                    <CardHeader className="text-center">
-                      <div className="text-4xl mb-2">📖</div>
-                      <CardTitle className="text-white text-xl">Read e-book</CardTitle>
+                    <CardHeader className="text-center py-3 md:py-6">
+                      <div className="text-2xl md:text-4xl mb-1 md:mb-2">📖</div>
+                      <CardTitle className="text-white text-base md:text-xl">Read e-book</CardTitle>
                     </CardHeader>
-                    <CardContent className="text-center">
-                      <p className="text-blue-200 text-sm">
+                    <CardContent className="text-center py-2 md:py-4">
+                      <p className="text-blue-200 text-xs md:text-sm">
                         Work through each Deaconship audio chapter and reflection to build a biblical foundation for servant leadership.
                       </p>
                     </CardContent>
                   </Card>
 
                   <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300">
-                    <CardHeader className="text-center">
-                      <div className="text-4xl mb-2">📝</div>
-                      <CardTitle className="text-white text-xl">Take the Quizzes</CardTitle>
+                    <CardHeader className="text-center py-3 md:py-6">
+                      <div className="text-2xl md:text-4xl mb-1 md:mb-2">📝</div>
+                      <CardTitle className="text-white text-base md:text-xl">Take the Quizzes</CardTitle>
                     </CardHeader>
-                    <CardContent className="text-center">
-                      <p className="text-blue-200 text-sm">
+                    <CardContent className="text-center py-2 md:py-4">
+                      <p className="text-blue-200 text-xs md:text-sm">
                         Assess your readiness each week and unlock the final exam once all chapters are complete.
                       </p>
                     </CardContent>
@@ -498,12 +498,12 @@ export default function CourseDetail() {
                   </Card>
 
                   <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300">
-                    <CardHeader className="text-center">
-                      <div className="text-4xl mb-2">📝</div>
-                      <CardTitle className="text-white text-xl">Take the Quizzes</CardTitle>
+                    <CardHeader className="text-center py-3 md:py-6">
+                      <div className="text-2xl md:text-4xl mb-1 md:mb-2">📝</div>
+                      <CardTitle className="text-white text-base md:text-xl">Take the Quizzes</CardTitle>
                     </CardHeader>
-                    <CardContent className="text-center">
-                      <p className="text-blue-200 text-sm">
+                    <CardContent className="text-center py-2 md:py-4">
+                      <p className="text-blue-200 text-xs md:text-sm">
                         Complete each weekly quiz to lock in what you learned and unlock the final assessment once the course is finished.
                       </p>
                     </CardContent>
@@ -657,12 +657,12 @@ export default function CourseDetail() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center">
                   {/* Watch Videos */}
                   <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300">
-                    <CardHeader className="text-center">
-                      <div className="text-4xl mb-2">📺</div>
-                      <CardTitle className="text-white text-xl">Watch the Videos</CardTitle>
+                    <CardHeader className="text-center py-3 md:py-6">
+                      <div className="text-2xl md:text-4xl mb-1 md:mb-2">📺</div>
+                      <CardTitle className="text-white text-base md:text-xl">Watch the Videos</CardTitle>
                     </CardHeader>
-                    <CardContent className="text-center">
-                      <p className="text-blue-200 text-sm">
+                    <CardContent className="text-center py-2 md:py-4">
+                      <p className="text-blue-200 text-xs md:text-sm">
                         Engaging video lessons covering key principles from the book of Jonah
                       </p>
                     </CardContent>
@@ -683,12 +683,12 @@ export default function CourseDetail() {
 
                   {/* Take Quiz */}
                   <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300">
-                    <CardHeader className="text-center">
-                      <div className="text-4xl mb-2">📝</div>
-                      <CardTitle className="text-white text-xl">Take the Quiz</CardTitle>
+                    <CardHeader className="text-center py-3 md:py-6">
+                      <div className="text-2xl md:text-4xl mb-1 md:mb-2">📝</div>
+                      <CardTitle className="text-white text-base md:text-xl">Take the Quiz</CardTitle>
                     </CardHeader>
-                    <CardContent className="text-center">
-                      <p className="text-blue-200 text-sm">
+                    <CardContent className="text-center py-2 md:py-4">
+                      <p className="text-blue-200 text-xs md:text-sm">
                         Test your understanding with interactive quizzes and assessments
                       </p>
                     </CardContent>
@@ -790,12 +790,12 @@ export default function CourseDetail() {
 
                   {/* Read Required Bible Chapter */}
                   <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300">
-                    <CardHeader className="text-center">
-                      <div className="text-4xl mb-2">📖</div>
-                      <CardTitle className="text-white text-xl">Read e-book chapter and Bible Chapter</CardTitle>
+                    <CardHeader className="text-center py-3 md:py-6">
+                      <div className="text-2xl md:text-4xl mb-1 md:mb-2">📖</div>
+                      <CardTitle className="text-white text-base md:text-xl">Read e-book chapter and Bible Chapter</CardTitle>
                     </CardHeader>
-                    <CardContent className="text-center">
-                      <p className="text-blue-200 text-sm">
+                    <CardContent className="text-center py-2 md:py-4">
+                      <p className="text-blue-200 text-xs md:text-sm">
                         Direct study of the biblical text with guided reading and reflection
                       </p>
                     </CardContent>
@@ -803,12 +803,12 @@ export default function CourseDetail() {
 
                   {/* Take Quiz */}
                   <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300">
-                    <CardHeader className="text-center">
-                      <div className="text-4xl mb-2">📝</div>
-                      <CardTitle className="text-white text-xl">Take the Quiz</CardTitle>
+                    <CardHeader className="text-center py-3 md:py-6">
+                      <div className="text-2xl md:text-4xl mb-1 md:mb-2">📝</div>
+                      <CardTitle className="text-white text-base md:text-xl">Take the Quiz</CardTitle>
                     </CardHeader>
-                    <CardContent className="text-center">
-                      <p className="text-blue-200 text-sm">
+                    <CardContent className="text-center py-2 md:py-4">
+                      <p className="text-blue-200 text-xs md:text-sm">
                         Test your understanding with interactive quizzes and assessments
                       </p>
                     </CardContent>
