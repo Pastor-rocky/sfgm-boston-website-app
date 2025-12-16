@@ -1093,6 +1093,14 @@ export default function GrowCompleteEbook() {
                 onPlay={() => setIsPlaying(true)}
                 onPause={() => setIsPlaying(false)}
                 onEnded={() => setIsPlaying(false)}
+                onError={(e) => {
+                  console.error('Audio error:', e);
+                  console.error('Failed to load:', currentChapterData.audioUrl);
+                  alert(`Failed to load audio: ${currentChapterData.audioUrl}. Please check the file path.`);
+                }}
+                onLoadedData={() => {
+                  console.log('Audio loaded successfully:', currentChapterData.audioUrl);
+                }}
               />
             </CardContent>
           </Card>

@@ -1745,11 +1745,16 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                                     contentType: 'video',
                                     contentId: video.id,
                                     completed: true
-                                  }).then(() => {
-                                    // Force refresh the content progress query
+                                  }).then(async () => {
+                                    // Force refresh the content progress query immediately
                                     setForceRefresh(prev => prev + 1);
-                                    queryClient.invalidateQueries({ queryKey: [`/api/content-progress/${courseId}`] });
-                                    queryClient.refetchQueries({ queryKey: [`/api/content-progress/${courseId}`] });
+                                    await queryClient.invalidateQueries({ queryKey: [`/api/content-progress/${courseId}`] });
+                                    await queryClient.refetchQueries({ queryKey: [`/api/content-progress/${courseId}`] });
+                                    // Force a second refresh after a short delay to ensure UI updates
+                                    setTimeout(() => {
+                                      setForceRefresh(prev => prev + 1);
+                                      queryClient.refetchQueries({ queryKey: [`/api/content-progress/${courseId}`] });
+                                    }, 500);
                                   }).catch(error => {
                                     console.error('Failed to update video progress:', error);
                                     toast({
@@ -1977,11 +1982,16 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                                         contentType: 'video',
                                         contentId: video.id,
                                         completed: true
-                                      }).then(() => {
-                                        // Force refresh the content progress query
+                                      }).then(async () => {
+                                        // Force refresh the content progress query immediately
                                         setForceRefresh(prev => prev + 1);
-                                        queryClient.invalidateQueries({ queryKey: [`/api/content-progress/${courseId}`] });
-                                        queryClient.refetchQueries({ queryKey: [`/api/content-progress/${courseId}`] });
+                                        await queryClient.invalidateQueries({ queryKey: [`/api/content-progress/${courseId}`] });
+                                        await queryClient.refetchQueries({ queryKey: [`/api/content-progress/${courseId}`] });
+                                        // Force a second refresh after a short delay to ensure UI updates
+                                        setTimeout(() => {
+                                          setForceRefresh(prev => prev + 1);
+                                          queryClient.refetchQueries({ queryKey: [`/api/content-progress/${courseId}`] });
+                                        }, 500);
                                       }).catch(error => {
                                         console.error('Failed to update video progress:', error);
                                         toast({

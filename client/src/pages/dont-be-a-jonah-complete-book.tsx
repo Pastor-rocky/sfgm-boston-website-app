@@ -1977,9 +1977,18 @@ export default function DontBeAJonahCompleteBook() {
               <audio
                 ref={audioRef}
                 preload="auto"
+                src={currentChapterData.audioUrl}
                 onLoadedMetadata={() => setDuration(audioRef.current?.duration || 0)}
                 onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime || 0)}
                 onEnded={() => setIsPlaying(false)}
+                onError={(e) => {
+                  console.error('Audio error:', e);
+                  console.error('Failed to load:', currentChapterData.audioUrl);
+                  alert(`Failed to load audio: ${currentChapterData.audioUrl}. Please check the file path.`);
+                }}
+                onLoadedData={() => {
+                  console.log('Audio loaded successfully:', currentChapterData.audioUrl);
+                }}
               />
             </div>
           </CardContent>

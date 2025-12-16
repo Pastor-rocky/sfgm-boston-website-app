@@ -4047,11 +4047,20 @@ Within minutes after the service ended, the two teenagers were at the old man's 
 
                   <audio
                     ref={audioRef}
+                    src={currentChapterData.audioUrl}
                     onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
                     onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
                     onPlay={() => setIsPlaying(true)}
                     onPause={() => setIsPlaying(false)}
                     onEnded={() => setIsPlaying(false)}
+                    onError={(e) => {
+                      console.error('Audio error:', e);
+                      console.error('Failed to load:', currentChapterData.audioUrl);
+                      alert(`Failed to load audio: ${currentChapterData.audioUrl}. Please check the file path.`);
+                    }}
+                    onLoadedData={() => {
+                      console.log('Audio loaded successfully:', currentChapterData.audioUrl);
+                    }}
                   />
                 </CardContent>
               </Card>
