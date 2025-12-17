@@ -149,3 +149,5 @@ if (totalIssues === 0) {
 
 process.exit(totalIssues > 0 ? 1 : 0);
 
+
+

@@ -49,3 +49,5 @@ All 8 course books should now appear correctly in the textbook catalog!
 **Status**: ✅ **FIXED**
 **Ready for deployment**: Yes
 
+
+

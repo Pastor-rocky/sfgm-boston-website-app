@@ -1,0 +1,86 @@
+═══════════════════════════════════════════════════════════════
+COMPLETE LIST OF ALL IMAGES TO UPLOAD TO R2
+═══════════════════════════════════════════════════════════════
+
+TOTAL: 41 IMAGES
+
+═══════════════════════════════════════════════════════════════
+FROM PUBLIC FOLDER (27 images)
+═══════════════════════════════════════════════════════════════
+
+COURSE COVERS:
+1. acts-in-action-cover.png
+2. acts-in-action-cover.webp
+3. becoming-a-fire-starter-cover.jpeg
+4. fire-starter-cover.jpg
+5. dont-be-a-jonah-cover.jpg
+6. grow-cover.png
+7. studying-for-service-cover.jpg
+8. studying-for-service-cover-new.jpg
+9. deacon-course-cover.png
+10. level-up-leadership-cover.png
+11. sfgm-youth-ministry-cover.png
+12. introduction-to-prophecy-cover.jpg
+13. introduction-to-prophecy-cover.png
+14. theology-101-cover.png
+15. theology-101-cover.webp
+16. man-of-god-course-cover.webp
+17. power-of-preaching-cover.jpg
+18. sfgm-man-of-god-cover.png
+
+SERIES COVERS:
+19. Watchmen Logo.jpeg (has space!)
+20. te.jpeg
+21. pss.jpeg
+22. the-watchmen-project-cover.png
+23. watchmen-project-cover.webp
+
+OTHER PUBLIC:
+24. BBU1.001.jpeg
+25. sfgm logo 4 .webp (has spaces!)
+26. WS.jpeg
+27. Whisk_a9d6813ad3e9c37877e4536c55cfd0d3dr.jpeg
+
+═══════════════════════════════════════════════════════════════
+FROM ASSETS FOLDER (14 images)
+═══════════════════════════════════════════════════════════════
+
+LOGOS & BRANDING:
+28. sfgm-logo-new-blue.png (MOST IMPORTANT - used everywhere!)
+29. sfgm-logo.png
+30. sfgm-logo-blue.png
+31. sfgm-logo-1.png
+32. sfgm-logo-2.png
+33. sfgm-shield.png
+34. sfgm-orlando-logo.png
+35. sfgm-baseball-logo.png
+36. bishop-signature.png
+37. certificate-group-small.png
+38. certificate-group.png
+
+OTHER ASSETS:
+39. church-image.jpg
+40. bridge-hero.png
+41. baseball-field-image.png
+
+═══════════════════════════════════════════════════════════════
+IMPORTANT NOTES:
+═══════════════════════════════════════════════════════════════
+
+⚠️ FILES WITH SPACES (upload exactly as shown):
+   - "Watchmen Logo.jpeg" (space between Watchmen and Logo)
+   - "sfgm logo 4 .webp" (spaces in filename)
+
+⭐ MOST CRITICAL (upload these first):
+   - sfgm-logo-new-blue.png (main logo)
+   - sfgm-shield.png (certificates)
+   - All course covers (1-18)
+
+📤 UPLOAD TO: Root level of R2 bucket (same as MP3 files)
+📁 FIND IN: 
+   Public folder: /Users/rocky/Desktop/SFGM Boston Website:App  /public/
+   Assets folder: /Users/rocky/Desktop/SFGM Boston Website:App  /client/src/assets/
+
+═══════════════════════════════════════════════════════════════
+
+

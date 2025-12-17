@@ -129,3 +129,5 @@ If Namecheap doesn't show "ALIAS Record" option:
 **Follow these steps and your domain will be connected!** 🚀
 
 
+
+
