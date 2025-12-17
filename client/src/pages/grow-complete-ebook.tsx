@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Play, Pause, SkipBack, SkipForward, ArrowLeft, Volume2 } from "lucide-react";
+import { getAudioUrl } from "@/lib/audio-storage";
 
 export default function GrowCompleteEbook() {
   const [, setLocation] = useLocation();
@@ -17,10 +18,10 @@ export default function GrowCompleteEbook() {
   const [currentChapter, setCurrentChapter] = useState(1);
 
   const chapters = [
-    { id: 1, title: "Introduction & Chapter 1: Give - Time, Talents, Treasure", audioUrl: "/uploads/textbook-audio/grow-ch1.mp3" },
-    { id: 2, title: "Chapter 2: Read - Feed Daily on God's Word", audioUrl: "/uploads/textbook-audio/grow-ch2.mp3" },
-    { id: 3, title: "Chapter 3: Obey - Listen and Apply God's Word", audioUrl: "/uploads/textbook-audio/grow-ch3.mp3" },
-    { id: 4, title: "Chapter 4: Win - Go, Witness, Make Disciples", audioUrl: "/uploads/textbook-audio/grow-ch4.mp3" }
+    { id: 1, title: "Introduction & Chapter 1: Give - Time, Talents, Treasure", audioUrl: getAudioUrl('G.R.O.W 🌱 Cp1 .mp3') },
+    { id: 2, title: "Chapter 2: Read - Feed Daily on God's Word", audioUrl: getAudioUrl('G.R.O.W 🌱 Cp2.mp3') },
+    { id: 3, title: "Chapter 3: Obey - Listen and Apply God's Word", audioUrl: getAudioUrl('G.R.O.W 🌱 Cp3.mp3') },
+    { id: 4, title: "Chapter 4: Win - Go, Witness, Make Disciples", audioUrl: getAudioUrl('G.R.O.W 🌱 Cp4.mp3') }
   ];
 
   const currentChapterData = chapters[currentChapter - 1];

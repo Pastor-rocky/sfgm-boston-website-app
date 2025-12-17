@@ -3,6 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Play, Pause, SkipBack, SkipForward, Volume2 } from 'lucide-react';
+import { getAudioUrl } from '@/lib/audio-storage';
 
 export default function GrowCh1() {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -134,7 +135,7 @@ export default function GrowCh1() {
 
             <audio
               ref={audioRef}
-              src="/uploads/textbook-audio/grow-ch1.mp3"
+              src={getAudioUrl('G.R.O.W 🌱 Cp1 .mp3')}
               onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
               onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
               onPlay={() => setIsPlaying(true)}
