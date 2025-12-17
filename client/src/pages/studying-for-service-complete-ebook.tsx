@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Play, Pause, SkipBack, SkipForward, ArrowLeft, Volume2, Download } from "lucide-react";
+import { getAudioUrl } from "@/lib/audio-storage";
 
 export default function StudyingForServiceCompleteEbook() {
   const [, setLocation] = useLocation();
@@ -22,18 +23,18 @@ export default function StudyingForServiceCompleteEbook() {
   const [currentChapter, setCurrentChapter] = useState(1);
 
   const chapters = [
-    { id: 1, title: "Chapter 1: Know Your Text", audioUrl: "/uploads/textbook-audio/studying-for-service-ch1.mp3" },
-    { id: 2, title: "Chapter 2: Notice the Names", audioUrl: "/uploads/textbook-audio/studying-for-service-ch2.mp3" },
-    { id: 3, title: "Chapter 3: Look at the Places", audioUrl: "/uploads/textbook-audio/studying-for-service-ch3.mp3" },
-    { id: 4, title: "Chapter 4: The Numbers Game", audioUrl: "/uploads/textbook-audio/studying-for-service-ch4.mp3" },
-    { id: 5, title: "Chapter 5: Dig Deeper (Greek and Hebrew)", audioUrl: "/uploads/textbook-audio/studying-for-service-ch5.mp3" },
-    { id: 6, title: "Chapter 6: Pictures and Parables", audioUrl: "/uploads/textbook-audio/studying-for-service-ch6.mp3" },
-    { id: 7, title: "Chapter 7: Illustrations", audioUrl: "/uploads/textbook-audio/studying-for-service-ch7.mp3" },
-    { id: 8, title: "Chapter 8: Application", audioUrl: "/uploads/textbook-audio/studying-for-service-ch8.mp3" },
-    { id: 9, title: "Chapter 9: How to Make a Sermon", audioUrl: "/uploads/textbook-audio/studying-for-service-ch9.mp3" },
-    { id: 10, title: "Chapter 10: Balance", audioUrl: "/uploads/textbook-audio/studying-for-service-ch10.mp3" },
-    { id: 11, title: "Chapter 11: Personal Testimony", audioUrl: "/uploads/textbook-audio/studying-for-service-ch11.mp3" },
-    { id: 12, title: "Chapter 12: Conclusion", audioUrl: "/uploads/textbook-audio/studying-for-service-ch12.mp3" }
+    { id: 1, title: "Chapter 1: Know Your Text", audioUrl: getAudioUrl('Studying for Service Cp1 .mp3') },
+    { id: 2, title: "Chapter 2: Notice the Names", audioUrl: getAudioUrl('Studying for Service Cp2.mp3') },
+    { id: 3, title: "Chapter 3: Look at the Places", audioUrl: getAudioUrl('Studying for Service Cp3 .mp3') },
+    { id: 4, title: "Chapter 4: The Numbers Game", audioUrl: getAudioUrl('Studying for Service Cp4.mp3') },
+    { id: 5, title: "Chapter 5: Dig Deeper (Greek and Hebrew)", audioUrl: getAudioUrl('Studying for Service Cp5.mp3') },
+    { id: 6, title: "Chapter 6: Pictures and Parables", audioUrl: getAudioUrl('Studying for Service Cp6.mp3') },
+    { id: 7, title: "Chapter 7: Illustrations", audioUrl: getAudioUrl('Studying for Service Cp7.mp3') },
+    { id: 8, title: "Chapter 8: Application", audioUrl: getAudioUrl('Studying for Service Cp8.mp3') },
+    { id: 9, title: "Chapter 9: How to Make a Sermon", audioUrl: getAudioUrl('Studying for Service Cp9.mp3') },
+    { id: 10, title: "Chapter 10: Balance", audioUrl: getAudioUrl('Studying for Service Cp10.mp3') },
+    { id: 11, title: "Chapter 11: Personal Testimony", audioUrl: getAudioUrl('Studying for Service Cp11.mp3') },
+    { id: 12, title: "Chapter 12: Conclusion", audioUrl: getAudioUrl('Studying for Service Cp12.mp3') }
   ];
 
   const currentChapterData = chapters[currentChapter - 1];
