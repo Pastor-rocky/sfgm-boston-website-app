@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/compone
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useState } from "react";
 import { Link } from "wouter";
+import { getImageUrl } from "@/lib/image-storage";
 
 export default function TrueEncounterSeries() {
   const [selectedVideo, setSelectedVideo] = useState<any>(null);
@@ -104,7 +105,7 @@ export default function TrueEncounterSeries() {
         <div className="text-center mb-12">
           <div className="max-w-md mx-auto mb-8">
             <img 
-              src="/te.jpeg" 
+              src={getImageUrl('te.jpeg')} 
               alt="Having a True Encounter Series Cover"
               className="w-full rounded-lg shadow-2xl border-4 border-blue-400/30"
             />

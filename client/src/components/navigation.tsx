@@ -30,9 +30,7 @@ export default function Navigation() {
   ];
 
   const enrollmentLinks = [
-    { href: "/bible-university", label: "SFGM Boston Curriculum 🎓", description: "Full degree programs" },
     { href: "/course-catalog", label: "Course Catalog 📚", description: "Browse all courses" },
-    { href: "/sfgm-orlando", label: "SFGM Orlando Curriculum 📖", description: "Bible study programs" },
   ];
 
   const privateExtraLinks = [
@@ -201,29 +199,8 @@ export default function Navigation() {
             </DropdownMenu>
           </div>
 
-          {/* Mobile menu button - Enhanced with user info */}
+          {/* Mobile menu button */}
           <div className="md:hidden flex items-center space-x-2">
-            {isAuthenticated && (
-              <div className="flex items-center space-x-2 bg-gradient-to-r from-blue-50 to-purple-50 px-3 py-1.5 rounded-lg border border-blue-200">
-                <Avatar className="w-8 h-8 border-2 border-blue-600">
-                  <AvatarImage 
-                    src={user?.profileImageUrl || undefined} 
-                    alt={`${user?.firstName || user?.username || 'Member'}'s profile`}
-                  />
-                  <AvatarFallback className="bg-blue-600 text-white text-xs font-semibold">
-                    {(user?.firstName || user?.username || 'M').charAt(0).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex flex-col">
-                  <span className="text-primary font-semibold text-xs">
-                    Welcome, {user?.firstName || user?.username || 'Member'}!
-                  </span>
-                  <Link href="/dashboard" className="text-xs text-blue-600 hover:text-blue-800 font-medium">
-                    Dashboard
-                  </Link>
-                </div>
-              </div>
-            )}
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
                 <Button 

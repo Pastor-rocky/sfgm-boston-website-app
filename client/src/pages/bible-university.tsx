@@ -10,6 +10,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient } from "@/lib/queryClient";
+import { getImageUrl } from "@/lib/image-storage";
 
 export default function BibleUniversity() {
   const { user, isAuthenticated } = useAuth();
@@ -131,7 +132,7 @@ export default function BibleUniversity() {
         <div className="text-center mb-12">
           <div className="mb-8 flex justify-center">
             <img 
-              src="/BBU1.001.jpeg" 
+              src={getImageUrl('BBU1.001.jpeg')} 
               alt="Boston Bible University"
               className="rounded-lg shadow-2xl border-4 border-blue-400/30"
               style={{ width: '600px', height: 'auto', maxWidth: '100%' }}

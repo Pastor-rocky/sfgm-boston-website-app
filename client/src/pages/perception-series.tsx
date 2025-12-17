@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/compone
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useState } from "react";
 import { Link } from "wouter";
+import { getImageUrl } from "@/lib/image-storage";
 
 export default function PerceptionSeries() {
   const [selectedVideo, setSelectedVideo] = useState<any>(null);
@@ -76,7 +77,7 @@ export default function PerceptionSeries() {
         <div className="text-center mb-12">
           <div className="max-w-md mx-auto mb-8">
             <img 
-              src="/pss.jpeg" 
+              src={getImageUrl('pss.jpeg')} 
               alt="Perception Sermon Series Cover"
               className="w-full rounded-lg shadow-2xl border-4 border-purple-400/30"
             />

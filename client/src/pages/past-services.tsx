@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/compone
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
+import { getImageUrl } from "@/lib/image-storage";
 
 export default function PastServices() {
   const [selectedVideo, setSelectedVideo] = useState<any>(null);
@@ -145,7 +146,7 @@ export default function PastServices() {
                     <div className="w-full md:w-40 lg:w-48 relative aspect-video md:aspect-[3/4] md:h-auto">
                       <div className="absolute inset-0 bg-gradient-to-br from-amber-600/20 to-orange-600/20"></div>
                       <img 
-                        src="/Watchmen Logo.jpeg" 
+                        src={getImageUrl('Watchmen Logo.jpeg')} 
                         alt="The Watchmen Series Cover"
                         className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                       />
@@ -208,7 +209,7 @@ export default function PastServices() {
                     <div className="w-full md:w-40 lg:w-48 relative aspect-video md:aspect-[3/4] md:h-auto">
                       <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-purple-600/20"></div>
                       <img 
-                        src="/te.jpeg" 
+                        src={getImageUrl('te.jpeg')} 
                         alt="Having a True Encounter Series Cover"
                         className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                       />
@@ -271,7 +272,7 @@ export default function PastServices() {
                     <div className="w-full md:w-40 lg:w-48 relative aspect-video md:aspect-[3/4] md:h-auto">
                       <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 to-indigo-600/20"></div>
                       <img 
-                        src="/pss.jpeg" 
+                        src={getImageUrl('pss.jpeg')} 
                         alt="Perception Sermon Series Cover"
                         className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                       />
