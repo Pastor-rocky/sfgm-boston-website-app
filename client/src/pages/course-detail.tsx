@@ -1,6 +1,6 @@
 import { useParams, useLocation } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { getAudioUrl } from "@/lib/audio-storage";
+import CoursePasswordPrompt from "@/components/course-password-prompt";
 
 
 export default function CourseDetail() {
@@ -19,6 +20,10 @@ export default function CourseDetail() {
   const { user, isAuthenticated } = useAuth();
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+  const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
+  
+  // Locked courses that require password
+  const LOCKED_COURSES = [6, 8]; // Deacon Course and Youth Ministry Course
 
   // Redirect course 18 (G.R.O.W) to proper interface
   useEffect(() => {
@@ -152,7 +157,15 @@ export default function CourseDetail() {
                     </Badge>
                   ) : (
                     <Button 
-                      onClick={() => enrollMutation.mutate()}
+                      onClick={() => {
+                        // Check if course is locked and requires password
+                        const courseIdNum = parseInt(id!);
+                        if (LOCKED_COURSES.includes(courseIdNum)) {
+                          setShowPasswordPrompt(true);
+                        } else {
+                          enrollMutation.mutate();
+                        }
+                      }}
                       disabled={enrollMutation.isPending}
                       size="lg"
                       className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-6 py-3 md:px-8 md:py-4 text-base md:text-lg min-h-[44px] w-full sm:w-auto"
@@ -935,6 +948,19 @@ export default function CourseDetail() {
       </div>
 
       <Footer />
+      
+      {/* Password Prompt Modal for Locked Courses */}
+      {id && LOCKED_COURSES.includes(parseInt(id)) && (
+        <CoursePasswordPrompt
+          courseId={parseInt(id)}
+          courseName={(course as any)?.name || 'Course'}
+          isOpen={showPasswordPrompt}
+          onClose={() => setShowPasswordPrompt(false)}
+          onSuccess={() => {
+            enrollMutation.mutate();
+          }}
+        />
+      )}
     </div>
   );
 }

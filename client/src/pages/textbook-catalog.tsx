@@ -11,6 +11,7 @@ import { useLocation } from "wouter";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { FaBook, FaEye, FaUser, FaCalendar, FaGraduationCap, FaTimes, FaBookmark, FaCheck, FaPlus, FaBookOpen } from "react-icons/fa";
+import CoursePasswordPrompt, { COURSE_PASSWORDS } from "@/components/course-password-prompt";
 // import growCover from "@assets/image_1753296696582.png";
 // import studyingForServiceCover from "@assets/Image 2_1753137106145.jpg";
 // import dontBeAJonahCover from "@assets/Image_1753137060328.jpg";
@@ -54,6 +55,10 @@ export default function TextbookCatalog() {
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("All");
   const [sortBy, setSortBy] = useState<string>("course");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
+  const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
+  const [passwordCourseId, setPasswordCourseId] = useState<number | null>(null);
+  const [passwordCourseName, setPasswordCourseName] = useState<string>("");
 
   // Get user's personal library to check which books are already added
   const { data: personalLibraryResponse } = useQuery<{ books: any[] }>({
@@ -396,6 +401,22 @@ export default function TextbookCatalog() {
   });
 
   const handleReadTextbook = (textbook: Textbook) => {
+    // Check if course requires password (Deacon Course 6 or Youth Ministry 8)
+    if (textbook.courseId === 6 || textbook.courseId === 8) {
+      setPasswordCourseId(textbook.courseId);
+      setPasswordCourseName(textbook.title);
+      setPendingAction(() => {
+        if (textbook.courseId === 6) {
+          return () => setLocation('/deacon-course-complete-ebook');
+        } else if (textbook.courseId === 8) {
+          return () => setLocation('/youth-ministry-complete-ebook');
+        }
+        return () => {};
+      });
+      setShowPasswordPrompt(true);
+      return;
+    }
+    
     // For "Acts in Action" (courseId 1), navigate to the complete e-book
     if (textbook.courseId === 1) {
       setLocation('/acts-in-action-ebook');
@@ -423,17 +444,6 @@ export default function TextbookCatalog() {
     // For "G.R.O.W" (courseId 4), navigate to the complete e-book
     if (textbook.courseId === 4) {
       setLocation('/grow-complete-ebook');
-      return;
-    }
-    
-    if (textbook.courseId === 6) {
-      setLocation('/deacon-course-complete-ebook');
-      return;
-    }
-    
-    // For Youth Ministry Course (courseId 8), navigate to the complete e-book
-    if (textbook.courseId === 8) {
-      setLocation('/youth-ministry-complete-ebook');
       return;
     }
     
@@ -708,90 +718,126 @@ export default function TextbookCatalog() {
                 {!(textbook.courseId >= 101 && textbook.courseId <= 106) && textbook.courseId !== 9 && textbook.courseId !== 16 && (
                   <div className="space-y-2 mt-auto">
                     {/* Read E-Book Button */}
-                    <Button 
-                      onClick={() => {
-                        if (textbook.courseId === 1) {
-                          // Navigate to the complete e-book for Acts in Action
-                          setLocation('/acts-in-action-ebook');
-                        } else if (textbook.courseId === 3) {
-                          // Navigate to the complete e-book for Don't Be a Jonah
-                          setLocation('/dont-be-a-jonah-complete-book');
-                        } else if (textbook.courseId === 2) {
-                          // Navigate to the complete e-book for Becoming a Fire Starter
-                          setLocation('/becoming-a-firestarter-complete-ebook');
-                        } else if (textbook.courseId === 5) {
-                          // Navigate to the complete e-book for Studying for Service
-                          setLocation('/studying-for-service-complete-ebook');
-                        } else if (textbook.courseId === 4) {
-                          // Navigate to the complete e-book for G.R.O.W
-                          setLocation('/grow-complete-ebook');
-                        } else if (textbook.courseId === 6) {
-                          // Navigate to the complete e-book for Deacon Course
-                          setLocation('/deacon-course-complete-ebook');
-                        } else if (textbook.courseId === 8) {
-                          // Navigate to the complete e-book for Youth Ministry Course
-                          setLocation('/youth-ministry-complete-ebook');
+                    {textbook.courseId === 7 ? (
+                      // Level Up Leadership - Link to Amazon instead of e-book
+                      <a
+                        href="https://www.amazon.com/Levels-Leadership-Proven-Maximize-Potential/dp/1599953633"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full"
+                      >
+                        <Button 
+                          className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white h-9 text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl"
+                          size="sm"
+                        >
+                          📖 Start Reading
+                        </Button>
+                      </a>
+                    ) : (
+                      <Button 
+                        onClick={() => {
+                          if (textbook.courseId === 1) {
+                            // Navigate to the complete e-book for Acts in Action
+                            setLocation('/acts-in-action-ebook');
+                          } else if (textbook.courseId === 3) {
+                            // Navigate to the complete e-book for Don't Be a Jonah
+                            setLocation('/dont-be-a-jonah-complete-book');
+                          } else if (textbook.courseId === 2) {
+                            // Navigate to the complete e-book for Becoming a Fire Starter
+                            setLocation('/becoming-a-firestarter-complete-ebook');
+                          } else if (textbook.courseId === 5) {
+                            // Navigate to the complete e-book for Studying for Service
+                            setLocation('/studying-for-service-complete-ebook');
+                          } else if (textbook.courseId === 4) {
+                            // Navigate to the complete e-book for G.R.O.W
+                            setLocation('/grow-complete-ebook');
+                        } else if (textbook.courseId === 6 || textbook.courseId === 8) {
+                          // Check password for locked courses
+                          setPasswordCourseId(textbook.courseId);
+                          setPasswordCourseName(textbook.title);
+                          setPendingAction(() => {
+                            if (textbook.courseId === 6) {
+                              return () => setLocation('/deacon-course-complete-ebook');
+                            } else if (textbook.courseId === 8) {
+                              return () => setLocation('/youth-ministry-complete-ebook');
+                            }
+                            return () => {};
+                          });
+                          setShowPasswordPrompt(true);
                         } else {
-                          setLocation(`/pdf-download?courseId=${textbook.courseId}`);
-                        }
-                      }}
-                      className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white h-9 text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl"
-                      size="sm"
-                    >
-                      📖 Start Reading
-                    </Button>
+                            setLocation(`/pdf-download?courseId=${textbook.courseId}`);
+                          }
+                        }}
+                        className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white h-9 text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl"
+                        size="sm"
+                      >
+                        📖 Start Reading
+                      </Button>
+                    )}
                     
-                    {/* Add to Library Button */}
-                    <Button 
-                      variant={isAuthenticated && isBookInLibrary(textbook.title, textbook.author) ? "secondary" : "outline"}
-                      onClick={() => {
-                        if (!isAuthenticated) {
-                          toast({
-                            title: "Login Required",
-                            description: "Please login to add books to your personal library",
-                            variant: "destructive",
-                          });
-                          return;
-                        }
-                        // Prevent adding if already in library
-                        if (isBookInLibrary(textbook.title, textbook.author)) {
-                          toast({
-                            title: "Already in Library",
-                            description: "This book is already in your personal library",
-                            variant: "default",
-                          });
-                          return;
-                        }
-                        const textbookData = {
-                          ...textbook,
-                          readingStatus: "want_to_read",
-                          priority: "high",
-                          rating: 5,
-                          coverColor: "blue"
-                        };
-                        handleAddToLibrary(textbookData);
-                      }}
-                      className={`w-full h-9 text-sm font-semibold rounded-xl transition-all duration-300 ${
-                        isAuthenticated && isBookInLibrary(textbook.title, textbook.author)
-                          ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-lg"
-                          : "bg-white/90 hover:bg-white border-2 border-purple-300 text-purple-700 hover:text-purple-800 shadow-md hover:shadow-lg"
-                      }`}
-                      size="sm"
-                      disabled={isAuthenticated && (isBookInLibrary(textbook.title, textbook.author) || addToLibraryMutation.isPending)}
-                    >
-                      {isAuthenticated && addToLibraryMutation.isPending ? (
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
-                      ) : isAuthenticated && isBookInLibrary(textbook.title, textbook.author) ? (
-                        <>✅ Saved!</>
-                      ) : (
-                        <>💾 Save to Library</>
-                      )}
-                    </Button>
+                    {/* Add to Library Button - Hidden for Level Up Leadership (courseId 7) */}
+                    {textbook.courseId !== 7 && (
+                      <Button 
+                        variant={isAuthenticated && isBookInLibrary(textbook.title, textbook.author) ? "secondary" : "outline"}
+                        onClick={() => {
+                          if (!isAuthenticated) {
+                            toast({
+                              title: "Login Required",
+                              description: "Please login to add books to your personal library",
+                              variant: "destructive",
+                            });
+                            return;
+                          }
+                          // Prevent adding if already in library
+                          if (isBookInLibrary(textbook.title, textbook.author)) {
+                            toast({
+                              title: "Already in Library",
+                              description: "This book is already in your personal library",
+                              variant: "default",
+                            });
+                            return;
+                          }
+                          const textbookData = {
+                            ...textbook,
+                            readingStatus: "want_to_read",
+                            priority: "high",
+                            rating: 5,
+                            coverColor: "blue"
+                          };
+                          handleAddToLibrary(textbookData);
+                        }}
+                        className={`w-full h-9 text-sm font-semibold rounded-xl transition-all duration-300 ${
+                          isAuthenticated && isBookInLibrary(textbook.title, textbook.author)
+                            ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-lg"
+                            : "bg-white/90 hover:bg-white border-2 border-purple-300 text-purple-700 hover:text-purple-800 shadow-md hover:shadow-lg"
+                        }`}
+                        size="sm"
+                        disabled={isAuthenticated && (isBookInLibrary(textbook.title, textbook.author) || addToLibraryMutation.isPending)}
+                      >
+                        {isAuthenticated && addToLibraryMutation.isPending ? (
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
+                        ) : isAuthenticated && isBookInLibrary(textbook.title, textbook.author) ? (
+                          <>✅ Saved!</>
+                        ) : (
+                          <>💾 Save to Library</>
+                        )}
+                      </Button>
+                    )}
                     
                     {/* Take Course Button */}
                     <Button 
                       variant="outline" 
-                      onClick={() => handleViewCourse(textbook.courseId)}
+                      onClick={() => {
+                        // Check if course requires password (Deacon Course 6 or Youth Ministry 8)
+                        if (textbook.courseId === 6 || textbook.courseId === 8) {
+                          setPasswordCourseId(textbook.courseId);
+                          setPasswordCourseName(textbook.title);
+                          setPendingAction(() => () => handleViewCourse(textbook.courseId));
+                          setShowPasswordPrompt(true);
+                        } else {
+                          handleViewCourse(textbook.courseId);
+                        }
+                      }}
                       className={`w-full h-9 text-sm font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-300 ${
                         isEnrolledInCourse(textbook.courseId)
                           ? "bg-gradient-to-r from-green-500/20 to-emerald-600/20 hover:from-green-500/30 hover:to-emerald-600/30 border-2 border-green-400 text-green-700 hover:text-green-800"
@@ -847,6 +893,26 @@ export default function TextbookCatalog() {
         <Footer />
         </div>
       </div>
+      
+      {/* Password Prompt Modal */}
+      {passwordCourseId && (
+        <CoursePasswordPrompt
+          courseId={passwordCourseId}
+          courseName={passwordCourseName}
+          isOpen={showPasswordPrompt}
+          onClose={() => {
+            setShowPasswordPrompt(false);
+            setPasswordCourseId(null);
+            setPasswordCourseName("");
+            setPendingAction(null);
+          }}
+          onSuccess={() => {
+            if (pendingAction) {
+              pendingAction();
+            }
+          }}
+        />
+      )}
     </TooltipProvider>
   );
 }

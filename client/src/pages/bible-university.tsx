@@ -11,10 +11,15 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient } from "@/lib/queryClient";
 import { getImageUrl } from "@/lib/image-storage";
+import { useState } from "react";
+import CoursePasswordPrompt from "@/components/course-password-prompt";
 
 export default function BibleUniversity() {
   const { user, isAuthenticated } = useAuth();
   const { toast } = useToast();
+  const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
+  const [passwordCourseId, setPasswordCourseId] = useState<number | null>(null);
+  const [passwordCourseName, setPasswordCourseName] = useState<string>("");
 
   // Fetch enrollments to check if user is enrolled in Deacon Course
   const { data: enrollments = [] } = useQuery({
@@ -91,8 +96,10 @@ export default function BibleUniversity() {
       return;
     }
 
-    // Perform enrollment
-    enrollMutation.mutate();
+    // Show password prompt for locked course
+    setPasswordCourseId(6);
+    setPasswordCourseName("Deacon Course");
+    setShowPasswordPrompt(true);
   };
 
   const handleYouthMinistryEnroll = () => {
@@ -108,8 +115,10 @@ export default function BibleUniversity() {
       return;
     }
 
-    // Perform enrollment
-    enrollYouthMinistryMutation.mutate();
+    // Show password prompt for locked course
+    setPasswordCourseId(8);
+    setPasswordCourseName("Youth Ministry Course");
+    setShowPasswordPrompt(true);
   };
 
   return (
@@ -315,6 +324,27 @@ export default function BibleUniversity() {
       </main>
 
       <Footer />
+      
+      {/* Password Prompt Modal */}
+      {passwordCourseId && (
+        <CoursePasswordPrompt
+          courseId={passwordCourseId}
+          courseName={passwordCourseName}
+          isOpen={showPasswordPrompt}
+          onClose={() => {
+            setShowPasswordPrompt(false);
+            setPasswordCourseId(null);
+            setPasswordCourseName("");
+          }}
+          onSuccess={() => {
+            if (passwordCourseId === 6) {
+              enrollMutation.mutate();
+            } else if (passwordCourseId === 8) {
+              enrollYouthMinistryMutation.mutate();
+            }
+          }}
+        />
+      )}
       </div>
     </div>
   );
