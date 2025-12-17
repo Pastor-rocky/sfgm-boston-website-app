@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Play, Pause, SkipBack, SkipForward, Volume2, ArrowLeft } from "lucide-react";
+import { getAudioUrl } from "@/lib/audio-storage";
 
 export default function YouthMinistryCourseCh1() {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -95,7 +96,7 @@ export default function YouthMinistryCourseCh1() {
 
             <audio
               ref={audioRef}
-              src="/uploads/textbook-audio/youth-ministry-ch1.mp3"
+              src={getAudioUrl('Section 1 .mp3')}
               onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime || 0)}
               onLoadedMetadata={() => setDuration(audioRef.current?.duration || 0)}
               onPlay={() => setIsPlaying(true)}

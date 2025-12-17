@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Play, Pause, SkipBack, SkipForward, ArrowLeft, Volume2 } from "lucide-react";
+import { getAudioUrl } from "@/lib/audio-storage";
 
 export default function YouthMinistryCompleteEbook() {
   const [, setLocation] = useLocation();
@@ -17,11 +18,11 @@ export default function YouthMinistryCompleteEbook() {
   const [currentChapter, setCurrentChapter] = useState(1);
 
   const chapters = [
-    { id: 1, title: "Chapter 1: The Calling", audioUrl: "/uploads/textbook-audio/youth-ministry-ch1.mp3" },
-    { id: 2, title: "Chapter 2: Requirements", audioUrl: "/uploads/textbook-audio/youth-ministry-ch2.mp3" },
-    { id: 3, title: "Chapter 3: Responsibilities", audioUrl: "/uploads/textbook-audio/youth-ministry-ch3.mp3" },
-    { id: 4, title: "Chapter 4: Accountability", audioUrl: "/uploads/textbook-audio/youth-ministry-ch4.mp3" },
-    { id: 5, title: "Chapter 5: Making New Disciples", audioUrl: "/uploads/textbook-audio/youth-ministry-ch5.mp3" }
+    { id: 1, title: "Chapter 1: The Calling", audioUrl: getAudioUrl('Section 1 .mp3') },
+    { id: 2, title: "Chapter 2: Requirements", audioUrl: getAudioUrl('Section 2.mp3') },
+    { id: 3, title: "Chapter 3: Responsibilities", audioUrl: getAudioUrl('Section 3 .mp3') },
+    { id: 4, title: "Chapter 4: Accountability", audioUrl: getAudioUrl('Section 4.mp3') },
+    { id: 5, title: "Chapter 5: Making New Disciples", audioUrl: getAudioUrl('Section 5.mp3') }
   ];
 
   const currentChapterData = chapters[currentChapter - 1];
