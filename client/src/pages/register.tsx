@@ -254,7 +254,7 @@ export default function Register() {
         // Store registration info for welcome message and redirect to welcome video
         sessionStorage.setItem('newRegistration', 'true');
         sessionStorage.setItem('registrationPassword', formData.password);
-        window.location.href = '/welcome-video';
+        window.location.href = '/dashboard';
       } else {
         
         toast({

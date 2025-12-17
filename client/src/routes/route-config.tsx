@@ -79,7 +79,6 @@ export const studentRoutes: RouteDefinition[] = [
 export const authRoutes: RouteDefinition[] = [
   createRoute("/login", () => import("@/pages/login")),
   createRoute("/register", () => import("@/pages/register")),
-  createRoute("/welcome-video", () => import("@/pages/welcome-video")),
   createRoute("/logout", () => import("@/pages/logout")),
 ];
 
