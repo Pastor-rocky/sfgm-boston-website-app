@@ -7,7 +7,6 @@ import { essaySubmissions } from "../../shared/schema";
 import { storage } from "../storage";
 import { requireAuth } from "../middleware/requireAuth";
 import { validateBody } from "../middleware/validate";
-import { sendEssaySubmissionEmail } from "../services/emailService";
 
 const essaySubmissionSchema = z.object({
   quizId: z.coerce.number().int().positive(),
@@ -49,26 +48,12 @@ export function registerEssayRoutes(app: Express) {
         })
         .returning();
 
-      const emailResult = await sendEssaySubmissionEmail({
-        toEmail: email,
-        studentName: `${student.firstName || ""} ${student.lastName || ""}`.trim() || student.username || student.email || "Unknown Student",
-        studentEmail: student.email || "unknown@sfgmboston.com",
-        courseTitle: quiz.title,
-        quizId,
-        questionId,
-        wordCount,
-        essayText,
-        submittedAt: new Date(),
-      });
-
       res.json({
         success: true,
         message: "Essay submitted successfully",
         essayId: essaySubmission.id,
         courseCompleted: true,
         certificateNumber: `CERT-${Date.now()}-${finalStudentId.slice(-4)}`,
-        emailDelivered: emailResult.delivered,
-        emailDeliveryMessage: emailResult.reason,
       });
     } catch (error) {
       console.error("Error submitting essay:", error);

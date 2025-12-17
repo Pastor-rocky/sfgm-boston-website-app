@@ -141,7 +141,7 @@ export function EssaySubmission({ quizId, essayQuestion, studentId, onSubmission
     onSuccess: (response: any) => {
       toast({
         title: "🎓 Essay Submitted Successfully!",
-        description: "Your essay has been sent to pastor_rocky@sfgmboston.com for review. You will receive your course completion certificate via email after review."
+        description: "Your essay has been saved. Please email or text your essay to Pastor Rocky for review."
       });
       queryClient.invalidateQueries({ queryKey: ['/api/quiz-attempts'] });
       queryClient.invalidateQueries({ queryKey: ['/api/certificates'] });
@@ -276,10 +276,35 @@ export function EssaySubmission({ quizId, essayQuestion, studentId, onSubmission
                 <li>• Minimum 100 words required</li>
                 <li>• Use specific examples from the textbook</li>
                 <li>• Explain how principles apply to your spiritual journey</li>
-                <li>• Essay will be sent to pastor_rocky@sfgmboston.com for review</li>
-                <li>• You will receive your course completion certificate via email after review</li>
                 <li>• You cannot retake the final exam once essay is submitted</li>
               </ul>
+            </div>
+
+            {/* Submit Essay Instructions */}
+            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 text-sm text-green-800 dark:text-green-200">
+              <h4 className="font-semibold mb-2">📧 Submit Your Essay:</h4>
+              <p className="mb-3">After submitting, please send your essay to Pastor Rocky:</p>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <a 
+                    href="mailto:pastor_rocky@sfgmboston.com?subject=Final Exam Essay Submission&body=Please find my essay submission attached." 
+                    className="text-green-700 dark:text-green-300 hover:underline font-medium flex items-center gap-2"
+                  >
+                    <i className="fas fa-envelope"></i>
+                    Email: pastor_rocky@sfgmboston.com
+                  </a>
+                </div>
+                <div className="flex items-center gap-2">
+                  <a 
+                    href="sms:6175127451?body=Final Exam Essay Submission" 
+                    className="text-green-700 dark:text-green-300 hover:underline font-medium flex items-center gap-2"
+                  >
+                    <i className="fas fa-sms"></i>
+                    Text: (617) 512-7451
+                  </a>
+                </div>
+              </div>
+              <p className="mt-3 text-xs opacity-90">Copy your essay text and send it via email or text message.</p>
             </div>
           </CardContent>
         </Card>

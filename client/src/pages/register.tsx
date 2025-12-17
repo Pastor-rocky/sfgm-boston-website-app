@@ -21,8 +21,6 @@ interface RegisterFormData {
   phone: string;
   password: string;
   confirmPassword: string;
-  emailConsent: boolean;
-  textMessageConsent: boolean;
 }
 
 export default function Register() {
@@ -43,8 +41,6 @@ export default function Register() {
     phone: "",
     password: "",
     confirmPassword: "",
-    emailConsent: false,
-    textMessageConsent: false,
   });
 
   // Calculate password strength
@@ -126,8 +122,7 @@ export default function Register() {
       formData.confirmPassword,
     ];
     const filledFields = fields.filter(f => f.trim() !== '').length;
-    const consentFields = [formData.emailConsent].filter(Boolean).length;
-    return Math.round(((filledFields + consentFields) / 9) * 100);
+    return Math.round((filledFields / 8) * 100);
   };
 
   // Redirect if already authenticated
@@ -222,15 +217,6 @@ export default function Register() {
       return;
     }
 
-    if (!formData.emailConsent) {
-      toast({
-        title: "Email Consent Required",
-        description: "Please consent to email communications to continue.",
-        variant: "destructive",
-      });
-      setIsLoading(false);
-      return;
-    }
 
     try {
       const response = await fetch('/api/auth/register', {
@@ -247,8 +233,6 @@ export default function Register() {
           username: formData.username.trim(),
           phone: formData.phone.trim(),
           password: formData.password,
-          emailConsent: formData.emailConsent,
-          textMessageConsent: formData.textMessageConsent,
         }),
       });
 
@@ -768,43 +752,6 @@ export default function Register() {
                 </div>
 
 
-                {/* Email Consent */}
-                <div className="flex items-start space-x-4 p-6 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-xl">
-                  <Checkbox
-                    id="emailConsent"
-                    checked={formData.emailConsent}
-                    onCheckedChange={(checked) => setFormData({...formData, emailConsent: checked as boolean})}
-                    className="mt-1 w-5 h-5 text-green-600 border-2 border-green-300 rounded focus:ring-green-500"
-                  />
-                  <div className="flex-1">
-                    <Label htmlFor="emailConsent" className="text-sm font-semibold text-gray-800 cursor-pointer flex items-center gap-2">
-                      <i className="fas fa-envelope text-green-600"></i>
-                      Email Communications Consent *
-                    </Label>
-                    <p className="text-xs text-gray-600 mt-2 leading-relaxed">
-                      I consent to receive email communications from SFGM Boston Bible School for course updates, educational content, ministry announcements, and important notifications. <span className="font-semibold">You can unsubscribe at any time.</span>
-                    </p>
-                  </div>
-                </div>
-
-                {/* Text Message Consent */}
-                <div className="flex items-start space-x-4 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl">
-                  <Checkbox
-                    id="textMessageConsent"
-                    checked={formData.textMessageConsent}
-                    onCheckedChange={(checked) => setFormData({...formData, textMessageConsent: checked as boolean})}
-                    className="mt-1 w-5 h-5 text-blue-600 border-2 border-blue-300 rounded focus:ring-blue-500"
-                  />
-                  <div className="flex-1">
-                    <Label htmlFor="textMessageConsent" className="text-sm font-semibold text-gray-800 cursor-pointer flex items-center gap-2">
-                      <i className="fas fa-sms text-blue-600"></i>
-                      Text Message Communications Consent
-                    </Label>
-                    <p className="text-xs text-gray-600 mt-2 leading-relaxed">
-                      I consent to receive text messages from SFGM Boston Bible School for course updates, educational content, ministry announcements, and important notifications. Message and data rates may apply. <span className="font-semibold">You can opt out at any time by replying STOP.</span>
-                    </p>
-                  </div>
-                </div>
 
                 {/* Submit Button */}
                 <Button

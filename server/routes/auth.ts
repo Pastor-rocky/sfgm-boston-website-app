@@ -5,7 +5,6 @@ import { z } from "zod";
 import { randomUUID } from "crypto";
 import { storage } from "../storage";
 import { extractAuthToken, setAuthCookies, clearAuthCookies, buildAuthResponse } from "../utils/auth";
-import { sendWelcomeEmail, sendAdminRegistrationNotification } from "../services/emailService";
 
 const loginSchema = z.object({
   identifier: z.string().min(1, "Email, username, or phone is required").optional(),
@@ -24,8 +23,6 @@ const registerSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
   username: z.string().min(3, "Username must be at least 3 characters"),
   phone: z.string().min(1, "Phone number is required"),
-  emailConsent: z.boolean().optional(),
-  textMessageConsent: z.boolean().optional(),
 });
 
 function resolveIdentifier(payload: z.infer<typeof loginSchema>) {
@@ -174,29 +171,6 @@ export function registerAuthRoutes(app: Express) {
       await storage.updateUserActivity(newUser.id, token);
 
       setAuthCookies(res, token, 7);
-
-      // Send welcome email to new user (non-blocking)
-      sendWelcomeEmail({
-        firstName: payload.firstName,
-        lastName: payload.lastName,
-        email: payload.email.toLowerCase(),
-        username,
-        registrationDate,
-      }).catch((error) => {
-        console.error("[registration] Failed to send welcome email:", error);
-      });
-
-      // Send admin notification email (non-blocking)
-      sendAdminRegistrationNotification({
-        firstName: payload.firstName,
-        lastName: payload.lastName,
-        email: payload.email.toLowerCase(),
-        username,
-        registrationDate,
-        emailConsent: payload.emailConsent || false,
-      }).catch((error) => {
-        console.error("[registration] Failed to send admin notification email:", error);
-      });
 
       return res.status(201).json(buildAuthResponse(newUser, token));
     } catch (error) {
