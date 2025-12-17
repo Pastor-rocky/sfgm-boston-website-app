@@ -3,10 +3,10 @@ import { useToast } from "@/hooks/use-toast";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import sfgmLogoBlue from "@/assets/sfgm-logo-new-blue.png";
+import { getVideoUrl } from "@/lib/video-storage";
 
-// Use public path for video to avoid Git LFS build issues
-// Video should be in public/assets/ or served from CDN
-const welcomeVideo = '/assets/welcome-video.mp4';
+// Use R2 cloud storage if available, fallback to local file
+const welcomeVideo = getVideoUrl('welcome-video.mp4');
 
 export default function WelcomeVideo() {
   const { toast } = useToast();
