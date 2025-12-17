@@ -40,10 +40,13 @@ export function registerAdminRoutes(app: Express) {
         hasPassword: sql<boolean>`${users.password} IS NOT NULL`,
       }).from(users).orderBy(users.createdAt);
 
-      res.json({ users: allUsers });
+      res.json({ 
+        users: allUsers,
+        count: allUsers.length 
+      });
     } catch (error) {
       console.error("Error fetching users:", error);
-      res.status(500).json({ message: "Failed to fetch users" });
+      res.status(500).json({ message: "Failed to fetch users", error: error instanceof Error ? error.message : String(error) });
     }
   });
 
@@ -212,6 +215,45 @@ export function registerAdminRoutes(app: Express) {
     } catch (error) {
       console.error("Error fetching courses:", error);
       res.status(500).json({ message: "Failed to fetch courses" });
+    }
+  });
+
+  // Add new course
+  const addCourseSchema = z.object({
+    name: z.string().min(1, "Course name is required"),
+    description: z.string().optional(),
+    duration: z.number().int().positive("Duration must be a positive number"),
+    category: z.string().optional(),
+    difficulty: z.string().optional(),
+    points: z.number().int().optional(),
+  });
+
+  router.post("/api/admin/courses", requireAuth, requireAdminPassword, validateBody(addCourseSchema), async (req: any, res: Response) => {
+    try {
+      const payload = req.validatedBody;
+      const newCourse = await storage.createCourse({
+        name: payload.name,
+        description: payload.description || null,
+        duration: payload.duration,
+        category: payload.category || null,
+        difficulty: payload.difficulty || null,
+        points: payload.points || null,
+        isActive: true,
+      } as any);
+
+      res.status(201).json({ 
+        success: true, 
+        course: {
+          id: newCourse.id,
+          title: newCourse.name,
+          name: newCourse.name,
+          description: newCourse.description,
+          duration: newCourse.duration,
+        }
+      });
+    } catch (error) {
+      console.error("Error creating course:", error);
+      res.status(500).json({ message: "Failed to create course", error: error instanceof Error ? error.message : String(error) });
     }
   });
 
