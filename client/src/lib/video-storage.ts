@@ -15,6 +15,14 @@ const getVideoBaseUrl = (): string => {
     return r2Url;
   }
   
+  // Production R2 base URL (fallback if env var not set)
+  // This is the Cloudflare R2 public bucket URL
+  if (import.meta.env.PROD) {
+    const prodR2Url = 'https://pub-5d553209d3dd4635aa4ee7406e048bf4.r2.dev';
+    console.log('[Video Storage] Using production R2 (hardcoded):', prodR2Url);
+    return prodR2Url;
+  }
+  
   // Fallback to local assets (development only)
   console.warn('[Video Storage] R2 not configured, using local files (development mode)');
   return '/assets';

@@ -5,8 +5,8 @@ import Footer from "@/components/footer";
 import sfgmLogoBlue from "@/assets/sfgm-logo-new-blue.png";
 import { getVideoUrl } from "@/lib/video-storage";
 
-// Use R2 cloud storage if available, fallback to local file
-const welcomeVideo = getVideoUrl('welcome-video.mp4');
+// Use R2 cloud storage - the actual file is named Intro.mp4 in R2
+const welcomeVideo = getVideoUrl('Intro.mp4');
 
 export default function WelcomeVideo() {
   const { toast } = useToast();
