@@ -15,6 +15,7 @@ import { registerProfileRoutes } from "./routes/profile";
 import { registerEssayRoutes } from "./routes/essays";
 import { registerForumRoutes } from "./routes/forum";
 import { registerBirthdayRoutes } from "./routes/birthday";
+import { registerAdminRoutes } from "./routes/admin";
 import { extractAuthToken } from "./utils/auth";
 import express from "express";
 
@@ -69,6 +70,7 @@ export function setupRoutes(app: Express): Server {
   registerEssayRoutes(app);
   registerForumRoutes(app);
   registerBirthdayRoutes(app);
+  registerAdminRoutes(app);
 
   // Health check endpoints for monitoring
   app.get('/api/health', async (_req, res) => {

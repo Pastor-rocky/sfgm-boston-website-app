@@ -73,6 +73,7 @@ export const studentRoutes: RouteDefinition[] = [
   createRoute("/student-management", () => import("@/pages/student-management")),
   createRoute("/my-certificates", () => import("@/pages/my-certificates")),
   createRoute("/my-personal-library", () => import("@/pages/my-personal-library")),
+  createRoute("/admin-panel", () => import("@/pages/admin-panel")),
 ];
 
 export const authRoutes: RouteDefinition[] = [

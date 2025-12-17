@@ -185,6 +185,15 @@ export default function Navigation() {
                       </Link>
                     </DropdownMenuItem>
 
+                    {/* Admin Panel */}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link href="/admin-panel" className="cursor-pointer text-purple-700 font-medium">
+                        <i className="fas fa-shield-alt mr-2 text-purple-700"></i>
+                        Admin Panel 🔐
+                      </Link>
+                    </DropdownMenuItem>
+
                     {/* Protected Portals */}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
@@ -280,6 +289,11 @@ export default function Navigation() {
                         <Link href="/my-personal-library" onClick={() => setIsOpen(false)}>
                           <Button variant="ghost" className="w-full justify-start text-blue-700 font-medium">
                             <i className="fas fa-book-reader mr-2 text-blue-700"></i>My Library 📚
+                          </Button>
+                        </Link>
+                        <Link href="/admin-panel" onClick={() => setIsOpen(false)}>
+                          <Button variant="ghost" className="w-full justify-start text-purple-700 font-medium">
+                            <i className="fas fa-shield-alt mr-2 text-purple-700"></i>Admin Panel 🔐
                           </Button>
                         </Link>
                         <Link href="/logout" onClick={() => setIsOpen(false)}>
