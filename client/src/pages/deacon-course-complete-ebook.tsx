@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Play, Pause, SkipBack, SkipForward, ArrowLeft, Volume2 } from "lucide-react";
+import { getAudioUrl } from "@/lib/audio-storage";
 
 export default function DeaconCourseCompleteEbook() {
   const [, setLocation] = useLocation();
@@ -17,11 +18,11 @@ export default function DeaconCourseCompleteEbook() {
   const [currentChapter, setCurrentChapter] = useState(1);
 
   const chapters = [
-    { id: 1, title: "Introduction & Chapter 1: The Unignorable Nudge", audioUrl: "/uploads/textbook-audio/deacon-course-ch1.mp3" },
-    { id: 2, title: "Chapter 2: Laying the Foundation", audioUrl: "/uploads/textbook-audio/deacon-course-ch2.mp3" },
-    { id: 3, title: "Chapter 3: The Servant in Motion", audioUrl: "/uploads/textbook-audio/deacon-course-ch3.mp3" },
-    { id: 4, title: "Chapter 4: The Spiritual Battlefield", audioUrl: "/uploads/textbook-audio/deacon-course-ch4.mp3" },
-    { id: 5, title: "Chapter 5: Commissioned for Impact", audioUrl: "/uploads/textbook-audio/deacon-course-ch5.mp3" }
+    { id: 1, title: "Introduction & Chapter 1: The Unignorable Nudge", audioUrl: getAudioUrl('Cp1.mp3') },
+    { id: 2, title: "Chapter 2: Laying the Foundation", audioUrl: getAudioUrl('Cp2.mp3') },
+    { id: 3, title: "Chapter 3: The Servant in Motion", audioUrl: getAudioUrl('Cp3.mp3') },
+    { id: 4, title: "Chapter 4: The Spiritual Battlefield", audioUrl: getAudioUrl('Cp4.mp3') },
+    { id: 5, title: "Chapter 5: Commissioned for Impact", audioUrl: getAudioUrl('Cp5.mp3') }
   ];
 
   const currentChapterData = chapters[currentChapter - 1];

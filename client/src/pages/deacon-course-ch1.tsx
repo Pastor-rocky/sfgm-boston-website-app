@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Play, Pause, SkipBack, SkipForward, ArrowLeft, Volume2 } from "lucide-react";
+import { getAudioUrl } from "@/lib/audio-storage";
 
 export default function DeaconCourseCh1() {
   const [, setLocation] = useLocation();
@@ -136,7 +137,7 @@ export default function DeaconCourseCh1() {
 
             <audio
               ref={audioRef}
-              src="/uploads/textbook-audio/deacon-course-ch1.mp3"
+              src={getAudioUrl('Cp1.mp3')}
               onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
               onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
               onPlay={() => setIsPlaying(true)}
