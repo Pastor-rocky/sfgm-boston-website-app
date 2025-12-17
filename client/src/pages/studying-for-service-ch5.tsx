@@ -141,7 +141,7 @@ export default function StudyingForServiceCh5() {
 
             <audio
               ref={audioRef}
-              src={getAudioUrl('Cp5.mp3')}
+              src={getAudioUrl('Studying for Service Cp5.mp3')}
               onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
               onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
               onPlay={() => setIsPlaying(true)}

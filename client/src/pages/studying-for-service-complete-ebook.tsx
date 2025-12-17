@@ -23,11 +23,11 @@ export default function StudyingForServiceCompleteEbook() {
   const [currentChapter, setCurrentChapter] = useState(1);
 
   const chapters = [
-    { id: 1, title: "Chapter 1: Know Your Text", audioUrl: getAudioUrl('Cp1.mp3') },
-    { id: 2, title: "Chapter 2: Notice the Names", audioUrl: getAudioUrl('Cp2.mp3') },
-    { id: 3, title: "Chapter 3: Look at the Places", audioUrl: getAudioUrl('Cp3.mp3') },
-    { id: 4, title: "Chapter 4: The Numbers Game", audioUrl: getAudioUrl('Cp4.mp3') },
-    { id: 5, title: "Chapter 5: Dig Deeper (Greek and Hebrew)", audioUrl: getAudioUrl('Cp5.mp3') },
+    { id: 1, title: "Chapter 1: Know Your Text", audioUrl: getAudioUrl('Studying for Service Cp1 .mp3') },
+    { id: 2, title: "Chapter 2: Notice the Names", audioUrl: getAudioUrl('Studying for Service Cp2.mp3') },
+    { id: 3, title: "Chapter 3: Look at the Places", audioUrl: getAudioUrl('Studying for Service Cp3 .mp3') },
+    { id: 4, title: "Chapter 4: The Numbers Game", audioUrl: getAudioUrl('Studying for Service Cp4.mp3') },
+    { id: 5, title: "Chapter 5: Dig Deeper (Greek and Hebrew)", audioUrl: getAudioUrl('Studying for Service Cp5.mp3') },
     { id: 6, title: "Chapter 6: Pictures and Parables", audioUrl: getAudioUrl('Studying for Service Cp6.mp3') },
     { id: 7, title: "Chapter 7: Illustrations", audioUrl: getAudioUrl('Studying for Service Cp7.mp3') },
     { id: 8, title: "Chapter 8: Application", audioUrl: getAudioUrl('Studying for Service Cp8.mp3') },
