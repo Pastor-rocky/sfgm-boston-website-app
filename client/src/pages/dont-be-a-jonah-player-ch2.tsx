@@ -232,19 +232,14 @@ export default function DontBeAJonahPlayerCh2() {
               <div className="bg-purple-900/20 p-6 rounded-lg border border-purple-400/30 mb-8">
                 <h3 className="text-xl font-bold mb-4 text-purple-300">📖 The Parable of the Unforgiving Servant</h3>
                 <blockquote className="border-l-4 border-purple-400 pl-4 mb-4 italic text-gray-200">
-                  <p>"Then Peter came to him and asked, 'Lord, how often should I forgive someone who sins against me? Seven times?' 'No, not seven times,' Jesus replied, 'but seventy times seven!'"</p>
+                  <p>"Then Peter came to him and asked, 'Lord, how often should I forgive someone who sins against me? Seven times?' 'No, not seven times,' Jesus replied, 'but seventy times seven!'</p>
+                  <p className="mt-3">Therefore, the Kingdom of Heaven can be compared to a king who decided to bring his accounts up to date with servants who had borrowed money from him. In the process, one of his debtors was brought in who owed him millions of dollars. He couldn't pay, so his master ordered that he be sold—along with his wife, his children, and everything he owned—to pay the debt.</p>
+                  <p className="mt-3">But the man fell down before his master and begged him, 'Please, be patient with me, and I will pay it all.' Then his master was filled with pity for him, and he released him and forgave his debt.</p>
+                  <p className="mt-3">But when the man left the king, he went to a fellow servant who owed him a few thousand dollars. He grabbed him by the throat and demanded instant payment. His fellow servant fell down before him and begged for a little more time. 'Be patient with me, and I will pay it,' he pleaded. But his creditor wouldn't wait. He had the man arrested and put in prison until the debt could be paid in full.</p>
+                  <p className="mt-3">When some of the other servants saw this, they were very upset. They went to the king and told him everything that had happened. Then the king called in the man he had forgiven and said, 'You evil servant! I forgave you that tremendous debt because you pleaded with me. Shouldn't you have mercy on your fellow servant, just as I had mercy on you?' Then the angry king sent the man to prison to be tortured until he had paid his entire debt.</p>
+                  <p className="mt-3">That's what my heavenly Father will do to you if you refuse to forgive your brothers and sisters from your heart."</p>
                   <p className="text-sm text-gray-300 mt-2">— Matthew 18:21-35 NLT</p>
                 </blockquote>
-                
-                <div className="bg-blue-900/20 p-4 rounded border border-blue-400/30 mt-4">
-                  <p className="font-semibold text-blue-300 mb-2">📝 Key Points from the Parable:</p>
-                  <ul className="list-disc list-inside ml-6 space-y-1">
-                    <li>The master forgave a huge debt (millions of dollars)</li>
-                    <li>The forgiven servant refused to forgive a small debt (few thousand dollars)</li>
-                    <li>The master was angry and sent the unforgiving servant to prison</li>
-                    <li>Jesus said: "That's what my heavenly Father will do to you if you refuse to forgive your brothers and sisters from your heart."</li>
-                  </ul>
-                </div>
               </div>
 
               <div className="bg-yellow-900/20 p-6 rounded-lg border border-yellow-400/30 mb-8">
@@ -256,7 +251,37 @@ export default function DontBeAJonahPlayerCh2() {
                 
                 <p className="text-lg font-semibold text-center text-yellow-300 mb-4">"Un-forgiveness is a prison and when you forgive you let the prisoner go—and then you realize the prisoner was you!"</p>
                 
-                <p>No matter how bad the people of Nineveh were, God wanted Jonah to minister His word so the people could repent and receive His love and mercy. Because of the bitter root Jonah had he was running from the very reason he was created and called to serve God.</p>
+                <p>No matter how bad the people of Nineveh were, God wanted Jonah to minister His word so the people could repent and receive His love and mercy. Because of the bitter root Jonah had he was running from the very reason he was created and called to serve God. Maybe without realizing it you are running from God's call and purpose for your life because you have been hurt and you are not willing to resolve the problem by forgiving and forgetting? If that's the case it's time to let it go and release the person(s) that have hurt and hindered you from the call that is on your life. Don't let it happen; stop holding onto something Jesus died to forgive!</p>
+              </div>
+              
+              <div className="bg-orange-900/20 p-6 rounded-lg border border-orange-400/30 mb-8">
+                <h3 className="text-xl font-bold mb-4 text-orange-300">⛪ Reconciliation Before Worship</h3>
+                <p>Jesus said:</p>
+                <blockquote className="border-l-4 border-orange-400 pl-4 mb-4 italic text-gray-200">
+                  <p>"Therefore if thou bring thy gift to the altar, and there rememberest that thy brother hath ought against thee; Leave there thy gift before the altar, and go thy way; first be reconciled to thy brother, and then come and offer thy gift."</p>
+                  <p className="text-sm text-gray-300 mt-2">— Matthew 5:23-24 KJV</p>
+                </blockquote>
+                
+                <p className="text-lg font-semibold text-center text-orange-300">Don't allow your un-forgiveness and bitterness to stop your worship and praise unto God.</p>
+              </div>
+              
+              <div className="bg-blue-900/20 p-6 rounded-lg border border-blue-400/30 mb-8">
+                <h3 className="text-xl font-bold mb-4 text-blue-300">📚 Greek Definitions of "Forgive"</h3>
+                <p>Before Jesus died on the cross, He said:</p>
+                <blockquote className="border-l-4 border-blue-400 pl-4 mb-4 italic text-gray-200">
+                  <p>"Then said Jesus, Father, forgive them; for they know not what they do. And they parted his raiment, and cast lots."</p>
+                  <p className="text-sm text-gray-300 mt-2">— Luke 23:34 KJV</p>
+                </blockquote>
+                
+                <div className="bg-green-900/20 p-4 rounded border border-green-400/30 mb-4">
+                  <p className="font-semibold text-green-300 mb-2">1. To Be Not Guilty:</p>
+                  <p>One of the Greek definitions for the word for "forgive" means to be not guilty. If Jesus forgave and pronounced you and me not guilty we have to forgive them in such a way that when we see them or think of them we pronounce them not guilty even though they have hurt us!</p>
+                </div>
+                
+                <div className="bg-yellow-900/20 p-4 rounded border border-yellow-400/30 mb-4">
+                  <p className="font-semibold text-yellow-300 mb-2">2. To Be Expired:</p>
+                  <p>Another Greek definition for the word for "forgive" means to be expired. Have you ever drunk expired milk? If so you would remember—milk that expires becomes bitter! When you hold on to something that Jesus died to forgive, you are holding on to something that has expired in the mind of God and this is why you will always be bitter until you let it go!</p>
+                </div>
               </div>
 
               <div className="bg-red-900/20 p-6 rounded-lg border border-red-400/30 mb-8">
@@ -285,6 +310,13 @@ export default function DontBeAJonahPlayerCh2() {
                   
                   <p className="mt-3">I began to tell him about Jesus and how only Jesus could help my mother, because he told me he prays to a saint called Guadalupe. I told him how Jesus was the one true God.</p>
                 </div>
+                
+                <div className="bg-red-900/20 p-4 rounded border border-red-400/30 mb-4">
+                  <p className="font-semibold text-red-300 mb-2">❓ Why Wasn't He Arrested?</p>
+                  <p>You might be thinking why wasn't he arrested? He covered her murder up by getting rid of the evidence that he hit her in the head with, then washed her body after she was knocked out to make it look like she fell getting out of the shower and after that he liquified pills and made her ingest it to make it look like the reason she fell was because she took too many sleeping pills. After this he put her in bed and called the ambulance twenty hours later. He then told the ambulance that she fell getting out of the shower, hitting her head, then she laid down after to get some rest but the next day wouldn't get up.</p>
+                  
+                  <p className="mt-3">Why do I know all this? My wife Gina, her aunt was married to the man's son that murdered my mother. They told my wife's aunt that if she ever told anyone they would do the same to her. Also, this man had connections with the police in the district he lived in; this man was an organized crime criminal. No matter what, though, God has all control over every government official (Rom 13). The point is, when God wants him to go to jail he will do it on his time and his way. Revenge is The LORD's not ours!</p>
+                </div>
               </div>
 
               <div className="bg-purple-900/20 p-6 rounded-lg border border-purple-400/30 mb-8">
@@ -298,7 +330,16 @@ export default function DontBeAJonahPlayerCh2() {
                   <p className="mt-3">I shook my head in amazement; I then walked out of the room, went up to him, and said I'm sorry!</p>
                 </div>
                 
-                <p className="text-lg font-semibold text-center text-purple-300 mb-4">If God gave me the strength to forgive and show love in a tragedy I believe He can give you the same strength as well. Ask and you will receive!</p>
+                <div className="bg-blue-900/20 p-4 rounded border border-blue-400/30 mb-4">
+                  <p className="font-semibold text-blue-300 mb-2">🙏 A Prayer for Transformation:</p>
+                  <p>I prayed, Lord maybe you're not allowing him to get locked up because you want him to become a Saul, someone that was a Christian killer but then became a mighty man of God. Who knows God's plan for him? I leave him in God's hands because He knows best.</p>
+                  
+                  <p className="mt-3">He's still not in jail, but I did hear that he began to go to church. What's the point? Vengeance is the Lord's. It's our responsibility to forgive and its God's responsibility to serve justice in His time and in His way.</p>
+                  
+                  <p className="mt-3">If God gave me the strength to forgive and show love in a tragedy I believe He can give you the same strength as well. Ask and you will receive!</p>
+                </div>
+                
+                <p className="text-lg font-semibold text-center text-purple-300 mb-4">I can relate with Jonah's feeling of anger and hurt, but when you're a servant and a Christ follower you do what the Master wants. He will always want us to be the better person in the midst of a bitter situation!</p>
               </div>
 
               <div className="bg-green-900/20 p-6 rounded-lg border border-green-400/30 mb-8">
@@ -351,8 +392,13 @@ export default function DontBeAJonahPlayerCh2() {
                 </div>
                 
                 <p className="text-2xl font-bold text-center text-yellow-300 mb-4">NO ONE IS WORTH LOSING ALL THAT! LET IT GO!</p>
+              </div>
+              
+              <div className="bg-orange-900/20 p-6 rounded-lg border border-orange-400/30 mb-8">
+                <h3 className="text-xl font-bold mb-4 text-orange-300">📖 Jonah's Discipline and Mercy</h3>
+                <p>Jonah went through a lot of discipline because of the bitterness he had for the Assyrians. But when he finally came to his senses he got mercy from God that he didn't want them to get. See the problem is when people do us wrong we want justice, but when we do wrong we want mercy! It's time to apply what Jesus said:</p>
                 
-                <blockquote className="border-l-4 border-green-400 pl-4 italic text-gray-200">
+                <blockquote className="border-l-4 border-orange-400 pl-4 mt-4 italic text-gray-200">
                   <p>"Blessed are the merciful: for they shall obtain mercy."</p>
                   <p className="text-sm text-gray-300 mt-2">— Matthew 5:7 KJV</p>
                 </blockquote>

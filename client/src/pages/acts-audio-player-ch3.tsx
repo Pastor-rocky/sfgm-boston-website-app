@@ -316,44 +316,10 @@ const ActsAudioPlayerCh3: React.FC = () => {
               </PurpleSection>
 
               <SectionHeading>MODERN APPLICATION: THE CRISIS–GROWTH CONNECTION</SectionHeading>
-              
-              <GreenSection title="🔧 When Growth Creates Problems">
-                <BulletList>
-                  <BulletItem>Identify the real issue—often cultural bias, not merely logistics</BulletItem>
-                  <BulletItem>Empower the affected group; don't solve for them, solve with them</BulletItem>
-                  <BulletItem>Establish clear criteria that prioritize character and competence over popularity</BulletItem>
-                  <BulletItem>Transfer real authority; give power, not just responsibility</BulletItem>
-                </BulletList>
-              </GreenSection>
-
-              <BlueSection title="🎯 When Leaders Are Overwhelmed">
-                <BulletList>
-                  <BulletItem>Distinguish between what is essential and what is merely important</BulletItem>
-                  <BulletItem>Identify what only you can do versus what others can do better</BulletItem>
-                  <BulletItem>Develop others proactively so crisis does not force delegation</BulletItem>
-                  <BulletItem>Create systems for sustainability—build processes, not just one-off fixes</BulletItem>
-                  <BulletItem>Focus on your strengths, just as the apostles did with prayer and teaching while deacons handled administration</BulletItem>
-                </BulletList>
-              </BlueSection>
-
-              <OrangeSection title="💪 When Facing Opposition">
-                <BulletList>
-                  <BulletItem>Stay calm under pressure—remember Stephen's face "like the face of an angel"</BulletItem>
-                  <BulletItem>Use truth as your defense; a biblical foundation beats political maneuvering</BulletItem>
-                  <BulletItem>Keep an eternal perspective—"I see heaven open"</BulletItem>
-                  <BulletItem>Forgive your enemies—"Do not hold this sin against them"</BulletItem>
-                </BulletList>
-              </OrangeSection>
-
-              <RedSection title="⚔️ When Making Sacrifices">
-                <BulletList>
-                  <BulletItem>Count the cost; leadership sometimes demands everything</BulletItem>
-                  <BulletItem>Trust God's purposes; what looks like defeat may be victory</BulletItem>
-                  <BulletItem>Focus on legacy; ask how your sacrifice will advance the mission</BulletItem>
-                  <BulletItem>Maintain integrity; do not compromise under pressure</BulletItem>
-                </BulletList>
-                <p>Maxwell writes, <HighlightText color="red">"The ultimate measure of leadership is influence, and sometimes influence requires sacrifice"</HighlightText> (The 21 Indispensable Qualities of a Leader, p. 156).</p>
-              </RedSection>
+              <YellowSection title="🔧">
+                <p>When growth creates problems, identify the real issue—often cultural bias, not merely logistics. Empower the affected group; don't solve for them, solve with them. Establish clear criteria that prioritize character and competence over popularity. Transfer real authority; give power, not just responsibility. When leaders are overwhelmed, distinguish between what is essential and what is merely important—what only you can do versus what others can do better. Develop others proactively so crisis does not force delegation. Create systems for sustainability—build processes, not just one-off fixes. Focus on your strengths, just as the apostles did with prayer and teaching while deacons handled administration.</p>
+                <p className="mt-4">When facing opposition, stay calm under pressure—remember Stephen's face "like the face of an angel." Use truth as your defense; a biblical foundation beats political maneuvering. Keep an eternal perspective—"I see heaven open." Forgive your enemies—"Do not hold this sin against them." When making sacrifices, count the cost; leadership sometimes demands everything. Trust God's purposes; what looks like defeat may be victory. Focus on legacy; ask how your sacrifice will advance the mission. Maintain integrity; do not compromise under pressure. Maxwell writes, "The ultimate measure of leadership is influence, and sometimes influence requires sacrifice" (The 21 Indispensable Qualities of a Leader, p. 156).</p>
+              </YellowSection>
             </div>
           </CardContent>
         </Card>

@@ -191,7 +191,64 @@ export default function YouthMinistryCourseCh1() {
                 </ul>
               </div>
 
-              <h2 className="text-2xl font-bold mb-6 text-blue-900">Chapter 1: The Calling</h2>
+              <h2 className="text-2xl font-bold mb-6 text-blue-900">Section One: Answering the Call - The Divine Blueprint – Understanding Your Place in the Fivefold</h2>
+              
+              <div className="mb-6 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                <h3 className="text-lg font-semibold text-blue-900 mb-2">Introduction</h3>
+                <p className="text-blue-800 mb-4">
+                  Welcome to a journey that is both profoundly personal and eternally significant. This book, Pursuing Your Calling, is not merely a collection of thoughts on youth ministry; it is a roadmap for those who have felt the unmistakable, often unsettling, and always sacred nudge of the Holy Spirit toward a specific purpose: shepherding the next generation. This call is not a whisper of suggestion but a divine summons, a commissioning that originates from the very throne room of God. It is a call to step into a role that is as challenging as it is rewarding, as humbling as it is empowering.
+                </p>
+                <p className="text-blue-800 mb-4">
+                  If you are holding this book, it is likely because you have heard this call. Perhaps it came during a worship service, in the quiet of your prayer closet, or through the affirming words of a spiritual mentor. You may feel a mixture of excitement and sheer terror, a combination that is often the hallmark of a genuine God-given assignment. This book is designed for you—the called, the uncertain, the willing, and the called-again. It is for those who know they are meant for more but aren't quite sure how to step into it.
+                </p>
+                <p className="text-blue-800 mb-4">
+                  The landscape of youth ministry is more complex and critical than ever before. Young people are navigating a world fraught with unprecedented pressures, identity crises, and spiritual battles. They are not the church of tomorrow; they are the church of right now, and they need leaders who are not just event planners or cool older friends, but true ministers—equipped, anointed, and secure in their God-given identity and purpose. This book seeks to ground you in that identity and clarify that purpose by exploring the biblical framework for ministry: the fivefold ministry gifts described in Ephesians 4.
+                </p>
+              </div>
+
+              <div className="mb-6 p-4 bg-purple-50 rounded-lg border-l-4 border-purple-500">
+                <blockquote className="border-l-4 border-purple-400 pl-4 italic text-gray-800 mb-4">
+                  <p className="font-semibold text-purple-900 mb-2">Ephesians 4:11-12</p>
+                  <p>"So Christ himself gave the apostles, the prophets, the evangelists, the pastors and teachers, to equip his people for works of service, so that the body of Christ may be built up."</p>
+                </blockquote>
+                <p className="text-purple-800 mb-4">
+                  This passage is the cornerstone for understanding ministry function within the body of Christ. It is not a list of job titles but a description of multifaceted grace gifts (charismata) given by the ascended Christ to His church. The phrase "Christ himself gave" (Greek: autos edōken) emphasizes that these roles are a direct, personal bestowal from the Head of the Church, Jesus. They are His strategic gift to the Church for its health, growth, and maturity.
+                </p>
+                <p className="text-purple-800 mb-4 font-semibold">Let's break down the key terms:</p>
+                
+                <div className="space-y-4 mt-4">
+                  <div className="bg-white p-4 rounded">
+                    <p className="font-bold text-purple-900 mb-2">Apostles* (Greek: apostoloi)</p>
+                    <p className="text-gray-800">Meaning "sent ones." This gift is foundational (Eph. 2:20), concerned with pioneering, establishing, and overseeing the work of the ministry with authority. They are visionaries and builders, focused on the macro-level health and expansion of the Church.</p>
+                  </div>
+                  
+                  <div className="bg-white p-4 rounded">
+                    <p className="font-bold text-purple-900 mb-2">Prophets* (Greek: prophētai)</p>
+                    <p className="text-gray-800">Meaning "forth-tellers" of God's word. This gift is not primarily about predicting the future but about speaking God's truth into the present. It involves exhortation, correction, and edification, bringing clarity and alignment with God's will.</p>
+                  </div>
+                  
+                  <div className="bg-white p-4 rounded">
+                    <p className="font-bold text-purple-900 mb-2">Evangelists* (Greek: euaggelistai)</p>
+                    <p className="text-gray-800">Meaning "bringers of good news." This gift is uniquely focused on reaching the lost. It is characterized by a passion for souls, an ability to clearly communicate the gospel, and a grace to see people respond in faith.</p>
+                  </div>
+                  
+                  <div className="bg-white p-4 rounded">
+                    <p className="font-bold text-purple-900 mb-2">Pastors (Greek: poimenes)</p>
+                    <p className="text-gray-800">Meaning "shepherds." This gift is centered on care, protection, and nurturing. A pastor's heart is for the well-being, discipleship, and spiritual growth of the flock, guiding them to green pastures and still waters.</p>
+                  </div>
+                  
+                  <div className="bg-white p-4 rounded">
+                    <p className="font-bold text-purple-900 mb-2">Teachers* (Greek: didaskaloi)</p>
+                    <p className="text-gray-800">Meaning "instructors." This gift is dedicated to the explanation and application of Scripture. It involves breaking down complex truths into understandable, life-applicable lessons, ensuring the body is grounded in sound doctrine.</p>
+                  </div>
+                </div>
+                
+                <p className="text-purple-800 mt-4 mb-4">
+                  The critical purpose of these gifts is "to equip his people for works of service." The word "equip" (Greek: katartismon) is a rich term. In ancient Greek, it was used for setting a broken bone, mending a fishing net, or fully preparing and outfitting a ship for voyage. It means to make something complete and perfectly functional for its intended purpose. The fivefold ministers are not called to do all the ministry work themselves; they are called to "equip the saints" — to train, prepare, and release God's people into their own callings and service.
+                </p>
+              </div>
+
+              <h2 className="text-2xl font-bold mb-6 text-blue-900 mt-8">Chapter 1: The Calling</h2>
               
               <p className="text-gray-700 mb-6">
                 When God calls a young person, He rarely does it with fanfare. More often, He whispers. In the quiet, He stirs a heart to pay attention to what He's doing among the next generation. If you're reading this, perhaps you've sensed that whisper: a burden for students who are searching, a desire to teach God's Word so it lands like fire, a conviction that your life is meant to be poured out for the good of teens and the glory of God. Calling, especially to youth ministry, is God's invitation to partner with Him in shaping future disciples and leaders. It is holy, humbling, and deeply hopeful.

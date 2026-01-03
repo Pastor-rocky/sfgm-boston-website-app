@@ -302,43 +302,20 @@ const ActsAudioPlayerCh7: React.FC = () => {
               </PurpleSection>
 
               <SectionHeading>MODERN APPLICATION: HOW TO ENTER HARD, SECULAR CITIES</SectionHeading>
-
-              <GreenSection title="🧭 Follow the Spirit with a Plan">
+              <YellowSection title="🔧">
+                <p>Follow the Spirit with a plan. Pray, fast, and test impressions in community, then act decisively when God confirms direction. Build diverse teams that strengthen one another on the way, valuing couples and marketplace leaders whose homes and vocations can become strategic platforms. Seek persons of peace whose credibility and hospitality can host a gospel beachhead; let households catalyze congregations. Learn the idols and ideas of your city, using shared language to lead people to the lordship and resurrection of Jesus; connect before you correct, then call for a clear response. Expect opposition—economic, ideological, and legal—and prepare to suffer well; sing in the night, and use appropriate legal avenues to protect the vulnerable and the work. Blend vocation and mission so excellence at work commends your message and opens doors. Stay where God says stay; ask for Corinth-style courage to keep speaking in strategic places. Develop leaders early; teach accurately, hand off ministry, and, like Priscilla and Aquila with Apollos, offer private, gracious coaching that multiplies impact. As Maxwell notes, "Great leaders ask great questions" (Good Leaders Ask Great Questions, p. 23).</p>
+              </YellowSection>
+              <YellowSection title="📅">
+                <p>This week, practice European-expansion leadership that is Spirit-led, city-smart, and team-centered.</p>
                 <BulletList>
-                  <BulletItem>Pray, fast, and test impressions in community</BulletItem>
-                  <BulletItem>Act decisively when God confirms direction</BulletItem>
-                  <BulletItem>Build diverse teams that strengthen one another on the way</BulletItem>
-                  <BulletItem>Value couples and marketplace leaders whose homes and vocations can become strategic platforms</BulletItem>
-                  <BulletItem>Seek persons of peace whose credibility and hospitality can host a gospel beachhead</BulletItem>
-                  <BulletItem>Let households catalyze congregations</BulletItem>
+                  <BulletItem><strong>Monday:</strong> Pray and plan by mapping your city's closed doors and open doors; name where God has been saying "not here, not now" and where He is saying "come over and help us," then write your next faithful step.</BulletItem>
+                  <BulletItem><strong>Tuesday:</strong> Identify your person of peace by surveying your workplace, neighborhood, and affinity networks; discern who shows openness, credibility, and hospitality, and invite one to host a discovery gathering.</BulletItem>
+                  <BulletItem><strong>Wednesday:</strong> Contextualize the message by drafting a five-minute gospel explanation for skeptics in your city that begins with shared foundations—creation, conscience, and longing—and culminates in the resurrection and a clear call to repent and believe (Acts 17:30–31).</BulletItem>
+                  <BulletItem><strong>Thursday:</strong> Prepare for pushback by naming likely points of resistance and outlining a response that is truthful, gentle, and legally aware; clarify when and how you will appropriately assert rights to protect the work, following the models in Philippi and Corinth.</BulletItem>
+                  <BulletItem><strong>Friday:</strong> Practice marketplace mission by serving with excellence at work or in the community and scheduling one intentional follow-up conversation that naturally connects to faith.</BulletItem>
+                  <BulletItem><strong>Saturday:</strong> Build your inner circle by naming three emerging leaders—include women and couples—and pairing each with a concrete next step such as co-leading a group, teaching a session, or hosting in their home.</BulletItem>
+                  <BulletItem><strong>Sunday:</strong> Launch or strengthen a house hub by gathering for Scripture, prayer, and a meal; share how God guided you this week and ask Him for a Corinth-style word of courage for your city.</BulletItem>
                 </BulletList>
-              </GreenSection>
-
-              <BlueSection title="💬 Learn and Communicate">
-                <BulletList>
-                  <BulletItem>Learn the idols and ideas of your city</BulletItem>
-                  <BulletItem>Use shared language to lead people to the lordship and resurrection of Jesus</BulletItem>
-                  <BulletItem>Connect before you correct</BulletItem>
-                  <BulletItem>Call for a clear response</BulletItem>
-                </BulletList>
-              </BlueSection>
-
-              <RedSection title="⚔️ Expect and Endure Opposition">
-                <BulletList>
-                  <BulletItem>Expect opposition—economic, ideological, and legal</BulletItem>
-                  <BulletItem>Prepare to suffer well; sing in the night</BulletItem>
-                  <BulletItem>Use appropriate legal avenues to protect the vulnerable and the work</BulletItem>
-                  <BulletItem>Blend vocation and mission so excellence at work commends your message and opens doors</BulletItem>
-                </BulletList>
-              </RedSection>
-
-              <YellowSection title="⏳ Stay and Develop">
-                <BulletList>
-                  <BulletItem>Stay where God says stay; ask for Corinth-style courage to keep speaking in strategic places</BulletItem>
-                  <BulletItem>Develop leaders early; teach accurately, hand off ministry</BulletItem>
-                  <BulletItem>Like Priscilla and Aquila with Apollos, offer private, gracious coaching that multiplies impact</BulletItem>
-                </BulletList>
-                <p>As Maxwell notes, <HighlightText color="yellow">"Great leaders ask great questions"</HighlightText> (Good Leaders Ask Great Questions, p. 23).</p>
               </YellowSection>
             </div>
           </CardContent>

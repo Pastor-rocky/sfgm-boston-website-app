@@ -115,8 +115,8 @@ export default function DontBeAJonahPlayerCh3() {
                 <h3 className="text-xl font-bold mb-4 text-gray-300">📖 Understanding Depression</h3>
                 <p>I recently read part of an article describing depression as follows:</p>
                 <div className="bg-blue-900/20 p-4 rounded border border-blue-400/30 mt-4">
-                  <p className="text-sm italic">Depression, in psychology, a mood or emotional state that is marked by feelings of low self-worth or guilt and a reduced ability to enjoy life. A person who is depressed usually experiences several of the following symptoms:</p>
-                  <ul className="list-disc list-inside ml-6 mt-2 space-y-1 text-sm">
+                  <p className="text-sm italic mb-3">Depression, in psychology, a mood or emotional state that is marked by feelings of low self-worth or guilt and a reduced ability to enjoy life. A person who is depressed usually experiences several of the following symptoms:</p>
+                  <ul className="list-disc list-inside ml-6 mt-2 space-y-1 text-sm mb-3">
                     <li>Feelings of sadness, hopelessness, or pessimism</li>
                     <li>Lowered self-esteem and heightened self-depreciation</li>
                     <li>A decrease or loss of ability to take pleasure in ordinary activities</li>
@@ -125,6 +125,8 @@ export default function DontBeAJonahPlayerCh3() {
                     <li>Loss of appetite</li>
                     <li>Disturbed sleep or insomnia</li>
                   </ul>
+                  <p className="text-sm italic mt-3">Depression differs from simple grief or mourning, which are appropriate emotional responses to the loss of loved persons or objects. Where there are clear grounds for a person's unhappiness, depression is considered to be present if the depressed mood is disproportionately long or severe vis-à-vis the precipitating event. The distinctions between the duration of depression, the circumstances under which it arises, and certain other characteristics underlie the classification of depression into different types. Examples of different types of depression include bipolar disorder, major depressive disorder (clinical depression), persistent depressive disorder, and seasonal affective disorder.</p>
+                  <p className="text-xs text-gray-400 mt-2">(Source: https://www.britannica.com/editor/The-Editors-of-Encyclopaedia-Britannica/4419. Last updated: Dec 28, 2018)</p>
                 </div>
                 <p className="mt-4">The world tries to fix depression in many ways such as psychiatrists, drugs, drinking, relationships with people, and even suicide.</p>
               </div>

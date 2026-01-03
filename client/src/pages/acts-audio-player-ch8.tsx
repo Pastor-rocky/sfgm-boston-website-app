@@ -248,56 +248,13 @@ const ActsAudioPlayerCh8: React.FC = () => {
               </OrangeSection>
 
               <SectionHeading>MODERN APPLICATION: THE EPHESIAN BUILD MODEL</SectionHeading>
-
-              <GreenSection title="🏗️ Begin with the Foundation">
-                <BulletList>
-                  <BulletItem>Complete what is incomplete by verifying understanding and leading people into the fullness of the gospel and the Spirit's power</BulletItem>
-                  <BulletItem>Establish systematic teaching that meets daily, not merely weekly, so discipleship becomes a rhythm rather than an event</BulletItem>
-                  <BulletItem>Create training centers—formal or informal—that develop leaders who can train other leaders</BulletItem>
-                  <BulletItem>Plan from the start for multiplication so every investment reproduces</BulletItem>
-                </BulletList>
-              </GreenSection>
-
-              <PurpleSection title="⚡ Engage the Power Phase">
-                <BulletList>
-                  <BulletItem>Demonstrate authentic spiritual authority that cannot be counterfeited</BulletItem>
-                  <BulletItem>Confront false spirituality clearly and pastorally</BulletItem>
-                  <BulletItem>Expect economic opposition as transformed lives disrupt established interests</BulletItem>
-                  <BulletItem>When confrontation erupts, exercise strategic restraint and let God fight battles through providence, processes, and principled allies</BulletItem>
-                </BulletList>
-              </PurpleSection>
-
-              <OrangeSection title="🔄 Lead Through Transition">
-                <BulletList>
-                  <BulletItem>Prepare for your absence by building systems that work without you</BulletItem>
-                  <BulletItem>Warn emerging leaders about future challenges so they are not surprised by wolves from outside or distortions from within</BulletItem>
-                  <BulletItem>Transfer real authority with clear responsibility and accountability</BulletItem>
-                  <BulletItem>Keep character central, trusting that competence grows best in the soil of humility, integrity, and service</BulletItem>
-                </BulletList>
-              </OrangeSection>
-
-              <BlueSection title="📋 Paul's Leadership Development Strategy">
-                <p>With the Ephesian elders, Paul demonstrated:</p>
-                <BulletList>
-                  <BulletItem><strong>Form character:</strong> "You know how I lived ... I served the Lord with great humility and with tears" (Acts 20:18–19)</BulletItem>
-                  <BulletItem><strong>Provide comprehensive training:</strong> "I have not hesitated to preach anything that would be helpful ... publicly and from house to house" (v. 20)</BulletItem>
-                  <BulletItem><strong>Clarify responsibility:</strong> "Keep watch over yourselves and all the flock ... be shepherds of the church of God" (v. 28)</BulletItem>
-                  <BulletItem><strong>Set a future focus:</strong> Warning of "savage wolves" and internal threats (vv. 29–31)</BulletItem>
-                  <BulletItem><strong>Resource them:</strong> "Now I commit you to God and to the word of his grace, which can build you up" (v. 32)</BulletItem>
-                </BulletList>
-                <p>As Maxwell writes, <HighlightText color="blue">"People don't care how much you know until they know how much you care"</HighlightText> (Winning with People, p. 67).</p>
-              </BlueSection>
-
-              <RedSection title="⚠️ When Ministry Threatens Economic Interests">
-                <BulletList>
-                  <BulletItem>Expect organized resistance</BulletItem>
-                  <BulletItem>Do not take the bait of public brawls; like Paul, avoid needless theater confrontations</BulletItem>
-                  <BulletItem>Allow credible voices and lawful systems to speak on behalf of justice</BulletItem>
-                  <BulletItem>Stay focused on the mission, resist distraction</BulletItem>
-                  <BulletItem>Trust appropriate legal processes to de-escalate civic unrest</BulletItem>
-                </BulletList>
-                <p>The same pattern applies when modern ministries face pressure from gambling interests in a community, business pushback against moral stands, political heat over justice issues, or economic threats when transformation impacts local commerce.</p>
-              </RedSection>
+              <YellowSection title="🔧">
+                <p>Begin with the foundation. Complete what is incomplete by verifying understanding and leading people into the fullness of the gospel and the Spirit's power. Establish systematic teaching that meets daily, not merely weekly, so discipleship becomes a rhythm rather than an event. Create training centers—formal or informal—that develop leaders who can train other leaders, and plan from the start for multiplication so every investment reproduces.</p>
+                <p className="mt-4">Engage the power phase. Demonstrate authentic spiritual authority that cannot be counterfeited, and confront false spirituality clearly and pastorally. Expect economic opposition as transformed lives disrupt established interests; when confrontation erupts, exercise strategic restraint and let God fight battles through providence, processes, and principled allies.</p>
+                <p className="mt-4">Lead through transition. Prepare for your absence by building systems that work without you. Warn emerging leaders about future challenges so they are not surprised by wolves from outside or distortions from within. Transfer real authority with clear responsibility and accountability, and keep character central, trusting that competence grows best in the soil of humility, integrity, and service.</p>
+                <p className="mt-4">Paul's leadership development strategy with the Ephesian elders offers a template. He formed character—"You know how I lived … I served the Lord with great humility and with tears" (Acts 20:18–19). He provided comprehensive training—"I have not hesitated to preach anything that would be helpful … publicly and from house to house" (v. 20). He clarified responsibility—"Keep watch over yourselves and all the flock … be shepherds of the church of God" (v. 28). He set a future focus by warning of "savage wolves" and internal threats (vv. 29–31). And he resourced them—"Now I commit you to God and to the word of his grace, which can build you up" (v. 32). As Maxwell writes, "People don't care how much you know until they know how much you care" (Winning with People, p. 67).</p>
+                <p className="mt-4">When ministry threatens economic interests, expect organized resistance. Do not take the bait of public brawls; like Paul, avoid needless theater confrontations. Allow credible voices and lawful systems to speak on behalf of justice. Stay focused on the mission, resist distraction, and trust appropriate legal processes to de-escalate civic unrest. The same pattern applies when modern ministries face pressure from gambling interests in a community, business pushback against moral stands, political heat over justice issues, or economic threats when transformation impacts local commerce.</p>
+              </YellowSection>
             </div>
           </CardContent>
         </Card>

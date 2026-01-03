@@ -292,7 +292,7 @@ const ActsAudioPlayerCh10: React.FC = () => {
                   <BulletItem><strong>Thursday:</strong> Strengthen supernatural dependence by scheduling regular times to seek God's direction</BulletItem>
                   <BulletItem><strong>Friday:</strong> Plan your legacy—what would continue if your active ministry ended today?</BulletItem>
                   <BulletItem><strong>Saturday:</strong> Evaluate your network and identify key relationships that could multiply your impact</BulletItem>
-                  <BulletItem><strong>Sunday:</strong> Make a finishing-strong commitment; teach about completing God's calling</BulletItem>
+                  <BulletItem><strong>Sunday:</strong> Make a finishing-strong commitment; teach your people the importance of completing God's calling, challenge them to stay faithful regardless of obstacles, and celebrate how God uses difficulties to advance His kingdom</BulletItem>
                 </BulletList>
                 <p><strong>Week 11 Goal:</strong> Establish at least one system or relationship that will extend your ministry impact beyond your current limitations.</p>
               </RedSection>
@@ -333,8 +333,26 @@ const ActsAudioPlayerCh10: React.FC = () => {
                   <BulletItem>Create systems and train successors so the mission outlasts you</BulletItem>
                   <BulletItem>Guard your integrity under accusation and pressure so trials strengthen, not sour, your soul</BulletItem>
                 </BulletList>
-                <p>As Maxwell challenges, <HighlightText color="orange">"The test of a leader is not how well he or she functions in times of comfort and convenience, but how they lead under fire"</HighlightText> (The 21 Indispensable Qualities of a Leader, p. 67).</p>
+                <p>As Maxwell challenges, "The test of a leader is not how well he or she functions in times of comfort and convenience, but how they lead under fire" (The 21 Indispensable Qualities of a Leader, p. 67).</p>
               </OrangeSection>
+
+              <SectionHeading>THE ROME PRINCIPLE</SectionHeading>
+              <BlueSection title="🏛️">
+                <p>Rome represents the ultimate destination of your calling—completing what God assigned despite every storm Satan can send. Identify your Rome. Ask whether you are still on course. Name the storms that threaten to shipwreck your mission. Recognize who needs your leadership in the crisis. Decide now how you will finish—with a plan and a legacy that endures.</p>
+                <p className="mt-4">Paul's Rome results were unmistakable. Geographically, he reached the empire's center. Strategically, he established a base for global expansion. Theologically, he completed a doctrinal foundation through his letters. In leadership, he developed a team that continued after his death. In legacy, he catalyzed a movement that changed world history. If you finish like Paul finished, your influence can extend far beyond anything you imagine today.</p>
+              </BlueSection>
+
+              <SectionHeading>FINAL CHALLENGE: THE ACTS LEGACY</SectionHeading>
+              <GreenSection title="🎯">
+                <p>As this eleven-week journey closes, fix your eyes on Acts' final snapshot: "He proclaimed the kingdom of God and taught about the Lord Jesus Christ—with all boldness and without hindrance!" (Acts 28:31). Are you proclaiming God's kingdom or just building your own organization? Are you teaching about Jesus Christ or promoting yourself? Are you doing it with boldness, or holding back in fear? Are you pressing forward without hindrance, or letting obstacles stop you? The promise remains: "If we do what they did, we'll get what they got." They got a movement that transformed the world and continues to grow after two thousand years. They did what you have studied in these chapters—timeless principles, Spirit-empowered methods, courageous leadership. Will you apply what you've learned and join the ranks of leaders who change the world for Jesus Christ?</p>
+                <p className="mt-4">"Leadership is influence—nothing more, nothing less. The question is not whether you will influence someone. The question is how you will use the influence you have" (The 21 Irrefutable Laws of Leadership, p. 11). Your Acts moment is now. Your Rome awaits. Your legacy begins today.</p>
+              </GreenSection>
+
+              <SectionHeading>CONCLUSION: YOUR ACTS LEGACY</SectionHeading>
+              <PurpleSection title="🎉">
+                <p>Congratulations. You have completed an eleven-week journey through the greatest leadership case study ever written. The early church started with nothing and changed everything. Now the continuing journey begins. Review these chapters regularly; principles require reinforcement. Share what you've learned; teaching others will deepen your own mastery. Apply one principle at a time; sequence beats scatter. Expect opposition; the same forces that opposed them will oppose you. Trust God's timing; their "sudden" breakthroughs were decades in the making. Build for legacy; construct systems and develop leaders that will outlast your personal involvement.</p>
+                <p className="mt-4">"If we do what they did, we'll get what they got." They followed Spirit-led, time-tested principles. They received fruit that outlived them. You serve the same God, empowered by the same Holy Spirit, carrying the same gospel. "The greatest leaders are not those who achieve the most for themselves, but those who empower others to achieve beyond what they thought possible" (Developing the Leaders Around You, p. 198). Your Acts legacy starts now. Your Rome awaits. The world needs leaders who will do what they did to get what they got. Will you be one of them?</p>
+              </PurpleSection>
             </div>
           </CardContent>
         </Card>

@@ -300,10 +300,19 @@ export default function YouthMinistryCourseCh5() {
                 </ul>
               </div>
 
-              <div className="p-4 bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg">
+              <div className="p-4 bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg mb-6">
                 <h3 className="text-lg font-semibold text-blue-900 mb-2">Conclusion</h3>
                 <p className="text-gray-700">
                   As you reach the end of this five-week journey, pause and look back at how far God has brought you. You listened for His whisper, clarified who you're becoming, turned vision into weekly rhythms, embraced guardrails that keep you healthy and honest, and fixed your eyes on making new disciples. This isn't just a course finished—it's a calling formed. What you've learned is not theory; it's a way of life that can reshape students, families, and a church for years to come. Take a deep breath, thank God for His grace, and get ready to walk forward with clarity, courage, and a servant's heart.
+                </p>
+              </div>
+
+              <div className="p-6 bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg text-center">
+                <p className="text-gray-800 mb-4">
+                  Pursue your calling. Not with a spirit of fear, but of power, love, and a sound mind. Tend the flame. Mend the nets. Stand on the wall. Be the watchman. Light the fire. The God who called you is faithful. He does not call the equipped; He equips the called. And He who began a good work in you will be faithful to complete it until the day of Christ Jesus.
+                </p>
+                <p className="text-2xl font-bold text-purple-900 mt-4">
+                  The pursuit continues. Now, step into it.
                 </p>
               </div>
             </div>

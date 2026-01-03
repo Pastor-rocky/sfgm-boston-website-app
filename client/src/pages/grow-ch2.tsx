@@ -275,7 +275,7 @@ export default function GrowCh2() {
 
             <div className="bg-gradient-to-r from-green-100 to-emerald-100 border-2 border-green-500 p-6 rounded-lg text-center">
               <p className="text-2xl font-bold text-green-900">
-                Remember: Readers are Leaders! 📚
+                Remember the Raiders are leaders
               </p>
             </div>
           </CardContent>

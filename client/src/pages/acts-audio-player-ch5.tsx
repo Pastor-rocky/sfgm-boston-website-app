@@ -295,69 +295,11 @@ const ActsAudioPlayerCh5: React.FC = () => {
               </BlueSection>
 
               <SectionHeading>MODERN APPLICATION: THE BARRIER-BREAKING BLUEPRINT</SectionHeading>
-
-              <PurpleSection title="🔍 Identify Barriers to Break">
-                <p><strong>Cultural barriers:</strong></p>
-                <BulletList>
-                  <BulletItem>Racial prejudice</BulletItem>
-                  <BulletItem>Class divides</BulletItem>
-                  <BulletItem>Generational gaps</BulletItem>
-                  <BulletItem>Language limitations</BulletItem>
-                </BulletList>
-                <p><strong>Religious barriers:</strong></p>
-                <BulletList>
-                  <BulletItem>Denominational walls</BulletItem>
-                  <BulletItem>Theological prejudices</BulletItem>
-                  <BulletItem>Lifestyle judgments</BulletItem>
-                  <BulletItem>Painful past experiences that block new relationships</BulletItem>
-                </BulletList>
-                <p>Ask: Who cannot access your ministry and why? Name them honestly.</p>
-              </PurpleSection>
-
-              <GreenSection title="🎯 Follow the Peter Process">
-                <p><strong>Step 1: Divine Vision (Acts 10:9–16)</strong></p>
-                <BulletList>
-                  <BulletItem>Pray regularly, and stay open to God challenging your assumptions</BulletItem>
-                  <BulletItem>Listen carefully—He may repeat crucial messages</BulletItem>
-                  <BulletItem>Be willing to move from "I have never …" to "I will now …"</BulletItem>
-                </BulletList>
-                <p><strong>Step 2: Courageous Obedience (Acts 10:17–23)</strong></p>
-                <BulletList>
-                  <BulletItem>Act despite uncertainty; Peter did not fully understand yet obeyed</BulletItem>
-                  <BulletItem>Break your own rules when love requires stepping beyond comfort</BulletItem>
-                  <BulletItem>Bring others along as witnesses and partners</BulletItem>
-                  <BulletItem>Move quickly—do not let fear talk you out of God's direction</BulletItem>
-                </BulletList>
-                <p><strong>Step 3: Authentic Connection (Acts 10:24–43)</strong></p>
-                <BulletList>
-                  <BulletItem>Start with humility—"I am only a human being"</BulletItem>
-                  <BulletItem>Share your growth—"God has shown me …"</BulletItem>
-                  <BulletItem>Keep the gospel central across cultures</BulletItem>
-                  <BulletItem>Expect God to move; be ready for supernatural confirmation</BulletItem>
-                </BulletList>
-                <p><strong>Step 4: Defend Your Actions (Acts 11:1–18)</strong></p>
-                <BulletList>
-                  <BulletItem>Tell the whole story—do not merely defend conclusions; explain God's process</BulletItem>
-                  <BulletItem>Point to His activity—"Who was I to think that I could stand in God's way?"</BulletItem>
-                  <BulletItem>Stay united by helping others see what God is doing</BulletItem>
-                  <BulletItem>Praise Him together when breakthroughs come</BulletItem>
-                </BulletList>
-              </GreenSection>
-
-              <OrangeSection title="🌉 Build a Barrier-Breaking Culture">
-                <BulletList>
-                  <BulletItem>Develop leaders who are natural bridge-builders—find your Barnabases</BulletItem>
-                  <BulletItem>Train your team for cultural competence</BulletItem>
-                  <BulletItem>Create diverse leadership that reflects the people you aim to reach</BulletItem>
-                  <BulletItem>Celebrate and share stories of barriers falling</BulletItem>
-                  <BulletItem>Align organizational systems with your mission</BulletItem>
-                  <BulletItem>Audit for hidden barriers that keep some from feeling welcome</BulletItem>
-                  <BulletItem>Adapt communication to how different groups receive information</BulletItem>
-                  <BulletItem>Keep the message while changing the methods</BulletItem>
-                  <BulletItem>Measure inclusion so you know whether diversity is real or imagined</BulletItem>
-                </BulletList>
-                <p>Maxwell observes, <HighlightText color="orange">"Diversity is not about political correctness; it's about kingdom effectiveness"</HighlightText> (Everyone Communicates, Few Connect, p. 89).</p>
-              </OrangeSection>
+              <YellowSection title="🔧">
+                <p>Begin by identifying barriers to break. Cultural barriers persist—racial prejudice, class divides, generational gaps, and language limitations. Ask who cannot access your ministry and why. Religious barriers also hinder—denominational walls, theological prejudices, lifestyle judgments, and painful past experiences that block new relationships. Name them honestly.</p>
+                <p className="mt-4">Follow the Peter process for barrier-breaking. Step 1 is Divine Vision (Acts 10:9–16). Pray regularly, and stay open to God challenging your assumptions. Listen carefully—He may repeat crucial messages. Be willing to move from "I have never …" to "I will now …" Step 2 is Courageous Obedience (Acts 10:17–23). Act despite uncertainty; Peter did not fully understand yet obeyed. Break your own rules when love requires stepping beyond comfort. Bring others along as witnesses and partners. Move quickly—do not let fear talk you out of God's direction. Step 3 is Authentic Connection (Acts 10:24–43). Start with humility—"I am only a human being." Share your growth—"God has shown me …" Keep the gospel central across cultures. Expect God to move; be ready for supernatural confirmation. Step 4 is Defend Your Actions (Acts 11:1–18). Tell the whole story—do not merely defend conclusions; explain God's process. Point to His activity—"Who was I to think that I could stand in God's way?" Stay united by helping others see what God is doing. Praise Him together when breakthroughs come.</p>
+                <p className="mt-4">Build a barrier-breaking culture. Develop leaders who are natural bridge-builders—find your Barnabases. Train your team for cultural competence. Create diverse leadership that reflects the people you aim to reach. Celebrate and share stories of barriers falling. Align organizational systems with your mission. Audit for hidden barriers that keep some from feeling welcome. Adapt communication to how different groups receive information. Keep the message while changing the methods. Measure inclusion so you know whether diversity is real or imagined. Maxwell observes, "Diversity is not about political correctness; it's about kingdom effectiveness" (Everyone Communicates, Few Connect, p. 89).</p>
+              </YellowSection>
             </div>
           </CardContent>
         </Card>

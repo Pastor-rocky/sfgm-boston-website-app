@@ -123,8 +123,7 @@ export default function DontBeAJonahPlayerCh4() {
                 </div>
                 
                 <blockquote className="border-l-4 border-red-400 pl-4 mb-4 italic text-gray-200">
-                  <p>"A man who isolates himself seeks his own desire; He rages against all wise judgment."</p>
-                  <p className="text-sm text-gray-300 mt-2">— Proverbs 18:1</p>
+                  <p>Proverbs 18:1 says, "A man who isolates him self seeks his own desire; He rages against all wise judgment."</p>
                 </blockquote>
               </div>
 

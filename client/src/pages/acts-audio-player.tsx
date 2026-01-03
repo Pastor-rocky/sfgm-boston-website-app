@@ -462,12 +462,7 @@ const ActsAudioPlayer: React.FC = () => {
 
               <SectionHeading>COMMON LAUNCH MISTAKES TO AVOID</SectionHeading>
               <RedSection title="⚠️">
-                <BulletList>
-                  <BulletItem>Mistake 1: Launching without adequate preparation — Acts 1–2 shows ten days of intensive preparation before public launch.</BulletItem>
-                  <BulletItem>Mistake 2: Operating in human strength alone — they waited for supernatural empowerment.</BulletItem>
-                  <BulletItem>Mistake 3: Having no systems for growth — four pillars were ready to receive and disciple 3,000 new people.</BulletItem>
-                  <BulletItem>Mistake 4: Focusing on events instead of processes — they cultivated daily growth through sustainable systems.</BulletItem>
-                </BulletList>
+                <p>Mistake 1 is launching without adequate preparation. The Acts 1–2 solution was ten days of intensive preparation before public launch. Mistake 2 is operating in human strength alone. The solution was that they waited for supernatural empowerment. Mistake 3 is having no systems for growth. The solution was four pillars ready to receive and disciple 3,000 new people. Mistake 4 is focusing on events instead of processes. The solution was daily growth through sustainable systems.</p>
               </RedSection>
             </div>
           </CardContent>

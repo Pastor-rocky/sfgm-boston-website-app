@@ -265,30 +265,10 @@ const ActsAudioPlayerCh2: React.FC = () => {
 
               <SectionHeading>MODERN APPLICATION: THE OPPOSITION–OPPORTUNITY PRINCIPLE</SectionHeading>
               <YellowSection title="🔧">
-                <p>When you face religious opposition, stay focused on your mission, not your critics. Respond with boldness rather than defensiveness. Point to God’s power, not your own abilities. Guard unity under pressure so your team remains one heart and mind.</p>
+                <p>When you face religious opposition, stay focused on your mission, not your critics. Respond with boldness rather than defensiveness. Point to God's power, not your own abilities. Guard unity under pressure so your team remains one heart and mind.</p>
                 <p>When experiencing rapid growth, never compromise integrity for the sake of numbers. Address internal issues quickly and decisively. Keep your systems aligned with your values. Use success to point people to God rather than to yourself.</p>
-                <p>When dealing with persecution, respond with prayer before strategy. Choose joy in being counted worthy to suffer for His Name. Continue your mission regardless of the consequences. Trust God’s sovereignty over human opposition. Maxwell observes, “Every problem introduces a person to himself” (Failing Forward, p. 156)</p>
+                <p>When dealing with persecution, respond with prayer before strategy. Choose joy in being counted worthy to suffer for His Name. Continue your mission regardless of the consequences. Trust God's sovereignty over human opposition. Maxwell observes, "Every problem introduces a person to himself" (Failing Forward, p. 156).</p>
               </YellowSection>
-
-              <SectionHeading>SUMMARY</SectionHeading>
-              <PurpleSection title="📌 Key Takeaways">
-                <BulletList>
-                  <BulletItem>Opposition clarified mission and produced boldness, not retreat.</BulletItem>
-                  <BulletItem>Prayer first, power next—bold witness flowed from fresh filling.</BulletItem>
-                  <BulletItem>Integrity protected credibility; discipline guarded the church.</BulletItem>
-                  <BulletItem>Obedience under pressure multiplied impact across the region.</BulletItem>
-                  <BulletItem>Leaders leveraged every crisis to point people to Jesus.</BulletItem>
-                </BulletList>
-              </PurpleSection>
-
-              <SectionHeading>REFLECTION</SectionHeading>
-              <BlueSection title="📝 This Week">
-                <BulletList>
-                  <BulletItem>Where am I facing opposition—and what mission focus must I restate?</BulletItem>
-                  <BulletItem>What integrity issue needs decisive action to protect credibility?</BulletItem>
-                  <BulletItem>When will I set aside time to pray first and ask for boldness?</BulletItem>
-                </BulletList>
-              </BlueSection>
             </div>
           </CardContent>
         </Card>

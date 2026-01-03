@@ -130,6 +130,13 @@ export default function DontBeAJonahPlayerCh1() {
         <Card className="bg-white/10 backdrop-blur-sm border-white/20 mb-8">
           <CardContent className="prose prose-invert max-w-none">
             <div className="text-white leading-relaxed space-y-6">
+              <div className="text-center mb-8 pb-6 border-b border-yellow-400/30">
+                <h1 className="text-4xl font-bold mb-4 text-yellow-300">DON'T BE A JONAH</h1>
+                <p className="text-2xl font-semibold mb-4 text-blue-300">Learn to stop running like Jonah, and start serving like Jesus!</p>
+                <p className="text-lg text-gray-300">By Anthony Lee</p>
+                <p className="text-md text-gray-400 italic">Foreword by Dr Tim Hill, Church of God General Overseer</p>
+              </div>
+              
               <h2 className="text-2xl font-bold mb-6 text-yellow-300">Introduction</h2>
               <p>There are so many people in this world that are believers of Jesus Christ that are still going through life with no purpose, no goals, and no determination or plan to even change. There are also nonbelievers going through these same types of things in their life. On top of all this both nonbelievers and believers alike are facing all kinds of problems in their life like isolation, depression, discouragement, bitterness, suicidal thoughts, and unnecessary storms that are affecting them and the people around them. They have been swallowed up by all these life problems.</p>
               <p>Have you ever felt like you have been swallowed up and you feel like you are being consumed by all that is coming against you? You don't have to stay there! In life's hopeless situations it is usually the time where God is about to do something that will forever change your life either for good or for bad, the question is only what do you want the outcome to be? It is time to come out and step into your calling!</p>

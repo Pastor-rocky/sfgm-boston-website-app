@@ -327,57 +327,11 @@ const ActsAudioPlayerCh6: React.FC = () => {
               </OrangeSection>
 
               <SectionHeading>MODERN APPLICATION: THE GLOBAL MISSIONS MODEL</SectionHeading>
-
-              <PurpleSection title="🚀 Before You Go: Strategic Sending">
-                <BulletList>
-                  <BulletItem>Worship and fast, seeking God's direction through spiritual disciplines</BulletItem>
-                  <BulletItem>Confirm calling through corporate validation, not merely personal conviction</BulletItem>
-                  <BulletItem>Build diverse teams that bring multiple perspectives and cultural strengths</BulletItem>
-                  <BulletItem>Establish clear lines of accountability and communication with the sending church</BulletItem>
-                </BulletList>
-              </PurpleSection>
-
-              <GreenSection title="🌱 Follow Paul's Church Planting Method">
-                <p><strong>Entry strategy:</strong></p>
-                <BulletList>
-                  <BulletItem>Start with existing connections and natural cultural bridges</BulletItem>
-                  <BulletItem>Seek out receptive people—those already leaning toward truth</BulletItem>
-                  <BulletItem>Demonstrate authenticity so your character speaks before your message</BulletItem>
-                  <BulletItem>Expect opposition and plan for resistance from established systems</BulletItem>
-                </BulletList>
-                <p><strong>Gospel presentation:</strong></p>
-                <BulletList>
-                  <BulletItem>Use familiar foundations</BulletItem>
-                  <BulletItem>Connect everything to Christ</BulletItem>
-                  <BulletItem>Call for a clear decision</BulletItem>
-                  <BulletItem>Form community immediately by integrating new believers into fellowship</BulletItem>
-                </BulletList>
-                <p><strong>Church establishment:</strong></p>
-                <BulletList>
-                  <BulletItem>Develop leaders quickly without waiting for "perfect" candidates</BulletItem>
-                  <BulletItem>Create systems that can function without you</BulletItem>
-                  <BulletItem>Address cultural issues wisely where traditions conflict with faith</BulletItem>
-                  <BulletItem>Plan your exit from day one, working yourself out of a job</BulletItem>
-                </BulletList>
-              </GreenSection>
-
-              <BlueSection title="🤝 When Cultural Controversies Arise">
-                <p>Use the Jerusalem Council model:</p>
-                <BulletList>
-                  <BulletItem>Listen to all sides</BulletItem>
-                  <BulletItem>Look for where the Holy Spirit is already working</BulletItem>
-                  <BulletItem>Focus on essentials, separating the core of the gospel from cultural preferences</BulletItem>
-                  <BulletItem>Create practical solutions that address real concerns without compromising truth</BulletItem>
-                  <BulletItem>Communicate clearly so all are strengthened</BulletItem>
-                </BulletList>
-                <p>As Maxwell notes, <HighlightText color="blue">"Great leaders ask great questions"</HighlightText> (Good Leaders Ask Great Questions, p. 23). Ask:</p>
-                <BulletList>
-                  <BulletItem>What is essential to the gospel and what is cultural preference?</BulletItem>
-                  <BulletItem>How do we maintain unity while allowing diversity?</BulletItem>
-                  <BulletItem>What barriers have we created that God never intended?</BulletItem>
-                  <BulletItem>How can we honor multiple cultures while serving Christ together?</BulletItem>
-                </BulletList>
-              </BlueSection>
+              <YellowSection title="🔧">
+                <p>Before you go, embrace strategic sending. Worship and fast, seeking God's direction through spiritual disciplines. Confirm calling through corporate validation, not merely personal conviction. Build diverse teams that bring multiple perspectives and cultural strengths. Establish clear lines of accountability and communication with the sending church.</p>
+                <p className="mt-4">Follow Paul's method for church planting. In your entry strategy, start with existing connections and natural cultural bridges. Seek out receptive people—those already leaning toward truth. Demonstrate authenticity so your character speaks before your message. Expect opposition and plan for resistance from established systems. In your gospel presentation, use familiar foundations, connect everything to Christ, call for a clear decision, and form community immediately by integrating new believers into fellowship. For church establishment, develop leaders quickly without waiting for "perfect" candidates. Create systems that can function without you. Address cultural issues wisely where traditions conflict with faith. And plan your exit from day one, working yourself out of a job.</p>
+                <p className="mt-4">When cultural controversies arise, use the Jerusalem Council model. Listen to all sides. Look for where the Holy Spirit is already working. Focus on essentials, separating the core of the gospel from cultural preferences. Create practical solutions that address real concerns without compromising truth. Communicate clearly so all are strengthened. As Maxwell notes, "Great leaders ask great questions" (Good Leaders Ask Great Questions, p. 23). Ask: What is essential to the gospel and what is cultural preference? How do we maintain unity while allowing diversity? What barriers have we created that God never intended? How can we honor multiple cultures while serving Christ together?</p>
+              </YellowSection>
             </div>
           </CardContent>
         </Card>

@@ -133,8 +133,8 @@ export default function DontBeAJonahPlayerCh5() {
               <blockquote className="border-l-4 border-green-400 pl-4 mb-4 italic text-gray-200">
                 <p>"This day I call heaven and earth as witnesses against you that I have set before you life and death, blessings and curses. Now choose life, so that you and your children may live" (Deuteronomy 20:19).</p>
               </blockquote>
-
-              <p>Scripture also tells us that the Lord knows the plans he has for you (Jeremiah 29:11).</p>
+              
+              <p>Scripture also tell us that the Lord knows the plans he has for you (Jeremiah 29:11).</p>
 
               <div className="bg-red-900/20 p-6 rounded-lg border border-red-400/30 mb-6">
                 <p className="text-lg font-semibold mb-4 text-red-300">⚖️ The Law of Sowing and Reaping</p>

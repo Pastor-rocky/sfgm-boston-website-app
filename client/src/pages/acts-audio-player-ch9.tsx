@@ -274,66 +274,11 @@ const ActsAudioPlayerCh9: React.FC = () => {
               </BlueSection>
 
               <SectionHeading>MODERN APPLICATION: THE TRIAL-TO-TESTIMONY MODEL</SectionHeading>
-
-              <GreenSection title="🔄 Transform Opposition into Opportunity">
-                <p><strong>Stay calm under pressure:</strong></p>
-                <BulletList>
-                  <BulletItem>Refuse emotional reactions</BulletItem>
-                  <BulletItem>Treat criticism and crisis as God-given stages to witness</BulletItem>
-                  <BulletItem>Speak the audience's language—relationally, culturally, and clearly</BulletItem>
-                  <BulletItem>Establish credibility before presenting controversial truth</BulletItem>
-                </BulletList>
-                <p><strong>Present your case strategically:</strong></p>
-                <BulletList>
-                  <BulletItem>Stick to facts, invite evidence, and tell your story</BulletItem>
-                  <BulletItem>Find common ground where you can—shared values, shared authorities</BulletItem>
-                  <BulletItem>Call for a decision rather than settling for discussion</BulletItem>
-                </BulletList>
-                <p><strong>Use legal and social systems wisely:</strong></p>
-                <BulletList>
-                  <BulletItem>Know your rights and exercise them ethically</BulletItem>
-                  <BulletItem>Work within established channels</BulletItem>
-                  <BulletItem>Cultivate principled allies</BulletItem>
-                  <BulletItem>Make long-term moves that align with the mission; Paul's appeal to Caesar served his Rome objective</BulletItem>
-                </BulletList>
-                <p><strong>Maintain mission focus:</strong></p>
-                <BulletList>
-                  <BulletItem>See the bigger picture in hardship</BulletItem>
-                  <BulletItem>Accept God's timing</BulletItem>
-                  <BulletItem>Stay aligned with your ultimate assignment—your "Rome"</BulletItem>
-                  <BulletItem>Trust the Lord's word, "You must also testify in Rome"</BulletItem>
-                </BulletList>
-              </GreenSection>
-
-              <RedSection title="⚠️ When Falsely Accused">
-                <p>Expect:</p>
-                <BulletList>
-                  <BulletItem>Character attacks</BulletItem>
-                  <BulletItem>Mission distortion</BulletItem>
-                  <BulletItem>Political manipulation</BulletItem>
-                  <BulletItem>Legal challenges</BulletItem>
-                </BulletList>
-                <p>Respond by:</p>
-                <BulletList>
-                  <BulletItem>Documenting your work carefully</BulletItem>
-                  <BulletItem>Responding strategically on selected platforms</BulletItem>
-                  <BulletItem>Using every defense moment to point to Christ</BulletItem>
-                  <BulletItem>Trusting the process without idolizing it</BulletItem>
-                  <BulletItem>Letting your integrity, patience, and clarity show</BulletItem>
-                  <BulletItem>Keeping the mission central so opposition does not define your agenda</BulletItem>
-                </BulletList>
-                <p>Remember, <HighlightText color="red">"Your reputation is what people think you are; your character is what you really are"</HighlightText> (The 21 Indispensable Qualities of a Leader, p. 28).</p>
-              </RedSection>
-
-              <OrangeSection title="🎯 Maximize Your Platforms for Witness">
-                <p>As Paul did:</p>
-                <BulletList>
-                  <BulletItem>Hostile crowds can become listening audiences when you answer wisely</BulletItem>
-                  <BulletItem>Legal proceedings can reveal Christian character and truth under scrutiny</BulletItem>
-                  <BulletItem>Private meetings with influential people can open surprising doors for the gospel</BulletItem>
-                  <BulletItem>High-profile settings can multiply impact when humility and courage are held together</BulletItem>
-                </BulletList>
-              </OrangeSection>
+              <YellowSection title="🔧">
+                <p>Transform opposition into opportunity by following Paul's pattern. First, stay calm under pressure. Refuse emotional reactions; treat criticism and crisis as God-given stages to witness. Speak the audience's language—relationally, culturally, and clearly—and establish credibility before presenting controversial truth. Second, present your case strategically. Stick to facts, invite evidence, and tell your story. Find common ground where you can—shared values, shared authorities—and then call for a decision rather than settling for discussion. Third, use legal and social systems wisely. Know your rights and exercise them ethically. Work within established channels, cultivate principled allies, and make long-term moves that align with the mission; Paul's appeal to Caesar served his Rome objective. Fourth, maintain mission focus. See the bigger picture in hardship, accept God's timing, and stay aligned with your ultimate assignment—your "Rome"—trusting the Lord's word, "You must also testify in Rome."</p>
+                <p className="mt-4">When falsely accused in modern settings, expect character attacks, mission distortion, political manipulation, and legal challenges. Document your work carefully, respond strategically on selected platforms, and use every defense moment to point to Christ. Trust the process without idolizing it; let your integrity, patience, and clarity show. Keep the mission central so opposition does not define your agenda. Remember, "Your reputation is what people think you are; your character is what you really are" (The 21 Indispensable Qualities of a Leader, p. 28).</p>
+                <p className="mt-4">Maximize your platforms for witness, as Paul did. Hostile crowds can become listening audiences when you answer wisely. Legal proceedings can reveal Christian character and truth under scrutiny. Private meetings with influential people can open surprising doors for the gospel. High-profile settings can multiply impact when humility and courage are held together.</p>
+              </YellowSection>
             </div>
           </CardContent>
         </Card>

@@ -310,57 +310,10 @@ const ActsAudioPlayerCh4: React.FC = () => {
               </YellowSection>
 
               <SectionHeading>MODERN APPLICATION: THE EXPANSION PRINCIPLES</SectionHeading>
-              
-              <GreenSection title="🔄 Turning Setbacks into Comebacks">
-                <p>When facing persecution or opposition:</p>
-                <BulletList>
-                  <BulletItem>Scatter strategically—treat displacement as deployment</BulletItem>
-                  <BulletItem>Preach everywhere—every new location becomes a mission field</BulletItem>
-                  <BulletItem>Cross barriers boldly—opposition often opens new territory</BulletItem>
-                  <BulletItem>Maintain joy—there was "great joy in that city" despite hardship</BulletItem>
-                </BulletList>
-              </GreenSection>
-
-              <BlueSection title="🌉 Encountering Cultural Barriers">
-                <BulletList>
-                  <BulletItem>Start with common ground—Philip began with Isaiah 53</BulletItem>
-                  <BulletItem>Demonstrate God's power—signs and wonders open hard hearts</BulletItem>
-                  <BulletItem>Build bridges—do not let prejudice block ministry opportunity</BulletItem>
-                  <BulletItem>Seek apostolic validation—maintain unity with existing leadership as you pioneer</BulletItem>
-                </BulletList>
-              </BlueSection>
-
-              <PurpleSection title="💫 Conversion and Development">
-                <p>When God brings unlikely converts:</p>
-                <BulletList>
-                  <BulletItem>Do not judge by the past—Saul seemed impossible</BulletItem>
-                  <BulletItem>Obey divine instructions—Ananias overcame fear</BulletItem>
-                  <BulletItem>Provide mentorship—Barnabas invested in Paul</BulletItem>
-                  <BulletItem>Give opportunities to prove change—let new believers serve quickly and appropriately</BulletItem>
-                </BulletList>
-              </PurpleSection>
-
-              <OrangeSection title="🚀 Leadership Pipelines">
-                <BulletList>
-                  <BulletItem>Recognize emerging leaders—Philip stepped up during crisis</BulletItem>
-                  <BulletItem>Develop people in their strengths—Philip excelled in evangelism more than administration</BulletItem>
-                  <BulletItem>Create development opportunities—scattered believers became scattered missionaries</BulletItem>
-                  <BulletItem>Connect people strategically—Barnabas knew how to open doors for others</BulletItem>
-                </BulletList>
-                <p>Maxwell observes, <HighlightText color="orange">"The greatest leaders see opportunities others miss"</HighlightText> (Leadership Gold, p. 67).</p>
-              </OrangeSection>
-
-              <YellowSection title="✅ Best Practices for Expansion">
-                <BulletList>
-                  <BulletItem>Follow divine direction as Philip did</BulletItem>
-                  <BulletItem>Adapt methods to context—one approach for Samaritans, another for an Ethiopian official</BulletItem>
-                  <BulletItem>Build on small successes—one convert can influence a continent</BulletItem>
-                  <BulletItem>Maintain connection with the sending base to preserve unity</BulletItem>
-                  <BulletItem>Identify natural leaders who surface in crisis</BulletItem>
-                  <BulletItem>Invest in unlikely candidates—your fiercest opponent may become your greatest ally</BulletItem>
-                  <BulletItem>Create mentorship relationships that accelerate growth</BulletItem>
-                  <BulletItem>Trust God's sovereignty—He can reach anyone, anywhere, at any time</BulletItem>
-                </BulletList>
+              <YellowSection title="🔧">
+                <p>Turning setbacks into comebacks requires a new mindset. When facing persecution or opposition, scatter strategically—treat displacement as deployment. Preach everywhere—every new location becomes a mission field. Cross barriers boldly—opposition often opens new territory. Maintain joy—there was "great joy in that city" despite hardship. When encountering cultural barriers, start with common ground—Philip began with Isaiah 53. Demonstrate God's power—signs and wonders open hard hearts. Build bridges—do not let prejudice block ministry opportunity. Seek apostolic validation—maintain unity with existing leadership as you pioneer.</p>
+                <p className="mt-4">Conversion and development go hand in hand. When God brings unlikely converts, do not judge by the past—Saul seemed impossible. Obey divine instructions—Ananias overcame fear. Provide mentorship—Barnabas invested in Paul. Give opportunities to prove change—let new believers serve quickly and appropriately. For leadership pipelines, recognize emerging leaders—Philip stepped up during crisis. Develop people in their strengths—Philip excelled in evangelism more than administration. Create development opportunities—scattered believers became scattered missionaries. Connect people strategically—Barnabas knew how to open doors for others. Maxwell observes, "The greatest leaders see opportunities others miss" (Leadership Gold, p. 67).</p>
+                <p className="mt-4">Best practices for expansion include following divine direction as Philip did, adapting methods to context—one approach for Samaritans, another for an Ethiopian official—building on small successes since one convert can influence a continent, and maintaining connection with the sending base to preserve unity. For leadership multiplication, identify natural leaders who surface in crisis, invest in unlikely candidates—your fiercest opponent may become your greatest ally—create mentorship relationships that accelerate growth, and trust God's sovereignty. He can reach anyone, anywhere, at any time.</p>
               </YellowSection>
             </div>
           </CardContent>
