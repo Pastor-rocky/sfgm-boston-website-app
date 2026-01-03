@@ -522,7 +522,10 @@ export default function BecomingAFireStarterCh9() {
               <InfoBox>
                 <p className="font-semibold mb-2">📖 How This Book Was Born</p>
                 <Paragraph>
-                  That trip fired me up. On the Day of Pentecost (Sunday, June 12, 2011), God woke me with the idea for this book. I started writing the next day and could hardly step away. Seventeen hours later, the first draft of this message poured out. The fire fell to write this as a tool to help people get set on fire and spread it. We'll be using this at our workers' retreat next week.
+                  That trip fired me up. On the Day of Pentecost (Sunday, June 12, 2011), God woke me with the idea for this book. I started writing the next day and could hardly step away from the computer. Seventeen hours later I got out of my office—at 7:00 am the next day! The fire fell upon me to write this book so it can be used as a witness tool to help people learn how to get set on fire for God, and most importantly how to spread that fire. This book was written in about two weeks. I had nothing to do with it; God told me what to say and I put it down. That's why this book is dedicated to Him, He wrote it and I hope you apply it!
+                </Paragraph>
+                <Paragraph className="mt-3">
+                  The workers' retreat is coming up next week. Guess what book we are going over and studying? This one! In manuscript form, of course. I'm going to teach the guys what God taught me, so they can get fired up as well and go fan the fire!
                 </Paragraph>
               </InfoBox>
             </PurpleSection>

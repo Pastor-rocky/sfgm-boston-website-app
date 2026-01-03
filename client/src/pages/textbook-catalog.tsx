@@ -132,7 +132,7 @@ export default function TextbookCatalog() {
       if (actsCourse) {
         completeTextbooks.push({
           id: 1, // Display order 1
-          title: "Acts In Action Course",
+          title: "Acts in Action",
           author: "SFGM Boston",
           description: "A comprehensive study of the Book of Acts focusing on how the early church received power and acted on faith. Learn how to receive the same power that transformed the disciples and discover how to put your faith into action for the Kingdom of God.",
           bookCoverUrl: "/acts-in-action-cover.png",
@@ -142,7 +142,7 @@ export default function TextbookCatalog() {
           estimatedReadingTime: "3-4 hours",
           isComplete: true, // Content available
           courseId: 1, // Maps to courseId = 1 for complete-book-reader
-          courseName: "Acts In Action Course",
+          courseName: "Acts in Action",
           isUpdated: actsCourse.isUpdated || false
         });
       }
@@ -232,7 +232,7 @@ export default function TextbookCatalog() {
       if (deaconCourse) {
         completeTextbooks.push({
           id: 6, // Display order 6
-          title: "Deaconship Course: Answering the Call",
+          title: "Deacon Course",
           author: "SFGM Boston Ministry",
           description: "A Spirit-appointed, servant-hearted leadership training course. This comprehensive 5-week course equips you to execute the practical ministry of the church, acting as a conduit of God's love and provision to His people. Learn to discern your calling, build a biblical foundation, serve in power, stand firm in spiritual warfare, and step into lifelong commissioned impact.",
           bookCoverUrl: "/deacon-course-cover.png",
@@ -242,7 +242,7 @@ export default function TextbookCatalog() {
           estimatedReadingTime: "3-4 hours",
           isComplete: true, // All 5 chapters complete with audio and complete e-book
           courseId: 6, // Maps to courseId = 6 for complete-book-reader
-          courseName: "Deaconship Course",
+          courseName: "Deacon Course",
           isUpdated: deaconCourse.isUpdated || false
         });
       }

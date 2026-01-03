@@ -145,6 +145,28 @@ export default function BibleSchool() {
     },
     {
       id: 1,
+      name: "Acts in Action",
+      description: "This Bible School semester we will be studying the first century church, reading through the book of Acts and paying close attention to what they did, so we can get what they got - signs, wonders, miracles and the empowering of the Holy Spirit to proclaim the Gospel like never before!",
+      overview: "This transformative semester focuses on the power and practices of the early church as recorded in Acts, equipping students to operate in supernatural ministry with signs, wonders, and miracles.",
+      weeks: 10,
+      points: calculatePoints(10), // 300 points
+      category: "Biblical Studies",
+      difficulty: "Intermediate",
+      bookCoverUrl: "/acts-in-action-cover.png"
+    },
+    {
+      id: 2,
+      name: "Becoming a Fire Starter",
+      description: "If you are tired of burning low and burning out, this is the book for you. Becoming a Fire Starter will instill in your walk of discipleship seven powerful principles that will enable you to not only be filled with the fire of the Holy Spirit, but to remain burning with passion for the Gospel of Jesus Christ and lost people. You should only read this book if you want your life changed by the fire of God!",
+      overview: "A comprehensive study of spiritual fire and passion, exploring seven essential principles for maintaining Holy Spirit empowerment and Gospel passion. Includes progressive Luke Gospel study (chapters 1-24) with 250 total assessment questions ensuring thorough mastery of both textbook and biblical content.",
+      weeks: 10,
+      points: calculatePoints(10), // 300 points
+      category: "Ministry",
+      difficulty: "Intermediate",
+      bookCoverUrl: "/becoming-a-fire-starter-cover.jpeg"
+    },
+    {
+      id: 3,
       name: "Don't Be a Jonah",
       description: "Bishop Anthony Lee's sixth book is filled with compassion and urgency to encourage all those who are running from the call that God has for their life, so they would submit to the plans God has for them and no longer deal with the unnecessary storms that plague us when we rebel against the will of God. He uses the story of the famous character of Jonah to bring about practical life applications for God's people so they won't be swallowed up by the deception of this world.",
       overview: "An intensive study on obedience to God's calling, using the prophet Jonah as a case study for understanding the consequences of running from divine purpose.",
@@ -155,7 +177,18 @@ export default function BibleSchool() {
       bookCoverUrl: "/dont-be-a-jonah-cover.jpg"
     },
     {
-      id: 2,
+      id: 4,
+      name: "GROW",
+      description: "Welcome orientation and practice course for new Bible school students. Learn how the platform works while exploring G.R.O.W ministry principles: Give, Read, Obey, Win Souls. This ungraded course introduces you to taking quizzes, watching videos, and reading materials before starting your real academic coursework.",
+      overview: "Welcome orientation and practice course designed to familiarize new students with the Bible school platform while introducing SFGM Boston's ministry philosophy. This ungraded course serves as training before accessing real academic coursework.",
+      weeks: 4,
+      points: calculatePoints(4), // 180 points
+      category: "Foundation",
+      difficulty: "Beginner",
+      bookCoverUrl: "/grow-cover.png"
+    },
+    {
+      id: 5,
       name: "Studying for Service",
       description: "Introduction to studying Scripture and understanding the importance of knowing your text thoroughly before preaching. Learn the Five Ws method and staying in context.",
       overview: "A comprehensive approach to biblical study methodology that transforms how students read, understand, and minister God's Word with greater effectiveness and depth.",
@@ -167,29 +200,18 @@ export default function BibleSchool() {
       beingUpdated: true
     },
     {
-      id: 3,
-      name: "Becoming a Fire Starter",
-      description: "If you are tired of burning low and burning out, this is the book for you. Becoming a Fire Starter will instill in your walk of discipleship seven powerful principles that will enable you to not only be filled with the fire of the Holy Spirit, but to remain burning with passion for the Gospel of Jesus Christ and lost people. You should only read this book if you want your life changed by the fire of God!",
-      overview: "A comprehensive study of spiritual fire and passion, exploring seven essential principles for maintaining Holy Spirit empowerment and Gospel passion. Includes progressive Luke Gospel study (chapters 1-24) with 250 total assessment questions ensuring thorough mastery of both textbook and biblical content.",
-      weeks: 10,
-      points: calculatePoints(10), // 300 points
+      id: 6,
+      name: "Deacon Course",
+      description: "A comprehensive deaconship course that builds a biblical foundation for servant leadership. Work through each Deaconship audio chapter and reflection to develop essential skills for ministry service.",
+      overview: "An intensive study of biblical deaconship principles, combining audio lessons with practical reflection to prepare students for effective servant leadership in ministry.",
+      weeks: 5,
+      points: calculatePoints(5), // 200 points
       category: "Ministry",
       difficulty: "Intermediate",
-      bookCoverUrl: "/becoming-a-fire-starter-cover.jpeg"
+      bookCoverUrl: "/deacon-course-cover.png"
     },
     {
-      id: 4,
-      name: "Acts in Action Course",
-      description: "This Bible School semester we will be studying the first century church, reading through the book of Acts and paying close attention to what they did, so we can get what they got - signs, wonders, miracles and the empowering of the Holy Spirit to proclaim the Gospel like never before!",
-      overview: "This transformative semester focuses on the power and practices of the early church as recorded in Acts, equipping students to operate in supernatural ministry with signs, wonders, and miracles.",
-      weeks: 10,
-      points: calculatePoints(10), // 300 points
-      category: "Biblical Studies",
-      difficulty: "Intermediate",
-      bookCoverUrl: "/acts-in-action-cover.png"
-    },
-    {
-      id: 5,
+      id: 7,
       name: "Level Up Leadership",
       description: "The SFGM Level Up leadership class is an in depth 7 week course that will teach you how to lead better by serving more. This course will be taught by Bishop Anthony Lee as he breaks down each level of leadership with all its biblical principles, application and truths. Each week you will be reading the Bible along side the book 5 Levels of Leadership by John Maxwell. As you read through each of the 5 Levels of leadership, Bishop Anthony will bring to light the Biblical foundation in each level.",
       overview: "A leadership development course that combines proven leadership principles with solid biblical foundation, preparing students for effective Christian leadership roles.",
@@ -200,40 +222,15 @@ export default function BibleSchool() {
       bookCoverUrl: "/level-up-leadership-cover.png"
     },
     {
-      id: 6,
-      name: "Power of Preaching",
-      description: "Master the art of biblical preaching with insights from Dr. Tony Evans and practical sermon preparation techniques.",
-      overview: "An advanced preaching course that combines biblical exposition principles with practical sermon development skills for effective pulpit ministry.",
+      id: 8,
+      name: "Youth Ministry Course",
+      description: "A comprehensive youth ministry course designed to equip students with the knowledge and skills needed for effective student discipleship. Dive into each Youth Ministry chapter along with companion audio lessons to build a solid foundation for youth ministry.",
+      overview: "An intensive course combining biblical principles with practical application for developing effective youth ministry programs and discipling the next generation.",
       weeks: 5,
       points: calculatePoints(5), // 200 points
       category: "Ministry",
-      difficulty: "Advanced",
-      bookCoverUrl: "/power-of-preaching-cover.jpg", // Correct Tony Evans preaching book cover
-      beingUpdated: true
-    },
-    {
-      id: 7,
-      name: "Introduction to Prophecy",
-      description: "A comprehensive introduction to biblical prophecy and end times events. Students will explore prophetic literature, understand different eschatological viewpoints, and learn to interpret apocalyptic texts with sound hermeneutical principles.",
-      overview: "An introductory course designed to give students a solid foundation in biblical prophecy, covering major prophetic themes and preparing them for deeper eschatological study.",
-      weeks: 5,
-      points: calculatePoints(5), // 200 points
-      category: "Prophecy",
       difficulty: "Intermediate",
-      bookCoverUrl: "/introduction-to-prophecy-cover.png",
-      beingUpdated: true
-    },
-    {
-      id: 8,
-      name: "The Watchmen Project",
-      description: "An in-depth study of biblical prophecy, covering detailed analysis of prophetic texts, chronological frameworks, and contemporary relevance of biblical prophecy. Students will examine complex prophetic passages and their fulfillment patterns.",
-      overview: "Advanced prophetic studies for students ready to engage with complex eschatological themes, detailed prophetic chronologies, and contemporary prophetic applications.",
-      weeks: 10,
-      points: calculatePoints(10), // 300 points
-      category: "Prophecy",
-      difficulty: "Advanced",
-      bookCoverUrl: "/the-watchmen-project-cover.png",
-      beingUpdated: true
+      bookCoverUrl: "/sfgm-youth-ministry-cover.png"
     },
     {
       id: 9,

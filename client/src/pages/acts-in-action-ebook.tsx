@@ -627,6 +627,37 @@ export default function ActsInActionEbook() {
                 <BulletItem>Trust God's sovereignty—He can reach anyone, anywhere, at any time</BulletItem>
               </BulletList>
             </YellowSection>
+
+            <SectionHeading>YOUR WEEK 5 CHALLENGE</SectionHeading>
+            <YellowSection>
+              <BulletList>
+                <BulletItem><strong>Monday:</strong> Conduct a setback assessment. Identify current challenges or "persecutions" in your ministry and ask, "How might God want to use these difficulties for expansion?" Look for opportunities hidden in obstacles.</BulletItem>
+                <BulletItem><strong>Tuesday:</strong> Evaluate barriers. List cultural, social, or geographic barriers in your community. Choose one to cross this week and plan specific steps to reach a previously unreached group.</BulletItem>
+                <BulletItem><strong>Wednesday:</strong> Practice personal evangelism. Follow Philip's model with the Ethiopian. Find someone seeking truth and offer to explain Scripture, starting where they are.</BulletItem>
+                <BulletItem><strong>Thursday:</strong> Pray for an unlikely convert. Ask God to save the person who seems farthest, and be ready to obey if He calls you to connect.</BulletItem>
+                <BulletItem><strong>Friday:</strong> Assess your leadership pipeline. Identify emerging leaders—like Philip—who step up in challenges. Look for evangelistic gifts and plan how to develop and deploy these leaders.</BulletItem>
+                <BulletItem><strong>Saturday:</strong> Develop an expansion plan. Map your "Jerusalem" (current ministry geography), identify your "Judea and Samaria" (nearby regions), and dream about your "ends of the earth" (long-term vision).</BulletItem>
+                <BulletItem><strong>Sunday:</strong> Launch a mentorship initiative. Like Barnabas with Paul, identify someone who needs an advocate. Introduce a new believer or emerging leader to your leadership team and commit to ongoing mentorship.</BulletItem>
+              </BulletList>
+              <p className="mt-4"><strong>Week 5 Goal:</strong> Transform current setbacks into expansion opportunities and develop new leaders for multiplication ministry.</p>
+            </YellowSection>
+
+            <SectionHeading>REFLECTION QUESTIONS</SectionHeading>
+            <PurpleSection>
+              <BulletList>
+                <BulletItem>How do you typically respond to persecution or opposition—retreat or advance?</BulletItem>
+                <BulletItem>Which cultural or social barriers have you been avoiding instead of crossing?</BulletItem>
+                <BulletItem>Whom have you written off as "too far gone" for God to save?</BulletItem>
+                <BulletItem>How are you identifying and developing emerging leaders during challenging times?</BulletItem>
+                <BulletItem>Are you thinking locally or globally about your ministry impact?</BulletItem>
+              </BulletList>
+            </PurpleSection>
+
+            <SectionHeading>THE PROMISE</SectionHeading>
+            <GreenSection>
+              <p>The Acts 8–9 formula is compelling: <span className="text-green-300 font-semibold">Persecution plus Evangelism plus Conversion plus Development equals Exponential Expansion.</span> Maxwell reminds us, "A leader's potential is determined by those closest to him" (The 21 Irrefutable Laws of Leadership, p. 131). Philip, Ananias, Barnabas, and Paul became world-changers because the early church knew how to identify, develop, and deploy leaders in seasons of crisis and opportunity.</p>
+              <p className="mt-4">The promise remains. If we expand like they expanded—turning setbacks into comebacks, breaking barriers boldly, expecting unlikely conversions, and developing leaders strategically—we will see the same results: exponential growth through multiplication ministry.</p>
+            </GreenSection>
           </div>
         );
       
