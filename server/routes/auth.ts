@@ -92,6 +92,11 @@ export function registerAuthRoutes(app: Express) {
     res.json({ message: "Auth routes are working!", path: req.path, method: req.method });
   });
 
+  // Test POST endpoint to verify POST requests work
+  router.post("/test-post", (req, res) => {
+    res.json({ message: "POST requests work!", path: req.path, method: req.method, body: req.body });
+  });
+
   router.post("/login", async (req: Request, res: Response) => {
     try {
       const payload = loginSchema.parse(req.body);
@@ -312,6 +317,15 @@ export function registerAuthRoutes(app: Express) {
         stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
       });
     }
+  });
+
+  // Mount auth router
+  console.log('[AUTH ROUTES] Registering auth routes at /api/auth');
+  console.log('[AUTH ROUTES] Available routes:', router.stack.map((r: any) => `${r.route?.methods || 'ALL'} ${r.route?.path || r.regexp}`).join(', '));
+  // Catch-all route to debug unmatched requests
+  router.use((req, res, next) => {
+    console.log(`[AUTH ROUTER CATCH-ALL] ${req.method} ${req.path} - Unmatched route in auth router`);
+    next(); // Let it fall through to the main 404 handler
   });
 
   app.use("/api/auth", router);
