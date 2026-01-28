@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -33,8 +33,8 @@ export default function Login() {
   const [location] = useLocation();
   
   // Check for error in URL params
-  React.useEffect(() => {
-    const params = new URLSearchParams(location.split("?")[1] || "");
+  useEffect(() => {
+    const params = new URLSearchParams((typeof location === "string" ? location.split("?")[1] : window.location.search.substring(1)) || "");
     const error = params.get("error");
     if (error) {
       toast({
