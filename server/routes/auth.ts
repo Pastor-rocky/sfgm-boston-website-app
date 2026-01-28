@@ -84,6 +84,7 @@ export function registerAuthRoutes(app: Express) {
     try {
       const payload = loginSchema.parse(req.body);
       const identifier = resolveIdentifier(payload);
+      console.log('[LOGIN DEBUG] Attempting login with identifier:', identifier ? identifier.substring(0, 10) + '...' : 'empty');
 
       let user;
       try {
@@ -101,6 +102,7 @@ export function registerAuthRoutes(app: Express) {
       }
       
       if (!user) {
+        console.log('[LOGIN DEBUG] User not found for identifier:', identifier ? identifier.substring(0, 10) + '...' : 'empty');
         return res.status(401).json({ message: "Invalid credentials" });
       }
 
@@ -109,6 +111,7 @@ export function registerAuthRoutes(app: Express) {
       }
 
       const passwordMatch = await bcrypt.compare(payload.password, user.password);
+      console.log('[LOGIN DEBUG] Password match:', passwordMatch, 'for user:', user.id);
       if (!passwordMatch) {
         return res.status(401).json({ message: "Invalid credentials" });
       }
