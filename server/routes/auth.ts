@@ -97,6 +97,11 @@ export function registerAuthRoutes(app: Express) {
     res.json({ message: "POST requests work!", path: req.path, method: req.method, body: req.body });
   });
 
+  // Duplicate login route right here to test if order matters
+  router.post("/login", async (req: Request, res: Response) => {
+    res.json({ message: "DUPLICATE LOGIN ROUTE - This should work!", path: req.path });
+  });
+
   router.post("/login-test", async (req: Request, res: Response) => {
     try {
       const payload = loginSchema.parse(req.body);
