@@ -92,7 +92,7 @@ export function registerAuthRoutes(app: Express) {
     res.json({ message: "Auth routes are working!", path: req.path, method: req.method });
   });
 
-router.post("/login", async (req: Request, res: Response) => {
+  router.post("/login", async (req: Request, res: Response) => {
     try {
       const payload = loginSchema.parse(req.body);
       const identifier = resolveIdentifier(payload);
