@@ -90,7 +90,12 @@ export function serveStatic(app: Express) {
   }
 
   // fall through to index.html if the file doesn't exist
-  app.use("*", (_req, res) => {
+  // BUT exclude /api routes - they should return 404 JSON, not HTML
+  app.use("*", (req, res) => {
+    // Don't serve HTML for API routes - let them return 404 JSON from routes.ts
+    if (req.path.startsWith("/api")) {
+      return res.status(404).json({ message: "The requested resource was not found.", code: "NOT_FOUND" });
+    }
     res.sendFile(path.resolve(distPath, "index.html"));
   });
 }

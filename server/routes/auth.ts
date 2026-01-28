@@ -107,7 +107,7 @@ export function registerAuthRoutes(app: Express) {
       }
 
       if (!user.password) {
-        return res.status(400).json({ message: "Please use Google login for this account" });
+        
       }
 
       const passwordMatch = await bcrypt.compare(payload.password, user.password);
