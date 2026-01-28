@@ -6,6 +6,8 @@ import { quizService } from "../services/quizService";
 import { quizMonitoring } from "../services/quizMonitoring";
 import { requireAuth } from "../middleware/requireAuth";
 import { validateBody } from "../middleware/validate";
+import { sendErrorResponse } from "../utils/errorHandler";
+import { apiRateLimit } from "../middleware/rateLimit";
 
 const QUIZ_SLUG_MAP: Record<string, number> = {
   "acts-week-1": 13,
@@ -109,7 +111,7 @@ const quizAttemptSchema = z.preprocess((data: any) => {
 export function registerQuizRoutes(app: Express) {
   const router = Router();
 
-  router.get("/api/quizzes/:quizId", async (req: Request, res: Response) => {
+  router.get("/api/quizzes/:quizId", apiRateLimit, async (req: Request, res: Response) => {
     try {
       const quizId = resolveQuizId(req.params.quizId);
       if (!quizId) {
@@ -122,8 +124,7 @@ export function registerQuizRoutes(app: Express) {
       }
       res.json(quiz);
     } catch (error) {
-      console.error("Error fetching quiz:", error);
-      res.status(500).json({ message: "Failed to fetch quiz" });
+      sendErrorResponse(res, error, "Fetch Quiz");
     }
   });
 
@@ -149,8 +150,7 @@ export function registerQuizRoutes(app: Express) {
 
         res.json(result);
       } catch (error) {
-        console.error("Error submitting quiz attempt:", error);
-        res.status(500).json({ message: "Failed to submit quiz attempt" });
+        sendErrorResponse(res, error, "Submit Quiz Attempt");
       }
     }
   );
@@ -168,9 +168,8 @@ export function registerQuizRoutes(app: Express) {
       });
 
       res.json(result);
-    } catch (error: any) {
-      console.error("Error submitting quiz attempt:", error);
-      res.status(500).json({ message: "Failed to submit quiz attempt", error: error?.message });
+    } catch (error) {
+      sendErrorResponse(res, error, "Submit Quiz Attempt");
     }
   });
 

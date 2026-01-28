@@ -5,6 +5,8 @@ import { z } from "zod";
 import { randomUUID } from "crypto";
 import { storage } from "../storage";
 import { extractAuthToken, setAuthCookies, clearAuthCookies, buildAuthResponse } from "../utils/auth";
+import { sendErrorResponse } from "../utils/errorHandler";
+import { withRetry, isRetryableError, shouldNotRetry } from "../utils/retry";
 
 const loginSchema = z.object({
   identifier: z.string().min(1, "Email, username, or phone is required").optional(),
@@ -23,6 +25,7 @@ const registerSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
   username: z.string().min(3, "Username must be at least 3 characters"),
   phone: z.string().min(1, "Phone number is required"),
+  sfgmChurch: z.string().min(1, "SFGM church is required"),
 });
 
 function resolveIdentifier(payload: z.infer<typeof loginSchema>) {
@@ -82,7 +85,21 @@ export function registerAuthRoutes(app: Express) {
       const payload = loginSchema.parse(req.body);
       const identifier = resolveIdentifier(payload);
 
-      const user = await findUserForLogin(identifier);
+      let user;
+      try {
+        user = await findUserForLogin(identifier);
+      } catch (dbError: any) {
+        // Check if it's a database connection error
+        if (dbError?.code === 'ECONNREFUSED' || dbError?.message?.includes('connection') || dbError?.message?.includes('ECONNREFUSED')) {
+          console.error("Database connection error during login:", dbError);
+          return res.status(503).json({ 
+            message: "Database is currently unavailable. Please check your database connection and try again.",
+            code: "DATABASE_UNAVAILABLE"
+          });
+        }
+        throw dbError; // Re-throw if it's not a connection error
+      }
+      
       if (!user) {
         return res.status(401).json({ message: "Invalid credentials" });
       }
@@ -99,8 +116,28 @@ export function registerAuthRoutes(app: Express) {
       const token = `sfgm_${user.id}_${Date.now()}`;
       const maxAgeDays = payload.keepLoggedIn ? 30 : 7;
 
-      await storage.setUserToken(user.id, token, maxAgeDays);
-      await storage.updateUserActivity(user.id, token);
+      // Use retry logic for token operations
+      try {
+        await withRetry(
+          async () => {
+            await storage.setUserToken(user.id, token, maxAgeDays);
+            await storage.updateUserActivity(user.id, token);
+          },
+          {
+            maxRetries: 2,
+            shouldRetry: (error) => isRetryableError(error) && !shouldNotRetry(error),
+          }
+        );
+      } catch (tokenError: any) {
+        // If database is unavailable, still allow login but warn user
+        if (tokenError?.code === 'ECONNREFUSED' || tokenError?.message?.includes('connection')) {
+          console.error("Database unavailable for token storage:", tokenError);
+          // Continue with login but token won't persist - user will need to login again
+          console.warn("⚠️  Login succeeded but token storage failed - database unavailable");
+        } else {
+          throw tokenError;
+        }
+      }
 
       setAuthCookies(res, token, maxAgeDays);
 
@@ -109,14 +146,7 @@ export function registerAuthRoutes(app: Express) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: error.errors[0]?.message || "Invalid payload" });
       }
-      console.error("Login error:", error);
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      // In development, show more details; in production, show generic message
-      return res.status(500).json({ 
-        message: process.env.NODE_ENV === 'development' 
-          ? `Unable to login: ${errorMessage}` 
-          : "Unable to login right now. Please try again later."
-      });
+      sendErrorResponse(res, error, "User Login");
     }
   });
 
@@ -158,6 +188,7 @@ export function registerAuthRoutes(app: Express) {
         lastName: payload.lastName,
         dateOfBirth: payload.dateOfBirth,
         phone: phoneNumber,
+        sfgmChurch: payload.sfgmChurch.trim(),
         gender: "Male", // Default value for database requirement
         profileCompleted: false,
         role: "student",
@@ -167,8 +198,17 @@ export function registerAuthRoutes(app: Express) {
 
       const token = `sfgm_${newUser.id}_${Date.now()}`;
 
-      await storage.setUserToken(newUser.id, token, 7);
-      await storage.updateUserActivity(newUser.id, token);
+      // Use retry logic for token operations
+      await withRetry(
+        async () => {
+          await storage.setUserToken(newUser.id, token, 7);
+          await storage.updateUserActivity(newUser.id, token);
+        },
+        {
+          maxRetries: 2,
+          shouldRetry: (error) => isRetryableError(error) && !shouldNotRetry(error),
+        }
+      );
 
       setAuthCookies(res, token, 7);
 
@@ -177,8 +217,7 @@ export function registerAuthRoutes(app: Express) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: error.errors[0]?.message || "Invalid payload" });
       }
-      console.error("Registration error:", error);
-      return res.status(500).json({ message: "Unable to register right now" });
+      sendErrorResponse(res, error, "User Registration");
     }
   });
 

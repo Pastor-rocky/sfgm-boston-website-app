@@ -3,6 +3,7 @@ import { Link } from "wouter";
 function Footer() {
   const quickLinks = [
     { href: "/bible-school", label: "Bible School" },
+    { href: "/instructor-application", label: "Teach with us" },
     { href: "/contact", label: "Contact" },
     { href: "/statement-of-faith", label: "Statement of Faith" },
     { href: "/genesis-to-revelation", label: "Genesis to Revelation" }

@@ -39,6 +39,8 @@ export default function Navigation() {
   ];
 
   const navLinks = isAuthenticated ? [...publicLinks, ...privateExtraLinks] : publicLinks;
+  const role = ((user as any)?.role ?? "").toLowerCase();
+  const isInstructorRole = ["instructor", "admin", "dean"].includes(role);
 
   // Direct access to dashboards with access codes
   const handleDashboardAccess = (type: 'admin' | 'dean' | 'instructor') => {
@@ -74,21 +76,23 @@ export default function Navigation() {
           <div className="hidden md:flex items-center space-x-4 flex-1 justify-end">
             {isAuthenticated ? (
               <div className="flex items-center space-x-4">
-                {/* Profile Avatar with Welcome Message */}
+                {/* Profile Avatar with Welcome Message — avatar + name link to profile */}
                 <div className="flex items-center space-x-3 bg-gradient-to-r from-blue-50 to-purple-50 px-4 py-2 rounded-lg border border-blue-200">
-                  <Avatar className="w-10 h-10 border-2 border-blue-600">
-                    <AvatarImage 
-                      src={user?.profileImageUrl || undefined} 
-                      alt={`${user?.firstName || user?.username || 'Member'}'s profile`}
-                    />
-                    <AvatarFallback className="bg-blue-600 text-white text-sm font-semibold">
-                      {(user?.firstName || user?.username || 'M').charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex flex-col">
-                    <span className="text-primary font-semibold text-sm">
+                  <Link href="/student-profile" className="flex items-center space-x-3 no-underline hover:opacity-90 rounded-lg shrink-0">
+                    <Avatar className="w-10 h-10 border-2 border-blue-600">
+                      <AvatarImage 
+                        src={user?.profileImageUrl || undefined} 
+                        alt={`${user?.firstName || user?.username || 'Member'}'s profile`}
+                      />
+                      <AvatarFallback className="bg-blue-600 text-white text-sm font-semibold">
+                        {(user?.firstName || user?.username || 'M').charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Link>
+                  <div className="flex flex-col min-w-0">
+                    <Link href="/student-profile" className="text-primary font-semibold text-sm hover:text-blue-700 no-underline">
                       Welcome, {user?.firstName || user?.username || 'Member'}!
-                    </span>
+                    </Link>
                     <Link href="/dashboard" className="text-xs text-blue-600 hover:text-blue-800 font-medium">
                       <i className="fas fa-user-graduate mr-1"></i>Dashboard
                     </Link>
@@ -177,6 +181,14 @@ export default function Navigation() {
                       </Link>
                     </DropdownMenuItem>
 
+                    {/* My Profile */}
+                    <DropdownMenuItem asChild>
+                      <Link href="/student-profile" className="cursor-pointer text-blue-700 font-medium">
+                        <i className="fas fa-user mr-2 text-blue-700"></i>
+                        My Profile
+                      </Link>
+                    </DropdownMenuItem>
+
                     {/* Personal Library */}
                     <DropdownMenuItem asChild>
                       <Link href="/my-personal-library" className="cursor-pointer text-blue-700 font-medium">
@@ -193,6 +205,15 @@ export default function Navigation() {
                         Admin Panel 🔐
                       </Link>
                     </DropdownMenuItem>
+
+                    {isInstructorRole && (
+                      <DropdownMenuItem asChild>
+                        <Link href="/instructor-dashboard" className="cursor-pointer text-amber-700 font-medium">
+                          <i className="fas fa-chalkboard-teacher mr-2 text-amber-700"></i>
+                          Instructor Dashboard 📋
+                        </Link>
+                      </DropdownMenuItem>
+                    )}
 
                     {/* Protected Portals */}
                     <DropdownMenuSeparator />
@@ -269,7 +290,7 @@ export default function Navigation() {
                     {/* User Info and Dashboard or Login/Register */}
                     {isAuthenticated ? (
                       <>
-                        <div className="px-3 py-2 text-sm text-gray-600 border-b flex items-center space-x-2">
+                        <Link href="/student-profile" onClick={() => setIsOpen(false)} className="px-3 py-2 text-sm text-gray-600 border-b flex items-center space-x-2 rounded-lg hover:bg-slate-100">
                           <Avatar className="w-6 h-6">
                             <AvatarImage 
                               src={user?.profileImageUrl || undefined} 
@@ -280,10 +301,15 @@ export default function Navigation() {
                             </AvatarFallback>
                           </Avatar>
                           <span>Welcome, {user?.firstName || user?.username || 'Member'}!</span>
-                        </div>
+                        </Link>
                         <Link href="/dashboard" onClick={() => setIsOpen(false)}>
                           <Button variant="ghost" className="w-full justify-start text-blue-700 font-medium">
                             <i className="fas fa-user-graduate mr-2 text-blue-700"></i>Student Dashboard 🎓
+                          </Button>
+                        </Link>
+                        <Link href="/student-profile" onClick={() => setIsOpen(false)}>
+                          <Button variant="ghost" className="w-full justify-start text-blue-700 font-medium">
+                            <i className="fas fa-user mr-2 text-blue-700"></i>My Profile
                           </Button>
                         </Link>
                         <Link href="/my-personal-library" onClick={() => setIsOpen(false)}>
@@ -296,6 +322,13 @@ export default function Navigation() {
                             <i className="fas fa-shield-alt mr-2 text-purple-700"></i>Admin Panel 🔐
                           </Button>
                         </Link>
+                        {isInstructorRole && (
+                          <Link href="/instructor-dashboard" onClick={() => setIsOpen(false)}>
+                            <Button variant="ghost" className="w-full justify-start text-amber-700 font-medium">
+                              <i className="fas fa-chalkboard-teacher mr-2 text-amber-700"></i>Instructor Dashboard 📋
+                            </Button>
+                          </Link>
+                        )}
                         <Link href="/logout" onClick={() => setIsOpen(false)}>
                           <Button variant="ghost" className="w-full justify-start text-red-600">
                             <i className="fas fa-sign-out-alt mr-2"></i>Logout

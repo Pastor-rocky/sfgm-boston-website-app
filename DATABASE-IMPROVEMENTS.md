@@ -149,8 +149,10 @@
    - Create materialized view for course statistics
 
 4. **Connection Pooling** (already configured):
-   - ✅ Already using pg Pool with max 5 connections
-   - Consider increasing if concurrent users > 50
+   - ✅ Already using pg Pool with configurable connection pool (default: 25)
+   - ✅ Configurable via DB_POOL_SIZE environment variable
+   - ✅ Default set to 25 for high-capacity launch (500+ students, 100+ concurrent users)
+   - Can increase to 30-40 if concurrent users > 150
 
 5. **Backup Strategy**:
    - Set up automated daily backups

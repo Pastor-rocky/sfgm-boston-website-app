@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Link, useLocation } from 'wouter';
 import { apiRequest, queryClient } from '@/lib/queryClient';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { useDeduplicatedMutation } from '@/hooks/useDeduplicatedMutation';
 
 
 interface ContentProgressItem {
@@ -503,9 +504,9 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
 
   // Prerequisites removed - all content is freely accessible
 
-  // Progress tracking mutation
-  const progressMutation = useMutation({
-    mutationFn: async (data: {
+  // Progress tracking mutation with deduplication
+  const progressMutation = useDeduplicatedMutation(
+    async (data: {
       courseId: number;
       contentType: 'video' | 'reading' | 'quiz';
       contentId: number;
@@ -513,7 +514,11 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
     }) => {
       return apiRequest('POST', '/api/content-progress', data);
     },
-    onMutate: async (variables) => {
+    {
+      dedupeKey: (data) => `${data.courseId}-${data.contentType}-${data.contentId}`,
+      dedupeWindowMs: 2000, // 2 second deduplication window
+      mutationOptions: {
+        onMutate: async (variables) => {
       // Cancel any outgoing refetches to avoid overwriting optimistic update
       await queryClient.cancelQueries({ queryKey: [`/api/content-progress/${variables.courseId}`] });
       
@@ -590,7 +595,9 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
         queryClient.setQueryData([`/api/content-progress/${variables.courseId}`], context.previousProgress);
       }
     },
-  });
+      },
+    }
+  );
 
   const handleContentComplete = async (contentType: 'video' | 'reading' | 'quiz', contentId: number) => {
     try {

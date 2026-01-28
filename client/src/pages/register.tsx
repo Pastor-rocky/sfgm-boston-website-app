@@ -11,6 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import sfgmLogoBlue from "@/assets/sfgm-logo-new-blue.png";
+import { SFGM_CHURCHES, formatChurchOption } from "@/lib/sfgm-churches";
 
 interface RegisterFormData {
   firstName: string;
@@ -19,6 +20,7 @@ interface RegisterFormData {
   email: string;
   username: string;
   phone: string;
+  sfgmChurch: string;
   password: string;
   confirmPassword: string;
 }
@@ -39,6 +41,7 @@ export default function Register() {
     email: "",
     username: "",
     phone: "",
+    sfgmChurch: "",
     password: "",
     confirmPassword: "",
   });
@@ -118,11 +121,12 @@ export default function Register() {
       formData.email,
       formData.username,
       formData.phone,
+      formData.sfgmChurch,
       formData.password,
       formData.confirmPassword,
     ];
     const filledFields = fields.filter(f => f.trim() !== '').length;
-    return Math.round((filledFields / 8) * 100);
+    return Math.round((filledFields / 9) * 100);
   };
 
   // Redirect if already authenticated
@@ -197,6 +201,16 @@ export default function Register() {
       return;
     }
 
+    if (!formData.sfgmChurch.trim()) {
+      toast({
+        title: "Church Affiliation Required",
+        description: "Please select your SFGM church.",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+      return;
+    }
+
     if (formData.password !== formData.confirmPassword) {
       toast({
         title: "Password Mismatch",
@@ -232,6 +246,7 @@ export default function Register() {
           email: formData.email.trim(),
           username: formData.username.trim(),
           phone: formData.phone.trim(),
+          sfgmChurch: formData.sfgmChurch.trim(),
           password: formData.password,
         }),
       });
@@ -606,6 +621,41 @@ export default function Register() {
                     <p className="text-xs text-green-600 mt-1 flex items-center">
                       <i className="fas fa-check-circle mr-1"></i>
                       Valid phone number
+                    </p>
+                  )}
+                </div>
+
+                {/* Church Affiliation */}
+                <div className="space-y-2">
+                  <Label htmlFor="sfgmChurch" className="text-gray-700 font-semibold text-sm">
+                    SFGM Church *
+                  </Label>
+                  <div className="relative">
+                    <i className="fas fa-church absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 z-10"></i>
+                    <select
+                      id="sfgmChurch"
+                      value={formData.sfgmChurch}
+                      onChange={(e) => handleInputChange("sfgmChurch", e.target.value)}
+                      className={`h-12 pl-12 pr-10 w-full border-2 rounded-xl transition-all duration-300 bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 ${
+                        formData.sfgmChurch
+                          ? "border-green-300 focus:border-blue-500"
+                          : "border-gray-200 focus:border-blue-500"
+                      }`}
+                      required
+                    >
+                      <option value="">Select your SFGM church</option>
+                      {SFGM_CHURCHES.map((c) => (
+                        <option key={c.church} value={c.church}>
+                          {formatChurchOption(c)}
+                        </option>
+                      ))}
+                    </select>
+                    <i className="fas fa-chevron-down absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                  </div>
+                  {formData.sfgmChurch && (
+                    <p className="text-xs text-green-600 mt-1 flex items-center">
+                      <i className="fas fa-check-circle mr-1"></i>
+                      Church selected
                     </p>
                   )}
                 </div>

@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Prevent pushing if .env is tracked
+if git ls-files | grep -q '\.env$'; then
+  echo "❌ ERROR: .env file is tracked in Git!"
+  echo "Run: git rm --cached .env"
+  echo "Then commit the removal"
+  exit 1
+fi
+
+# Check for uncommitted .env files
+if git status --porcelain | grep -q '\.env'; then
+  echo "⚠️  WARNING: Uncommitted .env files detected"
+  echo "Make sure .env is in .gitignore"
+  read -p "Continue with push? (y/n) " -n 1 -r
+  echo
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    exit 1
+  fi
+fi

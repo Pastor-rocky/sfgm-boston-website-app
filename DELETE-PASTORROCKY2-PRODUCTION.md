@@ -76,3 +76,6 @@ SELECT username, id, email FROM users WHERE username ILIKE '%pastor%';
 
 This should not show PastorRocky2 anymore.
 
+
+
+

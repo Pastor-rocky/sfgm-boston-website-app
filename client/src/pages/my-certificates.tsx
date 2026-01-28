@@ -54,7 +54,7 @@ export default function MyCertificates() {
             My Certificates
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-2">
-            View and download your earned certificates
+            View your earned certificates. Diplomas are presented in person only—not available for download.
           </p>
         </div>
 

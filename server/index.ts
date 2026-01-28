@@ -39,6 +39,15 @@ app.use((req, res, next) => {
 
 (async () => {
   try {
+    // Test database connection with retry logic (non-blocking - server will start even if DB fails initially)
+    try {
+      const { testDatabaseConnection } = await import('./db');
+      await testDatabaseConnection();
+    } catch (dbError) {
+      console.error('⚠️  Database connection failed, but server will continue to start');
+      console.error('Database error:', dbError);
+      console.log('⚠️  Some features may not work until database is connected');
+    }
     
     const server = setupRoutes(app);
 

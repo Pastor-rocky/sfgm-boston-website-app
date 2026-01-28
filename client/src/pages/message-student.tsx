@@ -31,14 +31,21 @@ export default function MessageStudent() {
   }, []);
 
   const { data: students, isLoading: studentsLoading } = useQuery({
-    queryKey: ['/api/students'],
+    queryKey: ['/api/instructor/students'],
+    queryFn: async () => {
+      const r = await fetch('/api/instructor/students', {
+        headers: { Authorization: `Bearer ${localStorage.getItem('auth_token')}` },
+        credentials: 'include',
+      });
+      if (!r.ok) throw new Error('Failed to fetch students');
+      return r.json();
+    },
     enabled: isAuthenticated,
   });
 
   const sendMessageMutation = useMutation({
     mutationFn: async (messageData: any) => {
-      const response = await apiRequest('POST', '/api/messages/send', messageData);
-      return response.json();
+      return apiRequest('POST', '/api/messages/send', messageData);
     },
     onSuccess: () => {
       toast({
@@ -76,6 +83,9 @@ export default function MessageStudent() {
     });
   };
 
+  const role = ((user as any)?.role ?? "").toLowerCase();
+  const isInstructor = ["instructor", "admin", "dean"].includes(role);
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
@@ -93,6 +103,22 @@ export default function MessageStudent() {
             <p className="text-gray-600 mb-6">You need to be logged in to send messages.</p>
             <Link href="/login">
               <Button className="w-full">Login</Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!isInstructor) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
+        <Card className="max-w-md w-full mx-4">
+          <CardContent className="p-8 text-center">
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">Access Denied</h1>
+            <p className="text-gray-600 mb-6">Message Student is only available to instructors, admins, and deans.</p>
+            <Link href="/dashboard">
+              <Button variant="outline" className="w-full">Back to Dashboard</Button>
             </Link>
           </CardContent>
         </Card>
@@ -170,7 +196,7 @@ export default function MessageStudent() {
                       <div>
                         <span className="text-gray-300">Role:</span>
                         <Badge variant="secondary" className="ml-2 bg-blue-600 text-white">
-                          {selectedStudentData.role || 'Student'}
+                          {selectedStudentData.role ? selectedStudentData.role.charAt(0).toUpperCase() + selectedStudentData.role.slice(1) : 'Student'}
                         </Badge>
                       </div>
                     </div>

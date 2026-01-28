@@ -40,3 +40,6 @@ The welcome video is referenced as `/assets/welcome-video.mp4` in the code, whic
 - Video is shown to new users after registration
 
 
+
+
+

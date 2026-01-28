@@ -52,6 +52,11 @@ export function buildAuthResponse(user: any, token: string) {
       lastName: user?.lastName,
       role: user?.role,
       redirectUrl,
+      phone: user?.phone ?? null,
+      dateOfBirth: user?.dateOfBirth ?? null,
+      sfgmChurch: user?.sfgmChurch ?? null,
+      favoriteScripture: user?.favoriteScripture ?? null,
+      profileImageUrl: user?.profileImageUrl ?? null,
     },
   };
 }

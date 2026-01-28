@@ -45,11 +45,8 @@ export default function DeaconCertificateGenerator() {
     }
   };
 
-  const handleDownloadAndNext = () => {
-    // Trigger download is handled by the Certificate component
-    setTimeout(() => {
-      handleGenerateNext();
-    }, 500);
+  const handleNext = () => {
+    setTimeout(() => handleGenerateNext(), 500);
   };
 
   return (
@@ -142,7 +139,7 @@ export default function DeaconCertificateGenerator() {
                 <ul className="text-sm text-gray-600 space-y-1 list-disc list-inside">
                   <li>Enter each student's name one at a time</li>
                   <li>Click "Preview Certificate" to see how it looks</li>
-                  <li>Click "Download & Print" on the certificate to print it</li>
+                  <li>Diplomas are presented in person only—not available for download</li>
                   <li>Add multiple students to the queue for batch processing</li>
                 </ul>
               </div>
@@ -159,11 +156,11 @@ export default function DeaconCertificateGenerator() {
                       <span>Certificate Preview</span>
                       {students.length > 0 && (
                         <Button
-                          onClick={handleDownloadAndNext}
+                          onClick={handleNext}
                           variant="outline"
                           size="sm"
                         >
-                          Download & Next
+                          Next
                         </Button>
                       )}
                     </CardTitle>

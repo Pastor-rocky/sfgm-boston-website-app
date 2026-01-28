@@ -1,5 +1,5 @@
 import { useAuth } from "@/hooks/useAuth";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,11 +9,12 @@ import { Link, useLocation } from "wouter";
 import { 
   Trophy, Crown, Medal, X, Play, BookOpen, GraduationCap, 
   Award, BarChart3, Library, Wrench, FileText, Clock, 
-  TrendingUp, Star, Zap, Target, Users, Calendar,
+  TrendingUp, Star, Zap, Target, Calendar, BookUser, Users,
   ChevronRight, CheckCircle, AlertCircle
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
+import { apiRequest } from "@/lib/queryClient";
 
 // Animated Progress Ring Component
 function AnimatedProgressRing({ progress, size = 120, strokeWidth = 8, color = "blue" }: {
@@ -117,14 +118,33 @@ function QuickActionButton({
 }
 
 // Course Card Component with Enhanced Features
-function EnhancedCourseCard({ enrollment, onUnenroll, onContinue }: { 
+function EnhancedCourseCard({ enrollment, instructors, onUnenroll, onContinue }: { 
   enrollment: any; 
+  instructors: any[];
   onUnenroll: (enrollmentId: number, courseId: number) => void;
   onContinue: (courseId: number) => void;
 }) {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [showUnenrollConfirm, setShowUnenrollConfirm] = useState(false);
   const [isUnenrolling, setIsUnenrolling] = useState(false);
+
+  const patchEnrollment = useMutation({
+    mutationFn: async (payload: { chosenInstructorId?: string | null }) => {
+      return apiRequest("PATCH", `/api/enrollments/${enrollment.id}`, payload);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/enrollments/student"] });
+      toast({ title: "Saved", description: "Instructor updated." });
+    },
+    onError: (e: any) => {
+      toast({ title: "Update failed", description: e?.message ?? "Please try again.", variant: "destructive" });
+    },
+  });
+
+  const saveInstructor = (instructorId: string) => {
+    patchEnrollment.mutate({ chosenInstructorId: instructorId || null });
+  };
 
   // Fetch quiz attempts for this course
   const { data: quizAttempts = [] } = useQuery<any[]>({
@@ -250,6 +270,24 @@ function EnhancedCourseCard({ enrollment, onUnenroll, onContinue }: {
             <p className="text-gray-900 text-sm mt-1 line-clamp-2 font-medium">
               {enrollment.course?.description || ''}
             </p>
+            {/* Select instructor — inline in card */}
+            <div className="mt-3 flex flex-wrap items-center gap-2 text-sm">
+              <BookUser className="w-4 h-4 text-green-300" />
+              <span className="text-gray-300">Instructor:</span>
+              <select
+                value={enrollment.chosenInstructorId ?? ""}
+                onChange={(e) => saveInstructor(e.target.value)}
+                disabled={patchEnrollment.isPending}
+                className="bg-white/10 border border-white/20 rounded px-2 py-1 text-white text-sm focus:ring-2 focus:ring-green-400"
+              >
+                <option value="">Select instructor…</option>
+                {instructors.map((i: any) => (
+                  <option key={i.id} value={i.id}>
+                    {i.firstName} {i.lastName}{i.sfgmChurch ? ` (${i.sfgmChurch})` : ""}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
           <div className="ml-4">
             <AnimatedProgressRing 
@@ -440,8 +478,12 @@ export default function StudentDashboard() {
     queryKey: ['/api/analytics/gpa'],
   });
 
-  const { data: enrollments = [] } = useQuery({
+  const { data: enrollments = [], isError: enrollmentsError, refetch: refetchEnrollments } = useQuery({
     queryKey: ['/api/enrollments/student'],
+  });
+
+  const { data: instructors = [] } = useQuery({
+    queryKey: ['/api/instructors'],
   });
 
   const { data: certificates = [] } = useQuery({
@@ -543,30 +585,32 @@ export default function StudentDashboard() {
       <Navigation />
       
       <main className="max-w-7xl mx-auto py-8 px-4">
-        {/* Enhanced Welcome Header */}
+        {/* Enhanced Welcome Header - entire block links to profile (student-profile = full profile editor) */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-3 mb-4">
-            <Link href="/profile">
-              <div className="relative w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center cursor-pointer hover:from-blue-600 hover:to-purple-700 transition-all duration-300 hover:scale-105 hover:shadow-lg group" title="Click to edit profile">
-                <span className="text-2xl font-bold text-white group-hover:scale-110 transition-transform">
-                  {user?.firstName?.charAt(0)?.toUpperCase() || 'S'}{user?.lastName?.charAt(0)?.toUpperCase() || ''}
-                </span>
-                <div className="absolute inset-0 rounded-full bg-black/0 group-hover:bg-black/10 transition-colors"></div>
-                {/* Small edit icon overlay */}
-                <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-md">
-                  <i className="fas fa-edit text-blue-600 text-xs"></i>
-                </div>
+          <button
+            type="button"
+            onClick={() => setLocation('/student-profile')}
+            className="inline-flex items-center gap-3 mb-4 no-underline group cursor-pointer bg-transparent border-0 p-0 text-left"
+            title="Go to profile"
+          >
+            <div className="relative w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:from-blue-600 group-hover:to-purple-700 group-hover:shadow-lg">
+              <span className="text-2xl font-bold text-white group-hover:scale-110 transition-transform">
+                {user?.firstName?.charAt(0)?.toUpperCase() || 'S'}{user?.lastName?.charAt(0)?.toUpperCase() || ''}
+              </span>
+              <div className="absolute inset-0 rounded-full bg-black/0 group-hover:bg-black/10 transition-colors" />
+              <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-md">
+                <i className="fas fa-edit text-blue-600 text-xs" />
               </div>
-            </Link>
+            </div>
             <div className="text-left">
-              <h1 className="text-4xl font-bold text-white">
+              <h1 className="text-4xl font-bold text-white group-hover:text-blue-100 transition-colors">
                 Welcome back, {(user as any)?.firstName || 'Student'}!
               </h1>
               <p className="text-xl text-blue-200">
                 Continue your spiritual journey with us
               </p>
             </div>
-          </div>
+          </button>
         </div>
 
 
@@ -641,9 +685,11 @@ export default function StudentDashboard() {
                         ></div>
                       </div>
                       <div className="text-sm text-gray-900 font-medium">
-                        {activeEnrollments.length > 0 
-                          ? `Based on ${activeEnrollments.length} active course${activeEnrollments.length !== 1 ? 's' : ''}`
-                          : 'No active courses'
+                        {enrollmentsError
+                          ? 'Couldn’t load course data'
+                          : activeEnrollments.length > 0 
+                            ? `Based on ${activeEnrollments.length} active course${activeEnrollments.length !== 1 ? 's' : ''}`
+                            : 'No active courses'
                         }
                       </div>
                     </div>
@@ -663,13 +709,40 @@ export default function StudentDashboard() {
                   {activeEnrollments.map((enrollment: any) => (
                     <EnhancedCourseCard 
                       key={enrollment.id} 
-                      enrollment={enrollment} 
+                      enrollment={enrollment}
+                      instructors={instructors as any[]}
                       onUnenroll={handleUnenroll}
                       onContinue={handleContinueCourse}
                     />
                   ))}
                 </div>
               </div>
+            ) : enrollmentsError ? (
+              <Card className="bg-gradient-to-br from-amber-900/30 to-orange-900/30 backdrop-blur-sm border-amber-500/30">
+                <CardContent className="p-8 text-center">
+                  <AlertCircle className="w-16 h-16 text-amber-400 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-white mb-2">Couldn’t load your courses</h3>
+                  <p className="text-gray-300 mb-6">
+                    We couldn’t fetch your enrollments. If you’re testing locally, ensure you’re using the same database as production (check <code className="text-amber-200 bg-amber-900/50 px-1 rounded">.env</code> <code className="text-amber-200 bg-amber-900/50 px-1 rounded">DATABASE_URL</code>). Otherwise, try refreshing.
+                  </p>
+                  <div className="flex flex-wrap gap-3 justify-center">
+                    <Button 
+                      onClick={() => refetchEnrollments()}
+                      variant="outline"
+                      className="border-amber-400 text-amber-100 hover:bg-amber-500/20"
+                    >
+                      Try again
+                    </Button>
+                    <Button 
+                      onClick={() => handleQuickAction('enroll')}
+                      className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-6 py-3"
+                    >
+                      <GraduationCap className="w-5 h-5 mr-2" />
+                      Browse Courses
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             ) : (
               <Card className="bg-gradient-to-br from-gray-800/30 to-gray-900/30 backdrop-blur-sm border-white/20">
                 <CardContent className="p-8 text-center">

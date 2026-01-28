@@ -130,3 +130,6 @@ ls -la "/Users/rocky/Desktop/SFGM Boston Website:App  /client/src/assets/"*.{jpg
 - After upload, images will work immediately (no code changes needed)
 
 
+
+
+

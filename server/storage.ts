@@ -115,8 +115,9 @@ export interface IStorage {
   // Enrollment operations
   enrollStudent(enrollment: InsertEnrollment): Promise<Enrollment>;
   unenrollStudent(studentId: string, courseId: number): Promise<{success: boolean, deletedItems?: any}>;
-  getStudentEnrollments(studentId: string): Promise<Enrollment[]>;
+  getStudentEnrollments(studentId: string): Promise<any[]>;
   getCourseEnrollments(courseId: number): Promise<Enrollment[]>;
+  updateEnrollmentChosenInstructor(enrollmentId: number, studentId: string, chosenInstructorId: string | null): Promise<Enrollment | null>;
   
   // Quiz operations
   getQuiz(id: number): Promise<Quiz | undefined>;
@@ -929,18 +930,50 @@ After completing this chapter, proceed to the next module or assessment as direc
       orderBy: desc(enrollments.enrolledAt),
     });
 
-    // Calculate progress for each enrollment
+    const chosenIds = [...new Set(enrollmentData.map((e: any) => e.chosenInstructorId).filter(Boolean))] as string[];
+    const chosenMap = new Map<string, any>();
+    if (chosenIds.length > 0) {
+      const chosenUsers = await db.select({
+        id: users.id,
+        firstName: users.firstName,
+        lastName: users.lastName,
+        email: users.email,
+      }).from(users).where(inArray(users.id, chosenIds));
+      chosenUsers.forEach((u) => chosenMap.set(u.id, u));
+    }
+
     const enrollmentsWithProgress = await Promise.all(
-      enrollmentData.map(async (enrollment) => {
+      enrollmentData.map(async (enrollment: any) => {
         const progress = await this.calculateCourseProgress(studentId, enrollment.courseId);
+        const chosenInstructor = enrollment.chosenInstructorId ? chosenMap.get(enrollment.chosenInstructorId) : null;
         return {
           ...enrollment,
-          progress: Math.round(progress)
+          progress: Math.round(progress),
+          chosenInstructor: chosenInstructor ? {
+            id: chosenInstructor.id,
+            firstName: chosenInstructor.firstName,
+            lastName: chosenInstructor.lastName,
+            email: chosenInstructor.email,
+          } : null,
         };
       })
     );
 
     return enrollmentsWithProgress;
+  }
+
+  async updateEnrollmentChosenInstructor(enrollmentId: number, studentId: string, chosenInstructorId: string | null): Promise<Enrollment | null> {
+    const [enrollment] = await db
+      .select()
+      .from(enrollments)
+      .where(and(eq(enrollments.id, enrollmentId), eq(enrollments.studentId, studentId)));
+    if (!enrollment) return null;
+    const [updated] = await db
+      .update(enrollments)
+      .set({ chosenInstructorId } as any)
+      .where(eq(enrollments.id, enrollmentId))
+      .returning();
+    return updated ?? null;
   }
 
   async calculateCourseProgress(studentId: string, courseId: number): Promise<number> {
@@ -2416,38 +2449,41 @@ After completing this chapter, proceed to the next module or assessment as direc
 
   // Content progress tracking methods
   async updateContentProgress(studentId: string, courseId: number, contentType: 'video' | 'reading' | 'quiz', contentId: number, completed: boolean): Promise<void> {
-    const existingProgress = await db
-      .select()
-      .from(contentProgress)
-      .where(
-        and(
-          eq(contentProgress.studentId, studentId),
-          eq(contentProgress.courseId, courseId),
-          eq(contentProgress.contentType, contentType),
-          eq(contentProgress.contentId, contentId)
-        )
-      );
+    // Use transaction to prevent race conditions when user clicks rapidly
+    await db.transaction(async (tx) => {
+      const existingProgress = await tx
+        .select()
+        .from(contentProgress)
+        .where(
+          and(
+            eq(contentProgress.studentId, studentId),
+            eq(contentProgress.courseId, courseId),
+            eq(contentProgress.contentType, contentType),
+            eq(contentProgress.contentId, contentId)
+          )
+        );
 
-    if (existingProgress.length > 0) {
-      await db
-        .update(contentProgress)
-        .set({ 
-          completed, 
-          completedAt: completed ? new Date() : null 
-        })
-        .where(eq(contentProgress.id, existingProgress[0].id));
-    } else {
-      await db
-        .insert(contentProgress)
-        .values({
-          studentId,
-          courseId,
-          contentType,
-          contentId,
-          completed,
-          completedAt: completed ? new Date() : null,
-        });
-    }
+      if (existingProgress.length > 0) {
+        await tx
+          .update(contentProgress)
+          .set({ 
+            completed, 
+            completedAt: completed ? new Date() : null 
+          })
+          .where(eq(contentProgress.id, existingProgress[0].id));
+      } else {
+        await tx
+          .insert(contentProgress)
+          .values({
+            studentId,
+            courseId,
+            contentType,
+            contentId,
+            completed,
+            completedAt: completed ? new Date() : null,
+          });
+      }
+    });
   }
 
   async getContentProgress(studentId: string, courseId: number): Promise<ContentProgress[]> {

@@ -54,6 +54,7 @@ export const users = pgTable("users", {
   emailVerified: boolean("email_verified").default(false),
   emailVerificationToken: varchar("email_verification_token"),
   registrationMethod: varchar("registration_method", { enum: ["email", "google", "facebook", "apple", "sfgmboston"] }).default("email"),
+  sfgmChurch: varchar("sfgm_church", { length: 255 }), // SFGM church affiliation for instructor-student segregation
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -130,6 +131,7 @@ export const enrollments = pgTable("enrollments", {
   completedAt: timestamp("completed_at"),
   grade: decimal("grade", { precision: 3, scale: 2 }),
   status: varchar("status", { enum: ["active", "completed", "dropped"] }).default("active"),
+  chosenInstructorId: varchar("chosen_instructor_id").references(() => users.id),
 });
 
 export const quizzes = pgTable("quizzes", {
@@ -274,11 +276,25 @@ export const instructorApplications = pgTable("instructor_applications", {
   experience: text("experience").notNull(),
   ministry: text("ministry").notNull(),
   motivation: text("motivation").notNull(),
+  courseOfInterest: text("course_of_interest"), // What course are you interested in teaching?
+  sfgmChurch: varchar("sfgm_church", { length: 255 }), // What SFGM church do you belong to?
+  churchPosition: text("church_position"), // What is your position in church?
+  availability: text("availability"),
+  additionalComments: text("additional_comments"),
   status: varchar("status", { length: 20 }).notNull().default("pending"), // pending, approved, rejected
   appliedAt: timestamp("applied_at").defaultNow().notNull(),
   reviewedAt: timestamp("reviewed_at"),
   reviewedBy: varchar("reviewed_by").references(() => users.id),
   adminNotes: text("admin_notes"),
+});
+
+// Church default instructor contact info (admin-editable; overrides SFGM_CHURCHES display)
+export const churchInstructorInfo = pgTable("church_instructor_info", {
+  church: varchar("church", { length: 255 }).primaryKey(),
+  instructorName: varchar("instructor_name", { length: 255 }),
+  email: varchar("email", { length: 255 }),
+  phone: varchar("phone", { length: 50 }),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 // Textbook Maker Tables

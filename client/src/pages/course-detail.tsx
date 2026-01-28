@@ -1,4 +1,4 @@
-import { useParams, useLocation } from "wouter";
+import { useParams, useLocation, Link } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -149,7 +149,7 @@ export default function CourseDetail() {
           <div className="flex flex-col items-center gap-4 mb-8">
             {/* Enrollment Badge/Button */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              {isAuthenticated && (user as any)?.role === 'student' && (
+              {isAuthenticated && ((user as any)?.role === 'student' || (user as any)?.role === 'dean') && (
                 <>
                   {isEnrolled ? (
                     <Badge className="bg-green-600/20 border-green-500/50 text-green-300 px-6 py-3 text-lg">
@@ -221,6 +221,14 @@ export default function CourseDetail() {
               <strong>Need help?</strong> Contact your instructor or reach out to the SFGM Boston Bible School team for support.
             </p>
           </div>
+
+          <p className="text-center text-purple-300/90 text-sm mb-8">
+            Interested in teaching?{" "}
+            <Link href="/instructor-application" className="underline hover:text-purple-200 transition-colors">
+              Apply to become an instructor
+            </Link>
+            .
+          </p>
 
           {/* Book Purchase Links for Level Up Leadership */}
           {id === '7' && (

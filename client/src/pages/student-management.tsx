@@ -30,14 +30,21 @@ export default function StudentManagement() {
   const [selectedAction, setSelectedAction] = useState<'delete' | 'block' | 'unblock' | null>(null);
 
   const { data: students, isLoading: studentsLoading } = useQuery({
-    queryKey: ['/api/students/grades'],
+    queryKey: ['/api/instructor/students'],
+    queryFn: async () => {
+      const r = await fetch('/api/instructor/students', {
+        headers: { Authorization: `Bearer ${localStorage.getItem('auth_token')}` },
+        credentials: 'include',
+      });
+      if (!r.ok) throw new Error('Failed to fetch students');
+      return r.json();
+    },
     enabled: isAuthenticated,
   });
 
   const sendMessageMutation = useMutation({
     mutationFn: async (messageData: any) => {
-      const response = await apiRequest('POST', '/api/messages/send', messageData);
-      return response.json();
+      return apiRequest('POST', '/api/messages/send', messageData);
     },
     onSuccess: () => {
       toast({
@@ -60,8 +67,7 @@ export default function StudentManagement() {
 
   const deleteStudentMutation = useMutation({
     mutationFn: async (studentId: string) => {
-      const response = await apiRequest('DELETE', `/api/students/${studentId}`);
-      return response.json();
+      return apiRequest('DELETE', `/api/students/${studentId}`);
     },
     onSuccess: () => {
       toast({
@@ -82,8 +88,7 @@ export default function StudentManagement() {
 
   const blockStudentMutation = useMutation({
     mutationFn: async ({ studentId, action }: { studentId: string, action: 'block' | 'unblock' }) => {
-      const response = await apiRequest('PATCH', `/api/students/${studentId}/status`, { action });
-      return response.json();
+      return apiRequest('PATCH', `/api/students/${studentId}/status`, { action });
     },
     onSuccess: (data, variables) => {
       toast({
@@ -168,6 +173,9 @@ export default function StudentManagement() {
     );
   }
 
+  const role = ((user as any)?.role ?? "").toLowerCase();
+  const isInstructor = ["instructor", "admin", "dean"].includes(role);
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
@@ -177,6 +185,22 @@ export default function StudentManagement() {
             <p className="text-gray-600 mb-6">You need to be logged in to access student management.</p>
             <Link href="/login">
               <Button className="w-full">Login</Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!isInstructor) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
+        <Card className="max-w-md w-full mx-4">
+          <CardContent className="p-8 text-center">
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">Access Denied</h1>
+            <p className="text-gray-600 mb-6">Student management is only available to instructors, admins, and deans.</p>
+            <Link href="/dashboard">
+              <Button variant="outline" className="w-full">Back to Dashboard</Button>
             </Link>
           </CardContent>
         </Card>
@@ -244,7 +268,7 @@ export default function StudentManagement() {
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <Badge variant="secondary" className="bg-blue-600 text-white">
-                        {student.role || 'Student'}
+                        {student.role ? student.role.charAt(0).toUpperCase() + student.role.slice(1) : 'Student'}
                       </Badge>
                       {student.isBlocked && (
                         <Badge variant="destructive" className="bg-red-600 text-white">

@@ -16,14 +16,31 @@ import { registerEssayRoutes } from "./routes/essays";
 import { registerForumRoutes } from "./routes/forum";
 import { registerBirthdayRoutes } from "./routes/birthday";
 import { registerAdminRoutes } from "./routes/admin";
+import { registerInstructorApplicationRoutes } from "./routes/instructorApplications";
+import { registerInstructorRoutes } from "./routes/instructor";
 import { extractAuthToken } from "./utils/auth";
 import express from "express";
+import { apiRateLimit } from "./middleware/rateLimit";
+import { pool } from "./db";
 
 export function setupRoutes(app: Express): Server {
   const server = createServer(app);
   
   app.use(cookieParser());
   app.use(express.json({ limit: '50mb' }));
+  
+  // Apply rate limiting to all API routes (except health checks)
+  app.use((req: any, res: any, next: any) => {
+    // Skip rate limiting for health checks
+    if (req.path === '/api/health' || req.path === '/health') {
+      return next();
+    }
+    // Apply rate limiting to API routes
+    if (req.path.startsWith('/api/')) {
+      return apiRateLimit(req, res, next);
+    }
+    next();
+  });
   
   // Simple authentication middleware for testing
   app.use(async (req: any, res: any, next: any) => {
@@ -71,6 +88,8 @@ export function setupRoutes(app: Express): Server {
   registerForumRoutes(app);
   registerBirthdayRoutes(app);
   registerAdminRoutes(app);
+  registerInstructorApplicationRoutes(app);
+  registerInstructorRoutes(app);
 
   // Health check endpoints for monitoring
   app.get('/api/health', async (_req, res) => {
@@ -94,11 +113,20 @@ export function setupRoutes(app: Express): Server {
       // Test database connection
       let dbStatus = 'unknown';
       let dbResponseTime = 0;
+      let poolStats = null;
       try {
         const dbStart = Date.now();
         await db.execute(sql`SELECT 1`);
         dbResponseTime = Date.now() - dbStart;
         dbStatus = 'connected';
+        
+        // Get connection pool statistics for monitoring
+        poolStats = {
+          totalCount: pool.totalCount,
+          idleCount: pool.idleCount,
+          waitingCount: pool.waitingCount,
+          maxConnections: (pool as any).options?.max || 30,
+        };
       } catch (error) {
         dbStatus = 'error';
         console.error('Database health check failed:', error);
@@ -115,6 +143,15 @@ export function setupRoutes(app: Express): Server {
           database: {
             status: dbStatus,
             responseTime: `${dbResponseTime}ms`,
+            connectionPool: poolStats ? {
+              active: poolStats.totalCount - poolStats.idleCount,
+              idle: poolStats.idleCount,
+              waiting: poolStats.waitingCount,
+              max: poolStats.maxConnections,
+              utilization: poolStats.maxConnections > 0 
+                ? `${Math.round(((poolStats.totalCount - poolStats.idleCount) / poolStats.maxConnections) * 100)}%`
+                : '0%',
+            } : null,
           },
         },
         system: {
@@ -162,6 +199,11 @@ export function setupRoutes(app: Express): Server {
       console.error("Error fetching announcements:", error);
       res.status(500).json({ message: "Failed to fetch announcements" });
     }
+  });
+
+  // Return JSON 404 for unmatched /api/* so clients never receive HTML (avoids res.json() throws)
+  app.use("/api", (_req, res) => {
+    res.status(404).json({ message: "The requested resource was not found.", code: "NOT_FOUND" });
   });
 
   return server;

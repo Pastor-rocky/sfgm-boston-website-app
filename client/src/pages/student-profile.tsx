@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Link } from "wouter";
 import { 
@@ -15,6 +14,7 @@ import {
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { SFGM_CHURCHES, formatChurchOption } from "@/lib/sfgm-churches";
 
 export default function StudentProfile() {
   const { user } = useAuth();
@@ -29,7 +29,8 @@ export default function StudentProfile() {
     phone: '',
     dateOfBirth: '',
     favoriteScripture: '',
-    profileImageUrl: ''
+    profileImageUrl: '',
+    sfgmChurch: ''
   });
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>('');
@@ -49,7 +50,8 @@ export default function StudentProfile() {
         phone: currentUser.phone || '',
         dateOfBirth: currentUser.dateOfBirth || '',
         favoriteScripture: currentUser.favoriteScripture || '',
-        profileImageUrl: currentUser.profileImageUrl || ''
+        profileImageUrl: currentUser.profileImageUrl || '',
+        sfgmChurch: currentUser.sfgmChurch || ''
       });
       setImagePreview(currentUser.profileImageUrl || '');
     }
@@ -380,6 +382,26 @@ export default function StudentProfile() {
                     disabled={!isEditing}
                     className="bg-white/10 border-white/30 text-white placeholder:text-gray-400"
                   />
+                </div>
+                <div>
+                  <Label htmlFor="sfgmChurch" className="text-white text-sm font-medium">
+                    SFGM Church
+                  </Label>
+                  <select
+                    id="sfgmChurch"
+                    value={profileData.sfgmChurch}
+                    onChange={(e) => handleInputChange('sfgmChurch', e.target.value)}
+                    disabled={!isEditing}
+                    className="flex h-10 w-full rounded-md border border-white/30 bg-white/10 px-3 py-2 text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <option value="">Select your SFGM church</option>
+                    {SFGM_CHURCHES.map((c) => (
+                      <option key={c.church} value={c.church} className="bg-slate-800 text-white">
+                        {formatChurchOption(c)}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-xs text-gray-400 mt-1">Which SFGM church do you belong to? Same dropdown as registration; each option shows the default instructor for that church.</p>
                 </div>
               </div>
             </div>

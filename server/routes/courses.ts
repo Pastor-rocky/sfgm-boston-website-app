@@ -7,6 +7,8 @@ import { eq } from "drizzle-orm";
 import { requireAuth } from "../middleware/requireAuth";
 import { validateBody } from "../middleware/validate";
 import { z } from "zod";
+import { sendErrorResponse } from "../utils/errorHandler";
+import { withRetry, isRetryableError, shouldNotRetry } from "../utils/retry";
 
 const contentProgressSchema = z.object({
   courseId: z.coerce.number().int().positive(),
@@ -24,6 +26,11 @@ const miniCourseSchema = z.object({
   courseId: z.coerce.number().int().positive(),
 });
 
+const patchEnrollmentSchema = z.object({
+  chosenInstructorId: z.string().nullable().optional(),
+  sfgmChurch: z.string().nullable().optional(),
+});
+
 export function registerCourseRoutes(app: Express) {
   const router = Router();
 
@@ -31,9 +38,8 @@ export function registerCourseRoutes(app: Express) {
     try {
       const coursesList = await db.select().from(schema.courses).where(eq(schema.courses.isActive, true));
       res.json(coursesList);
-    } catch (error: any) {
-      console.error("Error fetching courses:", error);
-      res.status(500).json({ message: "Failed to fetch courses", error: error?.message || String(error) });
+    } catch (error) {
+      sendErrorResponse(res, error, "Fetch Courses");
     }
   });
 
@@ -161,11 +167,15 @@ export function registerCourseRoutes(app: Express) {
         return res.status(401).json({ message: "Authentication required" });
       }
 
-      const progress = await storage.getContentProgress(studentId, parseInt(courseId));
+      const courseIdNum = parseInt(courseId);
+      if (isNaN(courseIdNum)) {
+        return res.status(400).json({ message: "Invalid course ID" });
+      }
+
+      const progress = await storage.getContentProgress(studentId, courseIdNum);
       res.json(progress);
     } catch (error) {
-      console.error("Error fetching content progress:", error);
-      res.status(500).json({ message: "Failed to fetch progress" });
+      sendErrorResponse(res, error, "Fetch Content Progress");
     }
   });
 
@@ -173,11 +183,19 @@ export function registerCourseRoutes(app: Express) {
     try {
       const { studentId, courseId } = req.validatedBody;
       const finalStudentId = studentId || req.user!.id;
-      await storage.enrollStudent({ studentId: finalStudentId, courseId });
+      
+      // Use retry logic for enrollment
+      await withRetry(
+        () => storage.enrollStudent({ studentId: finalStudentId, courseId }),
+        {
+          maxRetries: 2,
+          shouldRetry: (error) => isRetryableError(error) && !shouldNotRetry(error),
+        }
+      );
+      
       res.json({ success: true });
     } catch (error) {
-      console.error("Error enrolling student:", error);
-      res.status(500).json({ message: "Failed to enroll student" });
+      sendErrorResponse(res, error, "Student Enrollment");
     }
   });
 
@@ -221,6 +239,51 @@ export function registerCourseRoutes(app: Express) {
     }
   });
 
+  router.patch("/api/enrollments/:id", requireAuth, validateBody(patchEnrollmentSchema), async (req: any, res: Response) => {
+    try {
+      const enrollmentId = parseInt(req.params.id, 10);
+      if (isNaN(enrollmentId)) {
+        return res.status(400).json({ message: "Invalid enrollment ID" });
+      }
+      const { chosenInstructorId, sfgmChurch } = req.validatedBody;
+      const userId = req.user!.id;
+
+      if (chosenInstructorId !== undefined) {
+        const updated = await storage.updateEnrollmentChosenInstructor(enrollmentId, userId, chosenInstructorId ?? null);
+        if (!updated) {
+          return res.status(404).json({ message: "Enrollment not found or access denied" });
+        }
+      }
+
+      if (sfgmChurch !== undefined) {
+        await storage.updateUserProfile(userId, { sfgmChurch: sfgmChurch ?? null } as any);
+      }
+
+      const enrollments = await storage.getStudentEnrollments(userId);
+      const one = enrollments.find((e: any) => e.id === enrollmentId);
+      return res.json(one ?? {});
+    } catch (error) {
+      console.error("Error updating enrollment:", error);
+      res.status(500).json({ message: "Failed to update enrollment" });
+    }
+  });
+
+  router.get("/api/instructors", requireAuth, async (_req: Request, res: Response) => {
+    try {
+      const instructors = await storage.getInstructors();
+      res.json(instructors.map((u: any) => ({
+        id: u.id,
+        firstName: u.firstName,
+        lastName: u.lastName,
+        email: u.email,
+        sfgmChurch: u.sfgmChurch ?? null,
+      })));
+    } catch (error) {
+      console.error("Error fetching instructors:", error);
+      res.status(500).json({ message: "Failed to fetch instructors" });
+    }
+  });
+
   router.get("/api/analytics/gpa", requireAuth, async (req: any, res: Response) => {
     try {
       const quizAttempts = await storage.getAllQuizAttempts(req.user!.id);
@@ -237,6 +300,26 @@ export function registerCourseRoutes(app: Express) {
     } catch (error) {
       console.error("Error fetching student GPA:", error);
       res.status(500).json({ message: "Failed to fetch GPA" });
+    }
+  });
+
+  router.get("/api/certificates", requireAuth, async (req: any, res: Response) => {
+    try {
+      const certificates = await storage.getStudentCertificates(req.user!.id);
+      res.json(certificates);
+    } catch (error) {
+      console.error("Error fetching certificates:", error);
+      res.status(500).json({ message: "Failed to fetch certificates" });
+    }
+  });
+
+  router.get("/api/genesis-leaderboard", requireAuth, async (_req: Request, res: Response) => {
+    try {
+      // Placeholder until Genesis-to-Revelation leaderboard is implemented
+      res.json([]);
+    } catch (error) {
+      console.error("Error fetching genesis leaderboard:", error);
+      res.status(500).json({ message: "Failed to fetch leaderboard" });
     }
   });
 
@@ -317,7 +400,26 @@ export function registerCourseRoutes(app: Express) {
       if (!course) {
         return res.status(404).json({ message: "Course not found" });
       }
-      res.json(course);
+      
+      // Get instructor information if course has an instructor
+      let instructorInfo = null;
+      if ((course as any).instructorId) {
+        const instructor = await storage.getUser((course as any).instructorId);
+        if (instructor) {
+          instructorInfo = {
+            id: instructor.id,
+            firstName: instructor.firstName,
+            lastName: instructor.lastName,
+            email: instructor.email,
+            sfgmChurch: (instructor as any).sfgmChurch || null,
+          };
+        }
+      }
+      
+      res.json({
+        ...course,
+        instructor: instructorInfo,
+      });
     } catch (error) {
       console.error("Error fetching course:", error);
       res.status(500).json({ message: "Failed to fetch course" });
