@@ -80,7 +80,19 @@ async function ensureUniqueUsername(desired: string) {
 export function registerAuthRoutes(app: Express) {
   const router = Router();
 
-  router.post("/login", async (req: Request, res: Response) => {
+  // Log all requests to auth routes for debugging
+  router.use((req, res, next) => {
+    console.log(`[AUTH ROUTER] ${req.method} ${req.path} - Headers:`, JSON.stringify(req.headers, null, 2));
+    console.log(`[AUTH ROUTER] Body keys:`, req.body ? Object.keys(req.body) : 'no body');
+    next();
+  });
+
+  // Simple test endpoint to verify auth routes are accessible
+  router.get("/test", (req, res) => {
+    res.json({ message: "Auth routes are working!", path: req.path, method: req.method });
+  });
+
+router.post("/login", async (req: Request, res: Response) => {
     try {
       const payload = loginSchema.parse(req.body);
       const identifier = resolveIdentifier(payload);
