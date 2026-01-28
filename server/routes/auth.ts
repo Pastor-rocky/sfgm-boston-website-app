@@ -85,6 +85,7 @@ export function registerAuthRoutes(app: Express) {
       const payload = loginSchema.parse(req.body);
       const identifier = resolveIdentifier(payload);
       console.log('[LOGIN DEBUG] Attempting login with identifier:', identifier ? identifier.substring(0, 10) + '...' : 'empty');
+      console.log('[LOGIN DEBUG] Full request body keys:', Object.keys(payload));
 
       let user;
       try {
@@ -107,7 +108,8 @@ export function registerAuthRoutes(app: Express) {
       }
 
       if (!user.password) {
-        
+        console.log('[LOGIN DEBUG] User has no password - may need Google login or password reset');
+        return res.status(400).json({ message: "This account doesn't have a password. Please use the password reset feature or contact support." });
       }
 
       const passwordMatch = await bcrypt.compare(payload.password, user.password);
@@ -262,6 +264,43 @@ export function registerAuthRoutes(app: Express) {
 
   router.get("/me", handleCurrentUser);
   router.get("/user", handleCurrentUser);
+
+
+  // Diagnostic endpoint to test login flow
+  router.post("/login/diagnostic", async (req: Request, res: Response) => {
+    try {
+      const { identifier, password } = req.body;
+      
+      if (!identifier || !password) {
+        return res.status(400).json({ 
+          error: "Missing identifier or password",
+          received: { identifier: !!identifier, password: !!password }
+        });
+      }
+
+      const user = await findUserForLogin(identifier);
+      
+      return res.json({
+        identifier: identifier.substring(0, 10) + '...',
+        userFound: !!user,
+        userId: user?.id || null,
+        hasPassword: !!user?.password,
+        passwordLength: user?.password?.length || 0,
+        email: user?.email || null,
+        username: user?.username || null,
+        sfgmChurch: user?.sfgmChurch || null,
+        registrationMethod: user?.registrationMethod || null,
+        role: user?.role || null,
+        // Don't return password match result for security
+      });
+    } catch (error: any) {
+      return res.status(500).json({ 
+        error: "Diagnostic failed",
+        message: error.message,
+        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      });
+    }
+  });
 
   app.use("/api/auth", router);
 }
