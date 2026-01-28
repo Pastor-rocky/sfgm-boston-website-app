@@ -178,9 +178,6 @@ export default function Login() {
             </CardHeader>
             
             <CardContent className="p-8">
-              
-              </div>
-
               <div className="relative mb-6">
                 <div className="absolute inset-0 flex items-center">
                   <Separator className="w-full" />
