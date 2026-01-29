@@ -35,36 +35,9 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SFGM_CHURCHES } from "@/lib/sfgm-churches";
 
-const ADMIN_PASSWORD = "123";
 
 const INSTRUCTOR_CHURCH_POSITIONS = ["Pastor", "Elder", "Deacon", "Teacher", "Minister"] as const;
 
-// Custom API request with admin headers
-async function adminApiRequest(
-  method: string,
-  url: string,
-  data?: unknown,
-): Promise<Response> {
-  const headers: Record<string, string> = {
-    "x-admin-password": ADMIN_PASSWORD,
-  };
-  
-  if (data) headers["Content-Type"] = "application/json";
-  
-  const res = await fetch(url, {
-    method,
-    headers,
-    body: data ? JSON.stringify(data) : undefined,
-    credentials: "include",
-  });
-
-  if (!res.ok) {
-    const text = (await res.text()) || res.statusText;
-    throw new Error(`${res.status}: ${text}`);
-  }
-
-  return res;
-}
 
 export default function AdminPanel() {
   const { isAuthenticated: isLoggedIn } = useAuth();
@@ -115,18 +88,52 @@ export default function AdminPanel() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const handleLogin = () => {
-    if (password === ADMIN_PASSWORD) {
+  // Custom API request with admin headers (uses typed password)
+  const adminApiRequest = async (method: string, url: string, data?: unknown): Promise<Response> => {
+    const headers: Record<string, string> = {
+      'x-admin-password': password,
+    };
+
+    if (data) headers['Content-Type'] = 'application/json';
+
+    const res = await fetch(url, {
+      method,
+      headers,
+      body: data ? JSON.stringify(data) : undefined,
+      credentials: 'include',
+    });
+
+    if (!res.ok) {
+      const text = (await res.text()) || res.statusText;
+      throw new Error(`${res.status}: ${text}`);
+    }
+
+    return res;
+  };
+
+  const handleLogin = async () => {
+    try {
+      // Verify admin password by calling a protected admin endpoint
+      await adminApiRequest('GET', '/api/admin/users');
       setIsAuthenticated(true);
       toast({
-        title: "Access Granted",
-        description: "Welcome to the Admin Panel",
+        title: 'Access Granted',
+        description: 'Welcome to the Admin Panel',
       });
-    } else {
+    } catch (err: any) {
+      const msg = err?.message || String(err);
+      if (msg.includes('503') && msg.includes('Admin panel is not configured')) {
+        toast({
+          title: 'Admin Panel Not Configured',
+          description: 'Set ADMIN_PASSWORD in Render environment variables, then redeploy/restart.',
+          variant: 'destructive',
+        });
+        return;
+      }
       toast({
-        title: "Access Denied",
-        description: "Invalid password",
-        variant: "destructive",
+        title: 'Access Denied',
+        description: msg.includes('401') ? 'Invalid admin password' : msg,
+        variant: 'destructive',
       });
     }
   };

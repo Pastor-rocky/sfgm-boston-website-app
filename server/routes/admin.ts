@@ -11,7 +11,7 @@ import { requireAuth } from "../middleware/requireAuth";
 import { validateBody } from "../middleware/validate";
 
 // Admin password from environment variable (fallback to "123" only for development)
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || (process.env.NODE_ENV === 'development' ? "123" : null);
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || process.env.ADMIN_PANEL_PASSWORD || (process.env.NODE_ENV === 'development' ? "123" : null);
 
 if (!ADMIN_PASSWORD) {
   console.error("⚠️  WARNING: ADMIN_PASSWORD environment variable is not set. Admin routes will be disabled.");
