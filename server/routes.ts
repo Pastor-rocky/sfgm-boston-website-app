@@ -202,10 +202,7 @@ export function setupRoutes(app: Express): Server {
   });
 
   // Return JSON 404 for unmatched /api/* so clients never receive HTML (avoids res.json() throws)
-  app.use("/api", (req, res) => {
-    console.log(`[API 404] ${req.method} ${req.path} - Unmatched API route`);
-    console.log(`[API 404] Full URL: ${req.originalUrl || req.url}`);
-    console.log(`[API 404] Headers:`, JSON.stringify(req.headers, null, 2));
+  app.use("/api", (_req, res) => {
     res.status(404).json({ message: "The requested resource was not found.", code: "NOT_FOUND" });
   });
 
