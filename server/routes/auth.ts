@@ -91,12 +91,25 @@ export function registerAuthRoutes(app: Express) {
       try {
         user = await findUserForLogin(identifier);
       } catch (dbError: any) {
-        // Check if it's a database connection error
+        // Database connection errors
         if (dbError?.code === 'ECONNREFUSED' || dbError?.message?.includes('connection') || dbError?.message?.includes('ECONNREFUSED')) {
           console.error("Database connection error during login:", dbError);
           return res.status(503).json({ 
             message: "Database is currently unavailable. Please check your database connection and try again.",
             code: "DATABASE_UNAVAILABLE"
+          });
+        }
+
+        // Database schema/migration mismatch (e.g. missing columns/tables)
+        // These often contain: 'relation ... does not exist' or 'column ... does not exist'
+        if (typeof dbError?.message === 'string' && (
+          dbError.message.includes('relation') && dbError.message.includes('does not exist') ||
+          dbError.message.includes('column') && dbError.message.includes('does not exist')
+        )) {
+          console.error('Database schema mismatch during login:', dbError.message);
+          return res.status(503).json({
+            message: 'Database schema is out of date. Please run migrations for the production Neon database.',
+            code: 'DB_SCHEMA_MISMATCH',
           });
         }
         throw dbError; // Re-throw if it's not a connection error

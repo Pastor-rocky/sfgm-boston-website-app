@@ -64,8 +64,10 @@ export function isAuthError(error: Error): boolean {
 export function isNotFoundError(error: Error): boolean {
   const notFoundPatterns = [
     /not found/i,
-    /does not exist/i,
-    /missing/i,
+    // NOTE:
+    // Avoid treating generic "does not exist"/"missing" as NOT_FOUND.
+    // Postgres schema errors (e.g. relation/column does not exist)
+    // should surface as 5xx so deployment/migrations can be fixed.
   ];
   return notFoundPatterns.some((pattern) => pattern.test(error.message));
 }

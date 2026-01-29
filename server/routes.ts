@@ -201,6 +201,45 @@ export function setupRoutes(app: Express): Server {
     }
   });
 
+
+  // Diagnostics: verify DB schema has critical auth/enrollment columns
+  // Safe to expose: reports only existence, not data.
+  app.get('/api/diagnostics/db-schema', async (_req, res) => {
+    try {
+      const checks = {
+        users: ['id', 'email', 'username', 'password', 'phone'],
+        enrollments: ['id', 'student_id', 'course_id'],
+        courses: ['id', 'name'],
+      } as const;
+
+      const results: Record<string, any> = {};
+
+      for (const [table, columns] of Object.entries(checks)) {
+        const r = await pool.query(
+          `SELECT column_name FROM information_schema.columns WHERE table_schema='public' AND table_name=$1`,
+          [table]
+        );
+        const existing = new Set((r.rows || []).map((row: any) => row.column_name));
+        results[table] = {
+          exists: existing.size > 0,
+          missingColumns: (columns as string[]).filter((c) => !existing.has(c)),
+        };
+      }
+
+      res.json({
+        ok: Object.values(results).every((t: any) => t.exists && (t.missingColumns?.length || 0) === 0),
+        results,
+      });
+    } catch (error: any) {
+      console.error('DB schema diagnostics failed:', error);
+      res.status(500).json({
+        ok: false,
+        error: 'Diagnostics failed',
+        message: error?.message || String(error),
+      });
+    }
+  });
+
   // Return JSON 404 for unmatched /api/* so clients never receive HTML (avoids res.json() throws)
   app.use("/api", (_req, res) => {
     res.status(404).json({ message: "The requested resource was not found.", code: "NOT_FOUND" });
