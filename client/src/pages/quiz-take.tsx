@@ -271,12 +271,9 @@ export default function QuizTake() {
     queryKey: [`/api/quiz-attempts/${id}/review`],
     enabled: isReviewMode && !!id,
     queryFn: async () => {
-      const token = localStorage.getItem('auth_token');
-      if (!token) throw new Error('No auth token');
-      
       const response = await fetch(`/api/quiz-attempts/${id}/review`, {
+        credentials: 'include',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });

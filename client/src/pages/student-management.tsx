@@ -33,7 +33,7 @@ export default function StudentManagement() {
     queryKey: ['/api/instructor/students'],
     queryFn: async () => {
       const r = await fetch('/api/instructor/students', {
-        headers: { Authorization: `Bearer ${localStorage.getItem('auth_token')}` },
+        headers: {},
         credentials: 'include',
       });
       if (!r.ok) throw new Error('Failed to fetch students');

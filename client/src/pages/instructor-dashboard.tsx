@@ -48,7 +48,7 @@ export default function InstructorDashboard() {
     queryKey: ["/api/instructor/students"],
     queryFn: async () => {
       const r = await fetch("/api/instructor/students", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("auth_token")}` },
+        headers: {},
         credentials: "include",
       });
       if (!r.ok) throw new Error("Failed to fetch students");
@@ -61,7 +61,7 @@ export default function InstructorDashboard() {
     queryKey: ["/api/instructor/essay-submissions"],
     queryFn: async () => {
       const r = await fetch("/api/instructor/essay-submissions", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("auth_token")}` },
+        headers: {},
         credentials: "include",
       });
       if (!r.ok) throw new Error("Failed to fetch essays");

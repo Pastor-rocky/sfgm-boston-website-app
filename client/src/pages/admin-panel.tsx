@@ -45,13 +45,11 @@ async function adminApiRequest(
   url: string,
   data?: unknown,
 ): Promise<Response> {
-  const authToken = localStorage.getItem('auth_token');
   const headers: Record<string, string> = {
     "x-admin-password": ADMIN_PASSWORD,
   };
   
   if (data) headers["Content-Type"] = "application/json";
-  if (authToken) headers["Authorization"] = `Bearer ${authToken}`;
   
   const res = await fetch(url, {
     method,

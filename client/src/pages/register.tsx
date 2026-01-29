@@ -260,12 +260,6 @@ export default function Register() {
           title: "Welcome to SFGM Boston!",
           description: `Account created successfully! Please complete your profile to get started.`,
         });
-        
-        // Store authentication token if provided
-        if (data.token) {
-          localStorage.setItem('auth_token', data.token);
-        }
-        
         // Store registration info for welcome message and redirect to welcome video
         sessionStorage.setItem('newRegistration', 'true');
         sessionStorage.setItem('registrationPassword', formData.password);

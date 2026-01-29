@@ -86,12 +86,6 @@ export default function Login() {
         title: "Login Successful",
         description: "Welcome back to SFGM Bible School!",
       });
-
-      // Store token in localStorage and redirect
-      if (data.token) {
-        localStorage.setItem('auth_token', data.token);
-      }
-      
       // Use server-provided redirect URL for role-based routing
       const redirectUrl = data.user?.redirectUrl || '/dashboard';
       

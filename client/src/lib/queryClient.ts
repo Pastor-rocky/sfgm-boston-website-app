@@ -12,15 +12,12 @@ export async function apiRequest(
   url: string,
   data?: unknown,
 ): Promise<any> {
-  const authToken = localStorage.getItem('auth_token');
-  
   const headers: Record<string, string> = {};
   if (data) headers["Content-Type"] = "application/json";
-  if (authToken) headers["Authorization"] = `Bearer ${authToken}`;
-  
+
   // Only log in development to avoid exposing sensitive data in production
   if (process.env.NODE_ENV === 'development') {
-    console.log('API Request:', { method, url, hasToken: !!authToken });
+    console.log('API Request:', { method, url, usesCookies: true });
   }
   
   const res = await fetch(url, {
@@ -40,12 +37,9 @@ export const getQueryFn: <T>(options: {
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
-    const authToken = localStorage.getItem('auth_token');
-    
     const res = await fetch(queryKey[0] as string, {
       headers: {
         'Content-Type': 'application/json',
-        ...(authToken && { Authorization: `Bearer ${authToken}` }),
       },
       credentials: "include",
     });

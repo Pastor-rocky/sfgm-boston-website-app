@@ -351,13 +351,10 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
   React.useEffect(() => {
     if (courseId === 4 && Object.keys(manualCompletions).length === 0) {
       const loadManualCompletions = async () => {
-        const token = localStorage.getItem('auth_token');
-        if (!token) return;
-        
         try {
           const response = await fetch(`/api/content-progress/${courseId}`, {
+            credentials: 'include',
             headers: {
-              'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json',
             },
           });
@@ -397,12 +394,9 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
     refetchOnMount: true, // Always refetch when component mounts
     refetchOnWindowFocus: true, // Refetch when window regains focus
     queryFn: async () => {
-      const token = localStorage.getItem('auth_token');
-      if (!token) throw new Error('No auth token');
-      
       const response = await fetch(`/api/quiz-attempts/course/${courseId}`, {
+        credentials: 'include',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });

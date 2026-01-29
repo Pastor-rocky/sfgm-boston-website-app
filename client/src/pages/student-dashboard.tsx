@@ -511,9 +511,7 @@ export default function StudentDashboard() {
     try {
       const response = await fetch(`/api/enrollments/student/${(user as any)?.id}/course/${courseId}`, {
         method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
-        },
+        credentials: 'include',
       });
 
       if (!response.ok) {
