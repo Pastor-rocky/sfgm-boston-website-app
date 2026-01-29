@@ -80,29 +80,7 @@ async function ensureUniqueUsername(desired: string) {
 export function registerAuthRoutes(app: Express) {
   const router = Router();
 
-  // Log all requests to auth routes for debugging
-  router.use((req, res, next) => {
-    console.log(`[AUTH ROUTER] ${req.method} ${req.path} - Headers:`, JSON.stringify(req.headers, null, 2));
-    console.log(`[AUTH ROUTER] Body keys:`, req.body ? Object.keys(req.body) : 'no body');
-    next();
-  });
-
-  // Simple test endpoint to verify auth routes are accessible
-  router.get("/test", (req, res) => {
-    res.json({ message: "Auth routes are working!", path: req.path, method: req.method });
-  });
-
-  // Test POST endpoint to verify POST requests work
-  router.post("/test-post", (req, res) => {
-    res.json({ message: "POST requests work!", path: req.path, method: req.method, body: req.body });
-  });
-
-  // Duplicate login route right here to test if order matters
   router.post("/login", async (req: Request, res: Response) => {
-    res.json({ message: "DUPLICATE LOGIN ROUTE - This should work!", path: req.path });
-  });
-
-  router.post("/login-test", async (req: Request, res: Response) => {
     try {
       const payload = loginSchema.parse(req.body);
       const identifier = resolveIdentifier(payload);
@@ -288,50 +266,6 @@ export function registerAuthRoutes(app: Express) {
   router.get("/user", handleCurrentUser);
 
 
-  // Diagnostic endpoint to test login flow
-  router.post("/login/diagnostic", async (req: Request, res: Response) => {
-    try {
-      const { identifier, password } = req.body;
-      
-      if (!identifier || !password) {
-        return res.status(400).json({ 
-          error: "Missing identifier or password",
-          received: { identifier: !!identifier, password: !!password }
-        });
-      }
-
-      const user = await findUserForLogin(identifier);
-      
-      return res.json({
-        identifier: identifier.substring(0, 10) + '...',
-        userFound: !!user,
-        userId: user?.id || null,
-        hasPassword: !!user?.password,
-        passwordLength: user?.password?.length || 0,
-        email: user?.email || null,
-        username: user?.username || null,
-        sfgmChurch: user?.sfgmChurch || null,
-        registrationMethod: user?.registrationMethod || null,
-        role: user?.role || null,
-        // Don't return password match result for security
-      });
-    } catch (error: any) {
-      return res.status(500).json({ 
-        error: "Diagnostic failed",
-        message: error.message,
-        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
-      });
-    }
-  });
-
-  // Mount auth router
-  console.log('[AUTH ROUTES] Registering auth routes at /api/auth');
-  console.log('[AUTH ROUTES] Available routes:', router.stack.map((r: any) => `${r.route?.methods || 'ALL'} ${r.route?.path || r.regexp}`).join(', '));
-  // Catch-all route to debug unmatched requests
-  router.use((req, res, next) => {
-    console.log(`[AUTH ROUTER CATCH-ALL] ${req.method} ${req.path} - Unmatched route in auth router`);
-    next(); // Let it fall through to the main 404 handler
-  });
 
   app.use("/api/auth", router);
 }
