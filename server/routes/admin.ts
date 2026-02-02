@@ -9,6 +9,7 @@ import { users, courses, enrollments, quizAttempts, contentProgress, authTokens,
 import { eq, sql, inArray } from "drizzle-orm";
 import { requireAuth } from "../middleware/requireAuth";
 import { validateBody } from "../middleware/validate";
+import { rateLimit } from "../middleware/rateLimit";
 
 // Admin password from environment variable (fallback to "123" only for development)
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || process.env.ADMIN_PANEL_PASSWORD || (process.env.NODE_ENV === 'development' ? "123" : null);
@@ -17,21 +18,66 @@ if (!ADMIN_PASSWORD) {
   console.error("⚠️  WARNING: ADMIN_PASSWORD environment variable is not set. Admin routes will be disabled.");
 }
 
+// Strict rate limit for admin endpoints (brute-force + abuse protection)
+const adminRateLimit = rateLimit({
+  windowMs: 5 * 60 * 1000, // 5 minutes
+  maxRequests: 60, // 60 requests per 5 minutes per IP/user
+  message: 'Too many admin requests. Please slow down.',
+  keyGenerator: (req) => String((req as any).user?.id || req.ip || 'anonymous'),
+});
+
+// Lockout tracker for repeated wrong admin-password attempts (in-memory)
+const adminPasswordFailures: Record<string, { count: number; firstAt: number; lockedUntil?: number }> = {};
+const ADMIN_FAIL_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
+const ADMIN_LOCK_MS = 15 * 60 * 1000; // 15 minutes
+const ADMIN_MAX_FAILS = 10;
+
 // Admin password check middleware
 const requireAdminPassword = (req: Request, res: Response, next: NextFunction) => {
   if (!ADMIN_PASSWORD) {
     return res.status(503).json({ message: "Admin panel is not configured" });
   }
-  
-  const providedPassword = req.headers['x-admin-password'] || req.body?.adminPassword;
+  const key = String(req.ip || 'anonymous');
+  const now = Date.now();
+
+  // If locked, block immediately
+  const entry = adminPasswordFailures[key];
+  if (entry?.lockedUntil && entry.lockedUntil > now) {
+    return res.status(429).json({
+      message: 'Too many invalid admin password attempts. Please try again later.',
+      code: 'ADMIN_LOCKED',
+      retryAfter: Math.ceil((entry.lockedUntil - now) / 1000),
+    });
+  }
+
+  const providedPassword = req.headers['x-admin-password'];
   if (providedPassword !== ADMIN_PASSWORD) {
-    return res.status(401).json({ message: "Invalid admin password" });
+    // Track failures in a rolling window
+    const current = adminPasswordFailures[key];
+    if (!current || now - current.firstAt > ADMIN_FAIL_WINDOW_MS) {
+      adminPasswordFailures[key] = { count: 1, firstAt: now };
+    } else {
+      current.count += 1;
+      if (current.count >= ADMIN_MAX_FAILS) {
+        current.lockedUntil = now + ADMIN_LOCK_MS;
+      }
+    }
+
+    return res.status(401).json({ message: 'Invalid admin password' });
+  }
+
+  // Reset failure counter on success
+  if (adminPasswordFailures[key]) {
+    delete adminPasswordFailures[key];
   }
   next();
 };
 
 export function registerAdminRoutes(app: Express) {
   const router = Router();
+
+  // Apply stricter rate limiting to admin routes
+  router.use("/api/admin", adminRateLimit);
 
   // Get all users
   router.get("/api/admin/users", requireAuth, requireAdminPassword, async (req: Request, res: Response) => {
