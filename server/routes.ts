@@ -46,11 +46,6 @@ export function setupRoutes(app: Express): Server {
   app.use(async (req: any, res: any, next: any) => {
     const token = extractAuthToken(req) || 'guest';
     
-    // Only log tokens in development mode for security
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`Auth middleware: ${req.method} ${req.path}, token: ${token ? 'present' : 'missing'}`);
-    }
-    
     // For testing purposes, create a test user for test-token
     if (token === 'test-token') {
       req.user = {
@@ -60,17 +55,11 @@ export function setupRoutes(app: Express): Server {
         roles: ['student'],
         primaryRole: 'student'
       };
-      if (process.env.NODE_ENV === 'development') {
-        console.log('Set test user:', req.user);
-      }
     } else if (token && token !== 'guest') {
       // Try to get user by token from database
       const user = await storage.getUserByToken(token);
       if (user) {
         req.user = user;
-        if (process.env.NODE_ENV === 'development') {
-          console.log('Set user from token:', { id: user.id, username: user.username, email: user.email });
-        }
       }
     }
     
