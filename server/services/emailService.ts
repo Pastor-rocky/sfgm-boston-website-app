@@ -103,8 +103,7 @@ export async function sendEssaySubmissionEmail(payload: EssayEmailPayload): Prom
     "",
     "Essay:",
     payload.essayText,
-  ].join("
-");
+  ].join("\n");
 
   const result = await sendPostmarkEmail({
     to: reviewEmail,
@@ -171,8 +170,7 @@ export async function sendWelcomeEmail(payload: RegistrationEmailPayload): Promi
     "",
     "God bless,",
     "SFGM Boston Bible School",
-  ].join("
-");
+  ].join("\n");
 
   const result = await sendPostmarkEmail({
     to: payload.email,
@@ -206,8 +204,7 @@ export async function sendAdminRegistrationNotification(payload: AdminNotificati
     `Username: ${payload.username}`,
     `Registered: ${payload.registrationDate.toISOString()}`,
     `Email Consent: ${payload.emailConsent ? "Yes" : "No"}`,
-  ].join("
-");
+  ].join("\n");
 
   const result = await sendPostmarkEmail({
     to: adminEmail,
@@ -268,8 +265,7 @@ export async function sendBirthdayEmail(payload: BirthdayEmailPayload): Promise<
     "We pray God blesses you with a wonderful year ahead.",
     "",
     "SFGM Boston Bible School",
-  ].join("
-");
+  ].join("\n");
 
   const result = await sendPostmarkEmail({
     to: payload.email,
