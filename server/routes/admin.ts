@@ -10,6 +10,7 @@ import { eq, sql, inArray } from "drizzle-orm";
 import { requireAuth } from "../middleware/requireAuth";
 import { validateBody } from "../middleware/validate";
 import { rateLimit } from "../middleware/rateLimit";
+import { sendTestEmail } from "../services/emailService";
 
 // Admin password from environment variable (fallback to "123" only for development)
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || process.env.ADMIN_PANEL_PASSWORD || (process.env.NODE_ENV === 'development' ? "123" : null);
@@ -75,6 +76,19 @@ const requireAdminPassword = (req: Request, res: Response, next: NextFunction) =
 
 export function registerAdminRoutes(app: Express) {
   const router = Router();
+
+  // Admin-only: send a test email (Postmark)
+  router.post("/api/admin/test-email", requireAuth, adminRateLimit, requireAdminPassword, async (req: any, res: any) => {
+    try {
+      const to = String(req.body?.to || "").trim();
+      if (!to) return res.status(400).json({ message: "Missing to" });
+
+      const result = await sendTestEmail(to);
+      return res.json({ success: true, ...result });
+    } catch (error) {
+      return res.status(500).json({ message: "Failed to send test email", error: (error as Error)?.message || "Unknown error" });
+    }
+  });
 
   // Apply stricter rate limiting to admin routes
   router.use("/api/admin", adminRateLimit);

@@ -1,4 +1,4 @@
-import emailjs from "@emailjs/nodejs";
+import { ServerClient } from "postmark";
 
 interface EssayEmailPayload {
   toEmail?: string | null;
@@ -23,6 +23,65 @@ const emailEnabled = () => {
   return (process.env.EMAIL_ENABLED || "").toLowerCase() === "true";
 };
 
+let postmarkClient: ServerClient | null = null;
+
+function getPostmarkClient(): ServerClient | null {
+  const token = process.env.POSTMARK_SERVER_API_TOKEN;
+  if (!token) return null;
+
+  if (!postmarkClient) {
+    postmarkClient = new ServerClient(token);
+  }
+
+  return postmarkClient;
+}
+
+function getFromAddress(): string | null {
+  const fromEmail = process.env.POSTMARK_FROM_EMAIL;
+  const fromName = process.env.POSTMARK_FROM_NAME;
+
+  if (!fromEmail) return null;
+  if (fromName && fromName.trim().length > 0) {
+    // Postmark accepts: "Display Name <email@domain>"
+    return `${fromName.trim()} <${fromEmail.trim()}>`;
+  }
+
+  return fromEmail.trim();
+}
+
+async function sendPostmarkEmail(args: {
+  to: string;
+  subject: string;
+  textBody: string;
+  htmlBody?: string;
+}): Promise<EmailDeliveryResult> {
+  if (!emailEnabled()) {
+    return { delivered: false, reason: "Email delivery disabled" };
+  }
+
+  const client = getPostmarkClient();
+  const from = getFromAddress();
+
+  if (!client || !from) {
+    return { delivered: false, reason: "Missing Postmark configuration" };
+  }
+
+  try {
+    await client.sendEmail({
+      From: from,
+      To: args.to,
+      Subject: args.subject,
+      TextBody: args.textBody,
+      HtmlBody: args.htmlBody,
+      MessageStream: process.env.POSTMARK_MESSAGE_STREAM || "outbound",
+    });
+
+    return { delivered: true };
+  } catch (error) {
+    return { delivered: false, reason: (error as Error)?.message || "Unknown error" };
+  }
+}
+
 export async function sendEssaySubmissionEmail(payload: EssayEmailPayload): Promise<EmailDeliveryResult> {
   const reviewEmail = payload.toEmail || process.env.ESSAY_REVIEW_EMAIL || DEFAULT_REVIEW_EMAIL;
 
@@ -32,40 +91,33 @@ export async function sendEssaySubmissionEmail(payload: EssayEmailPayload): Prom
     return { delivered: false, reason: "Email delivery disabled" };
   }
 
-  const serviceId = process.env.EMAILJS_SERVICE_ID;
-  const templateId = process.env.EMAILJS_TEMPLATE_ID;
-  const publicKey = process.env.EMAILJS_PUBLIC_KEY;
-  const privateKey = process.env.EMAILJS_PRIVATE_KEY;
+  const subject = `Final Exam Essay Submission - ${payload.studentName || "Unknown Student"}`;
+  const textBody = [
+    `Student: ${payload.studentName || "Unknown Student"}`,
+    `Student Email: ${payload.studentEmail || "unknown@sfgmboston.com"}`,
+    `Course: ${payload.courseTitle || "Unknown Course"}`,
+    `Quiz ID: ${payload.quizId}`,
+    `Question ID: ${payload.questionId}`,
+    `Word Count: ${payload.wordCount}`,
+    `Submitted At: ${payload.submittedAt.toISOString()}`,
+    "",
+    "Essay:",
+    payload.essayText,
+  ].join("
+");
 
-  if (!serviceId || !templateId || !publicKey || !privateKey) {
-    console.warn("[email] Missing EmailJS configuration. Unable to send essay notification.");
+  const result = await sendPostmarkEmail({
+    to: reviewEmail,
+    subject,
+    textBody,
+  });
+
+  if (!result.delivered) {
+    console.error("[email] Failed to deliver essay submission email:", result.reason);
     logEssayPayload(reviewEmail, payload);
-    return { delivered: false, reason: "Missing EmailJS configuration" };
   }
 
-  const templateParams = {
-    to_email: reviewEmail,
-    student_name: payload.studentName || "Unknown Student",
-    student_email: payload.studentEmail || "unknown@sfgmboston.com",
-    course_title: payload.courseTitle || "Unknown Course",
-    quiz_id: payload.quizId,
-    question_id: payload.questionId,
-    word_count: payload.wordCount,
-    essay_text: payload.essayText,
-    submitted_at: payload.submittedAt.toISOString(),
-  };
-
-  try {
-    await emailjs.send(serviceId, templateId, templateParams, {
-      publicKey,
-      privateKey,
-    });
-    return { delivered: true };
-  } catch (error) {
-    console.error("[email] Failed to deliver essay submission email:", error);
-    logEssayPayload(reviewEmail, payload);
-    return { delivered: false, reason: (error as Error)?.message || "Unknown error" };
-  }
+  return result;
 }
 
 function logEssayPayload(recipient: string, payload: EssayEmailPayload) {
@@ -78,7 +130,8 @@ function logEssayPayload(recipient: string, payload: EssayEmailPayload) {
   console.log(`Word Count: ${payload.wordCount}`);
   console.log(`Submitted: ${payload.submittedAt.toLocaleString()}`);
   console.log(`Student Email: ${payload.studentEmail}`);
-  console.log(`Essay Text:\n${payload.essayText}`);
+  console.log(`Essay Text:
+${payload.essayText}`);
   console.log("=== END EMAIL ===");
 }
 
@@ -96,7 +149,7 @@ interface AdminNotificationPayload {
   email: string;
   username: string;
   registrationDate: Date;
-  emailConsent: boolean;
+  emailConsent?: boolean;
 }
 
 export async function sendWelcomeEmail(payload: RegistrationEmailPayload): Promise<EmailDeliveryResult> {
@@ -106,42 +159,37 @@ export async function sendWelcomeEmail(payload: RegistrationEmailPayload): Promi
     return { delivered: false, reason: "Email delivery disabled" };
   }
 
-  const serviceId = process.env.EMAILJS_SERVICE_ID;
-  const welcomeTemplateId = process.env.EMAILJS_WELCOME_TEMPLATE_ID || process.env.EMAILJS_TEMPLATE_ID;
-  const publicKey = process.env.EMAILJS_PUBLIC_KEY;
-  const privateKey = process.env.EMAILJS_PRIVATE_KEY;
+  const subject = "Welcome to SFGM Boston Bible School!";
+  const textBody = [
+    `Hello ${payload.firstName} ${payload.lastName},`,
+    "",
+    "Welcome to SFGM Boston Bible School!",
+    `Your username is: ${payload.username}`,
+    "",
+    "You can log in anytime at:",
+    "https://sfgmboston.com/login",
+    "",
+    "God bless,",
+    "SFGM Boston Bible School",
+  ].join("
+");
 
-  if (!serviceId || !welcomeTemplateId || !publicKey || !privateKey) {
-    console.warn("[email] Missing EmailJS configuration. Unable to send welcome email.");
+  const result = await sendPostmarkEmail({
+    to: payload.email,
+    subject,
+    textBody,
+  });
+
+  if (!result.delivered) {
+    console.error("[email] Failed to deliver welcome email:", result.reason);
     logWelcomeEmail(payload);
-    return { delivered: false, reason: "Missing EmailJS configuration" };
   }
 
-  const templateParams = {
-    to_email: payload.email,
-    first_name: payload.firstName,
-    last_name: payload.lastName,
-    full_name: `${payload.firstName} ${payload.lastName}`,
-    username: payload.username,
-    registration_date: payload.registrationDate.toLocaleDateString(),
-    registration_time: payload.registrationDate.toLocaleTimeString(),
-  };
-
-  try {
-    await emailjs.send(serviceId, welcomeTemplateId, templateParams, {
-      publicKey,
-      privateKey,
-    });
-    return { delivered: true };
-  } catch (error) {
-    console.error("[email] Failed to deliver welcome email:", error);
-    logWelcomeEmail(payload);
-    return { delivered: false, reason: (error as Error)?.message || "Unknown error" };
-  }
+  return result;
 }
 
 export async function sendAdminRegistrationNotification(payload: AdminNotificationPayload): Promise<EmailDeliveryResult> {
-  const adminEmail = DEFAULT_REVIEW_EMAIL;
+  const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || DEFAULT_REVIEW_EMAIL;
 
   if (!emailEnabled()) {
     console.log("[email] Delivery disabled. Logging admin notification payload.");
@@ -149,46 +197,36 @@ export async function sendAdminRegistrationNotification(payload: AdminNotificati
     return { delivered: false, reason: "Email delivery disabled" };
   }
 
-  const serviceId = process.env.EMAILJS_SERVICE_ID;
-  const adminTemplateId = process.env.EMAILJS_ADMIN_TEMPLATE_ID || process.env.EMAILJS_TEMPLATE_ID;
-  const publicKey = process.env.EMAILJS_PUBLIC_KEY;
-  const privateKey = process.env.EMAILJS_PRIVATE_KEY;
+  const subject = `New User Registration - ${payload.firstName} ${payload.lastName}`;
+  const textBody = [
+    "A new user registered:",
+    "",
+    `Name: ${payload.firstName} ${payload.lastName}`,
+    `Email: ${payload.email}`,
+    `Username: ${payload.username}`,
+    `Registered: ${payload.registrationDate.toISOString()}`,
+    `Email Consent: ${payload.emailConsent ? "Yes" : "No"}`,
+  ].join("
+");
 
-  if (!serviceId || !adminTemplateId || !publicKey || !privateKey) {
-    console.warn("[email] Missing EmailJS configuration. Unable to send admin notification.");
+  const result = await sendPostmarkEmail({
+    to: adminEmail,
+    subject,
+    textBody,
+  });
+
+  if (!result.delivered) {
+    console.error("[email] Failed to deliver admin notification email:", result.reason);
     logAdminNotification(adminEmail, payload);
-    return { delivered: false, reason: "Missing EmailJS configuration" };
   }
 
-  const templateParams = {
-    to_email: adminEmail,
-    first_name: payload.firstName,
-    last_name: payload.lastName,
-    full_name: `${payload.firstName} ${payload.lastName}`,
-    email: payload.email,
-    username: payload.username,
-    registration_date: payload.registrationDate.toLocaleDateString(),
-    registration_time: payload.registrationDate.toLocaleTimeString(),
-    email_consent: payload.emailConsent ? "Yes" : "No",
-  };
-
-  try {
-    await emailjs.send(serviceId, adminTemplateId, templateParams, {
-      publicKey,
-      privateKey,
-    });
-    return { delivered: true };
-  } catch (error) {
-    console.error("[email] Failed to deliver admin notification email:", error);
-    logAdminNotification(adminEmail, payload);
-    return { delivered: false, reason: (error as Error)?.message || "Unknown error" };
-  }
+  return result;
 }
 
 function logWelcomeEmail(payload: RegistrationEmailPayload) {
   console.log("=== WELCOME EMAIL ===");
   console.log(`To: ${payload.email}`);
-  console.log(`Subject: Welcome to SFGM Boston Bible School!`);
+  console.log("Subject: Welcome to SFGM Boston Bible School!");
   console.log(`Name: ${payload.firstName} ${payload.lastName}`);
   console.log(`Username: ${payload.username}`);
   console.log(`Registration Date: ${payload.registrationDate.toLocaleString()}`);
@@ -223,42 +261,34 @@ export async function sendBirthdayEmail(payload: BirthdayEmailPayload): Promise<
     return { delivered: false, reason: "Email delivery disabled" };
   }
 
-  const serviceId = process.env.EMAILJS_SERVICE_ID;
-  const birthdayTemplateId = process.env.EMAILJS_BIRTHDAY_TEMPLATE_ID || process.env.EMAILJS_TEMPLATE_ID;
-  const publicKey = process.env.EMAILJS_PUBLIC_KEY;
-  const privateKey = process.env.EMAILJS_PRIVATE_KEY;
+  const subject = `Happy Birthday ${payload.firstName}!`;
+  const textBody = [
+    `Happy Birthday ${payload.firstName}!`,
+    "",
+    "We pray God blesses you with a wonderful year ahead.",
+    "",
+    "SFGM Boston Bible School",
+  ].join("
+");
 
-  if (!serviceId || !birthdayTemplateId || !publicKey || !privateKey) {
-    console.warn("[email] Missing EmailJS configuration. Unable to send birthday email.");
+  const result = await sendPostmarkEmail({
+    to: payload.email,
+    subject,
+    textBody,
+  });
+
+  if (!result.delivered) {
+    console.error("[email] Failed to deliver birthday email:", result.reason);
     logBirthdayEmail(payload);
-    return { delivered: false, reason: "Missing EmailJS configuration" };
   }
 
-  const templateParams = {
-    to_email: payload.email,
-    first_name: payload.firstName,
-    last_name: payload.lastName,
-    full_name: `${payload.firstName} ${payload.lastName}`,
-    birthday_date: payload.dateOfBirth,
-  };
-
-  try {
-    await emailjs.send(serviceId, birthdayTemplateId, templateParams, {
-      publicKey,
-      privateKey,
-    });
-    return { delivered: true };
-  } catch (error) {
-    console.error("[email] Failed to deliver birthday email:", error);
-    logBirthdayEmail(payload);
-    return { delivered: false, reason: (error as Error)?.message || "Unknown error" };
-  }
+  return result;
 }
 
 function logBirthdayEmail(payload: BirthdayEmailPayload) {
   console.log("=== BIRTHDAY EMAIL ===");
   console.log(`To: ${payload.email}`);
-  console.log(`Subject: 🎉 Happy Birthday ${payload.firstName}!`);
+  console.log(`Subject: Happy Birthday ${payload.firstName}!`);
   console.log(`Name: ${payload.firstName} ${payload.lastName}`);
   console.log(`Date of Birth: ${payload.dateOfBirth}`);
   console.log(`Phone: ${payload.phone || "N/A"}`);
@@ -266,22 +296,15 @@ function logBirthdayEmail(payload: BirthdayEmailPayload) {
   console.log("=== END EMAIL ===");
 }
 
+export async function sendTestEmail(toEmail: string): Promise<EmailDeliveryResult> {
+  const to = (toEmail || "").trim();
+  if (!to) return { delivered: false, reason: "Missing recipient" };
 
+  const result = await sendPostmarkEmail({
+    to,
+    subject: "SFGM Test Email",
+    textBody: "This is a test email from SFGM Boston Bible School.",
+  });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  return result;
+}

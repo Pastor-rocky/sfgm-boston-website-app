@@ -66,6 +66,8 @@ export default function AdminPanel() {
   const [selectedDefaultInstructor, setSelectedDefaultInstructor] = useState<string>("");
   const [newPassword, setNewPassword] = useState("");
   const [refreshKey, setRefreshKey] = useState(0);
+  const [testEmailTo, setTestEmailTo] = useState("");
+  const [testEmailSending, setTestEmailSending] = useState(false);
   const [newCourse, setNewCourse] = useState({
     name: "",
     description: "",
@@ -982,6 +984,13 @@ export default function AdminPanel() {
               <BookOpen className="w-4 h-4 mr-2" />
               Courses
             </TabsTrigger>
+            <TabsTrigger 
+              value="settings"
+              className="data-[state=active]:bg-white/20 data-[state=active]:text-white text-blue-200 rounded-lg"
+            >
+              <Settings className="w-4 h-4 mr-2" />
+              Settings
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="users" className="space-y-6">
@@ -1723,6 +1732,56 @@ export default function AdminPanel() {
                     </Table>
                   </div>
                 )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="settings" className="space-y-6">
+            <Card className="bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl">
+              <CardHeader>
+                <CardTitle className="text-2xl font-bold text-white flex items-center gap-2">
+                  <Mail className="w-6 h-6" />
+                  Send Test Email
+                </CardTitle>
+                <CardDescription className="text-blue-200">
+                  Verify Postmark is working by sending a test email to any address.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex flex-wrap gap-2 items-end">
+                  <div className="flex-1 min-w-[200px]">
+                    <label className="text-sm font-medium text-blue-200 block mb-1">Email address</label>
+                    <Input
+                      type="email"
+                      placeholder="you@example.com"
+                      value={testEmailTo}
+                      onChange={(e) => setTestEmailTo(e.target.value)}
+                      className="bg-white/10 border-white/20 text-white placeholder:text-blue-200/60"
+                    />
+                  </div>
+                  <Button
+                    onClick={async () => {
+                      const to = testEmailTo.trim();
+                      if (!to) {
+                        toast({ title: "Enter an email", variant: "destructive" });
+                        return;
+                      }
+                      setTestEmailSending(true);
+                      try {
+                        await adminApiRequest("POST", "/api/admin/test-email", { to });
+                        toast({ title: "Test email sent", description: `Check ${to} (and spam).` });
+                      } catch (err: any) {
+                        toast({ title: "Failed", description: err?.message || String(err), variant: "destructive" });
+                      } finally {
+                        setTestEmailSending(false);
+                      }
+                    }}
+                    disabled={testEmailSending}
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    {testEmailSending ? "Sending…" : "Send test email"}
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>

@@ -7,6 +7,7 @@ import { essaySubmissions } from "../../shared/schema";
 import { storage } from "../storage";
 import { requireAuth } from "../middleware/requireAuth";
 import { validateBody } from "../middleware/validate";
+import { sendEssaySubmissionEmail } from "../services/emailService";
 
 const essaySubmissionSchema = z.object({
   quizId: z.coerce.number().int().positive(),
@@ -47,6 +48,19 @@ export function registerEssayRoutes(app: Express) {
           status: "submitted",
         })
         .returning();
+
+      // Fire-and-forget: email the essay to the review inbox
+      void sendEssaySubmissionEmail({
+        toEmail: email || null,
+        studentName: `${student.firstName || ""} ${student.lastName || ""}`.trim() || student.username || "Unknown Student",
+        studentEmail: student.email || "",
+        courseTitle: quiz.title || "Unknown Course",
+        quizId,
+        questionId,
+        wordCount,
+        essayText,
+        submittedAt: new Date(),
+      }).catch((err) => console.error("[email] Essay submission email failed:", err));
 
       res.json({
         success: true,

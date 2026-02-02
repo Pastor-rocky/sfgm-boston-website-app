@@ -7,6 +7,7 @@ import { storage } from "../storage";
 import { extractAuthToken, setAuthCookies, clearAuthCookies, buildAuthResponse } from "../utils/auth";
 import { sendErrorResponse } from "../utils/errorHandler";
 import { withRetry, isRetryableError, shouldNotRetry } from "../utils/retry";
+import { sendWelcomeEmail, sendAdminRegistrationNotification } from "../services/emailService";
 
 const loginSchema = z.object({
   identifier: z.string().min(1, "Email, username, or phone is required").optional(),
@@ -224,6 +225,24 @@ export function registerAuthRoutes(app: Express) {
       );
 
       setAuthCookies(res, token, 7);
+
+      // Fire-and-forget email notifications (do not block registration on email delivery)
+      void sendWelcomeEmail({
+        firstName: payload.firstName,
+        lastName: payload.lastName,
+        email: payload.email.toLowerCase(),
+        username,
+        registrationDate,
+      }).catch((err) => console.error("[email] Welcome email failed:", err));
+
+      void sendAdminRegistrationNotification({
+        firstName: payload.firstName,
+        lastName: payload.lastName,
+        email: payload.email.toLowerCase(),
+        username,
+        registrationDate,
+        emailConsent: true,
+      }).catch((err) => console.error("[email] Admin registration notification failed:", err));
 
       return res.status(201).json(buildAuthResponse(newUser, token));
     } catch (error) {
