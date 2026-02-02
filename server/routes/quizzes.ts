@@ -124,6 +124,116 @@ function requireAdminPasswordForDebug(req: any, res: any, next: any) {
 export function registerQuizRoutes(app: Express) {
   const router = Router();
 
+  // Quiz monitoring endpoint (for debugging/admin)
+  router.get("/api/quizzes/monitoring/stats", requireAuth, requireAdminPasswordForDebug, async (req: Request, res: Response) => {
+    try {
+      const recentFailures = quizMonitoring.getRecentFailures(20);
+      const failureCountLastHour = quizMonitoring.getFailureCountInLastMinutes(60);
+      const failureCountLastDay = quizMonitoring.getFailureCountInLastMinutes(24 * 60);
+
+      res.json({
+        recentFailures: recentFailures.length,
+        failureCountLastHour,
+        failureCountLastDay,
+        failures: recentFailures.map((f) => ({
+          timestamp: f.timestamp.toISOString(),
+          quizId: f.quizId,
+          studentId: f.studentId,
+          errorMessage: f.error instanceof Error ? f.error.message : String(f.error),
+        })),
+      });
+    } catch (error) {
+      console.error("Error fetching monitoring stats:", error);
+      res.status(500).json({ message: "Failed to fetch monitoring stats" });
+    }
+  });
+
+  // Quiz data export endpoint for backups
+  router.get("/api/quizzes/export", requireAuth, requireAdminPasswordForDebug, async (req: Request, res: Response) => {
+    try {
+      const { format = "json", startDate, endDate } = req.query;
+
+      // Get all quiz attempts with related data
+      const attempts = await storage.getAllQuizAttemptsForAdmin();
+
+      // Filter by date range if provided
+      let filteredAttempts = attempts;
+      if (startDate || endDate) {
+        const start = startDate ? new Date(startDate as string) : new Date(0);
+        const end = endDate ? new Date(endDate as string) : new Date();
+        filteredAttempts = attempts.filter((attempt: any) => {
+          const submittedAt = attempt.submittedAt ? new Date(attempt.submittedAt) : null;
+          return submittedAt && submittedAt >= start && submittedAt <= end;
+        });
+      }
+
+      if (format === "csv") {
+        // Generate CSV
+        const headers = [
+          "Attempt ID",
+          "Student ID",
+          "Student Name",
+          "Student Email",
+          "Quiz ID",
+          "Quiz Title",
+          "Score",
+          "Submitted At",
+          "Completed At",
+          "Time Spent (minutes)",
+          "Is Final Exam",
+          "Course Name",
+        ];
+
+        const csvRows = [
+          headers.join(","),
+          ...filteredAttempts.map((attempt: any) => {
+            return [
+              attempt.attemptId || attempt.id || "",
+              attempt.studentId || "",
+              `"${(attempt.studentName || "").replace(/"/g, '""')}"`,
+              attempt.studentEmail || "",
+              attempt.quizId || "",
+              `"${(attempt.quizTitle || "").replace(/"/g, '""')}"`,
+              attempt.score || "0",
+              attempt.submittedAt || "",
+              attempt.completedAt || "",
+              attempt.timeSpent || "0",
+              attempt.isFinalExam ? "Yes" : "No",
+              `"${(attempt.courseName || "").replace(/"/g, '""')}"`,
+            ].join(",");
+          }),
+        ];
+
+        res.setHeader("Content-Type", "text/csv");
+        res.setHeader(
+          "Content-Disposition",
+          `attachment; filename="quiz-attempts-${new Date().toISOString().split("T")[0]}.csv"`
+        );
+        res.send(csvRows.join("\n"));
+      } else {
+        // Default to JSON
+        res.setHeader("Content-Type", "application/json");
+        res.setHeader(
+          "Content-Disposition",
+          `attachment; filename="quiz-attempts-${new Date().toISOString().split("T")[0]}.json"`
+        );
+        res.json({
+          exportedAt: new Date().toISOString(),
+          totalAttempts: filteredAttempts.length,
+          dateRange: {
+            start: startDate || null,
+            end: endDate || null,
+          },
+          attempts: filteredAttempts,
+        });
+      }
+    } catch (error) {
+      console.error("Error exporting quiz attempts:", error);
+      res.status(500).json({ message: "Failed to export quiz attempts" });
+    }
+  });
+
+
   router.get("/api/quizzes/:quizId", apiRateLimit, async (req: Request, res: Response) => {
     try {
       const quizId = resolveQuizId(req.params.quizId);
@@ -291,115 +401,6 @@ export function registerQuizRoutes(app: Express) {
     } catch (error) {
       console.error("Error fetching all quizzes:", error);
       res.status(500).json({ message: "Failed to fetch quizzes" });
-    }
-  });
-
-  // Quiz monitoring endpoint (for debugging/admin)
-  router.get("/api/quizzes/monitoring/stats", requireAuth, requireAdminPasswordForDebug, async (req: Request, res: Response) => {
-    try {
-      const recentFailures = quizMonitoring.getRecentFailures(20);
-      const failureCountLastHour = quizMonitoring.getFailureCountInLastMinutes(60);
-      const failureCountLastDay = quizMonitoring.getFailureCountInLastMinutes(24 * 60);
-
-      res.json({
-        recentFailures: recentFailures.length,
-        failureCountLastHour,
-        failureCountLastDay,
-        failures: recentFailures.map((f) => ({
-          timestamp: f.timestamp.toISOString(),
-          quizId: f.quizId,
-          studentId: f.studentId,
-          errorMessage: f.error instanceof Error ? f.error.message : String(f.error),
-        })),
-      });
-    } catch (error) {
-      console.error("Error fetching monitoring stats:", error);
-      res.status(500).json({ message: "Failed to fetch monitoring stats" });
-    }
-  });
-
-  // Quiz data export endpoint for backups
-  router.get("/api/quizzes/export", requireAuth, requireAdminPasswordForDebug, async (req: Request, res: Response) => {
-    try {
-      const { format = "json", startDate, endDate } = req.query;
-
-      // Get all quiz attempts with related data
-      const attempts = await storage.getAllQuizAttemptsForAdmin();
-
-      // Filter by date range if provided
-      let filteredAttempts = attempts;
-      if (startDate || endDate) {
-        const start = startDate ? new Date(startDate as string) : new Date(0);
-        const end = endDate ? new Date(endDate as string) : new Date();
-        filteredAttempts = attempts.filter((attempt: any) => {
-          const submittedAt = attempt.submittedAt ? new Date(attempt.submittedAt) : null;
-          return submittedAt && submittedAt >= start && submittedAt <= end;
-        });
-      }
-
-      if (format === "csv") {
-        // Generate CSV
-        const headers = [
-          "Attempt ID",
-          "Student ID",
-          "Student Name",
-          "Student Email",
-          "Quiz ID",
-          "Quiz Title",
-          "Score",
-          "Submitted At",
-          "Completed At",
-          "Time Spent (minutes)",
-          "Is Final Exam",
-          "Course Name",
-        ];
-
-        const csvRows = [
-          headers.join(","),
-          ...filteredAttempts.map((attempt: any) => {
-            return [
-              attempt.attemptId || attempt.id || "",
-              attempt.studentId || "",
-              `"${(attempt.studentName || "").replace(/"/g, '""')}"`,
-              attempt.studentEmail || "",
-              attempt.quizId || "",
-              `"${(attempt.quizTitle || "").replace(/"/g, '""')}"`,
-              attempt.score || "0",
-              attempt.submittedAt || "",
-              attempt.completedAt || "",
-              attempt.timeSpent || "0",
-              attempt.isFinalExam ? "Yes" : "No",
-              `"${(attempt.courseName || "").replace(/"/g, '""')}"`,
-            ].join(",");
-          }),
-        ];
-
-        res.setHeader("Content-Type", "text/csv");
-        res.setHeader(
-          "Content-Disposition",
-          `attachment; filename="quiz-attempts-${new Date().toISOString().split("T")[0]}.csv"`
-        );
-        res.send(csvRows.join("\n"));
-      } else {
-        // Default to JSON
-        res.setHeader("Content-Type", "application/json");
-        res.setHeader(
-          "Content-Disposition",
-          `attachment; filename="quiz-attempts-${new Date().toISOString().split("T")[0]}.json"`
-        );
-        res.json({
-          exportedAt: new Date().toISOString(),
-          totalAttempts: filteredAttempts.length,
-          dateRange: {
-            start: startDate || null,
-            end: endDate || null,
-          },
-          attempts: filteredAttempts,
-        });
-      }
-    } catch (error) {
-      console.error("Error exporting quiz attempts:", error);
-      res.status(500).json({ message: "Failed to export quiz attempts" });
     }
   });
 

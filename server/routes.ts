@@ -201,17 +201,10 @@ export function setupRoutes(app: Express): Server {
     }
   });
 
-
-
-  // Diagnostics endpoints should be locked down in production
-  const DIAGNOSTICS_ENABLED = process.env.DIAGNOSTICS_ENABLED === 'true';
+  // Diagnostics endpoints: admin-only in production
   const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || process.env.ADMIN_PANEL_PASSWORD || (process.env.NODE_ENV === 'development' ? '123' : null);
 
   const requireDiagnosticsAccess = (req: any, res: any, next: any) => {
-    if (process.env.NODE_ENV === 'production' && !DIAGNOSTICS_ENABLED) {
-      return res.status(404).json({ message: 'The requested resource was not found.', code: 'NOT_FOUND' });
-    }
-
     // In production, require both auth + admin password
     if (process.env.NODE_ENV === 'production') {
       if (!req.user) return res.status(401).json({ message: 'Authentication required' });
