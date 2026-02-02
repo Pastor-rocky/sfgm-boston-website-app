@@ -107,6 +107,19 @@ const quizAttemptSchema = z.preprocess((data: any) => {
   completedAt: z.string().datetime().optional(),
   studentId: z.string().optional(), // Allow but ignore - extracted from auth token
 }));
+// Admin-only guard for debug/backup endpoints
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || process.env.ADMIN_PANEL_PASSWORD || (process.env.NODE_ENV === 'development' ? '123' : null);
+
+function requireAdminPasswordForDebug(req: any, res: any, next: any) {
+  if (process.env.NODE_ENV === 'production') {
+    if (!req.user) return res.status(401).json({ message: 'Authentication required' });
+    if (!ADMIN_PASSWORD) return res.status(503).json({ message: 'Admin panel is not configured' });
+    const provided = req.headers['x-admin-password'];
+    if (provided !== ADMIN_PASSWORD) return res.status(401).json({ message: 'Invalid admin password' });
+  }
+  next();
+}
+
 
 export function registerQuizRoutes(app: Express) {
   const router = Router();
@@ -282,7 +295,7 @@ export function registerQuizRoutes(app: Express) {
   });
 
   // Quiz monitoring endpoint (for debugging/admin)
-  router.get("/api/quizzes/monitoring/stats", async (req: Request, res: Response) => {
+  router.get("/api/quizzes/monitoring/stats", requireAuth, requireAdminPasswordForDebug, async (req: Request, res: Response) => {
     try {
       const recentFailures = quizMonitoring.getRecentFailures(20);
       const failureCountLastHour = quizMonitoring.getFailureCountInLastMinutes(60);
@@ -306,7 +319,7 @@ export function registerQuizRoutes(app: Express) {
   });
 
   // Quiz data export endpoint for backups
-  router.get("/api/quizzes/export", async (req: Request, res: Response) => {
+  router.get("/api/quizzes/export", requireAuth, requireAdminPasswordForDebug, async (req: Request, res: Response) => {
     try {
       const { format = "json", startDate, endDate } = req.query;
 

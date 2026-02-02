@@ -202,9 +202,30 @@ export function setupRoutes(app: Express): Server {
   });
 
 
+
+  // Diagnostics endpoints should be locked down in production
+  const DIAGNOSTICS_ENABLED = process.env.DIAGNOSTICS_ENABLED === 'true';
+  const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || process.env.ADMIN_PANEL_PASSWORD || (process.env.NODE_ENV === 'development' ? '123' : null);
+
+  const requireDiagnosticsAccess = (req: any, res: any, next: any) => {
+    if (process.env.NODE_ENV === 'production' && !DIAGNOSTICS_ENABLED) {
+      return res.status(404).json({ message: 'The requested resource was not found.', code: 'NOT_FOUND' });
+    }
+
+    // In production, require both auth + admin password
+    if (process.env.NODE_ENV === 'production') {
+      if (!req.user) return res.status(401).json({ message: 'Authentication required' });
+      if (!ADMIN_PASSWORD) return res.status(503).json({ message: 'Admin panel is not configured' });
+      const provided = req.headers['x-admin-password'];
+      if (provided !== ADMIN_PASSWORD) return res.status(401).json({ message: 'Invalid admin password' });
+    }
+
+    next();
+  };
+
   // Diagnostics: verify DB schema has critical auth/enrollment columns
   // Safe to expose: reports only existence, not data.
-  app.get('/api/diagnostics/db-schema', async (_req, res) => {
+  app.get('/api/diagnostics/db-schema', requireDiagnosticsAccess, async (_req, res) => {
     try {
       const checks = {
         users: ['id', 'email', 'username', 'password', 'phone'],
