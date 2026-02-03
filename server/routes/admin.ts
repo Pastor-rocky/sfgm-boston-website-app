@@ -84,6 +84,7 @@ export function registerAdminRoutes(app: Express) {
       if (!to) return res.status(400).json({ message: "Missing to" });
 
       const result = await sendTestEmail(to);
+      console.log("[admin test-email]", { to, delivered: result.delivered, reason: result.reason });
       return res.json({ success: true, ...result });
     } catch (error) {
       return res.status(500).json({ message: "Failed to send test email", error: (error as Error)?.message || "Unknown error" });

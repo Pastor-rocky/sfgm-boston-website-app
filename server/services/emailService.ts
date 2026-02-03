@@ -56,6 +56,7 @@ async function sendPostmarkEmail(args: {
   htmlBody?: string;
 }): Promise<EmailDeliveryResult> {
   if (!emailEnabled()) {
+    console.log("[email] EMAIL_ENABLED is not true; delivery disabled");
     return { delivered: false, reason: "Email delivery disabled" };
   }
 
@@ -63,6 +64,8 @@ async function sendPostmarkEmail(args: {
   const from = getFromAddress();
 
   if (!client || !from) {
+    const why = !process.env.POSTMARK_SERVER_API_TOKEN ? "POSTMARK_SERVER_API_TOKEN missing" : !process.env.POSTMARK_FROM_EMAIL ? "POSTMARK_FROM_EMAIL missing" : "Postmark config incomplete";
+    console.log("[email]", why);
     return { delivered: false, reason: "Missing Postmark configuration" };
   }
 

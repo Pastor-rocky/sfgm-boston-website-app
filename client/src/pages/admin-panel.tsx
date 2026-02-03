@@ -1768,8 +1768,13 @@ export default function AdminPanel() {
                       }
                       setTestEmailSending(true);
                       try {
-                        await adminApiRequest("POST", "/api/admin/test-email", { to });
-                        toast({ title: "Test email sent", description: `Check ${to} (and spam).` });
+                        const response = await adminApiRequest("POST", "/api/admin/test-email", { to });
+                        const data = await response.json();
+                        if (data.delivered) {
+                          toast({ title: "Test email sent", description: `Check ${to} (and spam).` });
+                        } else {
+                          toast({ title: "Email not sent", description: data.reason || "Unknown reason", variant: "destructive" });
+                        }
                       } catch (err: any) {
                         toast({ title: "Failed", description: err?.message || String(err), variant: "destructive" });
                       } finally {
