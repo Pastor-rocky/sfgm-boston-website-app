@@ -43,6 +43,7 @@ export function registerCourseRoutes(app: Express) {
     }
   });
 
+  // Single readings endpoint (no duplicate /public route; frontend uses this)
   router.get("/api/courses/:courseId/readings", async (req: Request, res: Response) => {
     try {
       const courseId = parseInt(req.params.courseId);
