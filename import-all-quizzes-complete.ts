@@ -62,8 +62,8 @@ async function importAll() {
       }
     }
     
-    console.log(`✅ Imported ${importedQuizzes} new quizzes, ${skippedQuizzes} already existed, ${failedQuizzes} failed\n`);
-    console.log(`✅ Imported ${importedQuizzes} new quizzes\n`);
+    console.log(`✅ Imported ${importedQuizzes} new quizzes, ${skippedQuizzes} already existed, ${failedQuizzes} failed
+`);
 
     // Step 2: Import ALL questions
     console.log("📤 Step 2: Importing all quiz questions...");
@@ -87,7 +87,7 @@ async function importAll() {
 
       try {
         // Handle options - ensure it's valid JSON
-        let optionsJson = null;
+        let optionsJson: string | null = null;
         if (q.options) {
           if (typeof q.options === 'string') {
             try {

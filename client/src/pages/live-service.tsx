@@ -17,15 +17,15 @@ export default function LiveService() {
   const { user } = useAuth();
   const isAdmin = user?.role === 'admin' || user?.role === 'instructor' || user?.isDean;
 
-  // Check if it's Sunday around service time (7:00 PM)
+  // Check if it's Sunday around service time (7:30 PM)
   useEffect(() => {
     const checkServiceTime = () => {
       const now = new Date();
       const dayOfWeek = now.getDay(); // 0 = Sunday
       const hour = now.getHours();
       
-      // Sunday between 6:30 PM and 9:00 PM (service time buffer)
-      const isServiceTime = dayOfWeek === 0 && hour >= 18 && hour <= 21;
+      // Sunday between 7:00 PM and 9:30 PM (buffer around 7:30 PM service)
+      const isServiceTime = dayOfWeek === 0 && hour >= 19 && hour <= 21;
       
       setStreamStatus({
         youtube: isServiceTime,
@@ -56,15 +56,15 @@ export default function LiveService() {
     const now = currentTime;
     const nextSunday = new Date();
     
-    // Find next Sunday at 7:00 PM
+    // Find next Sunday at 7:30 PM
     const daysUntilSunday = (7 - now.getDay()) % 7;
-    if (daysUntilSunday === 0 && now.getHours() < 19) {
-      // It's Sunday but before 7 PM
-      nextSunday.setHours(19, 0, 0, 0);
+    if (daysUntilSunday === 0 && (now.getHours() < 19 || (now.getHours() === 19 && now.getMinutes() < 30))) {
+      // It's Sunday but before 7:30 PM
+      nextSunday.setHours(19, 30, 0, 0);
     } else {
       // Set to next Sunday
       nextSunday.setDate(now.getDate() + (daysUntilSunday === 0 ? 7 : daysUntilSunday));
-      nextSunday.setHours(19, 0, 0, 0);
+      nextSunday.setHours(19, 30, 0, 0);
     }
 
     const timeDiff = nextSunday.getTime() - now.getTime();
@@ -145,7 +145,7 @@ export default function LiveService() {
               </div>
               <div className="flex items-center justify-center space-x-2">
                 <i className="fas fa-clock text-blue-600"></i>
-                <span className="text-gray-700 font-medium">7:00 PM</span>
+                <span className="text-gray-700 font-medium">7:30 PM</span>
               </div>
               <div className="flex items-center justify-center space-x-2">
                 <i className="fas fa-music text-blue-600"></i>

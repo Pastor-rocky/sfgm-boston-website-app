@@ -490,8 +490,8 @@ export default function StudentDashboard() {
     queryKey: ['/api/certificates'],
   });
 
-  // Fetch Genesis to Revelation leaderboard
-  const { data: genesisLeaderboard = [] } = useQuery({
+  // Fetch Family Night leaderboard (when implemented)
+  const { data: familyNightLeaderboard = [] } = useQuery({
     queryKey: ['/api/genesis-leaderboard'],
   });
 
@@ -893,24 +893,23 @@ export default function StudentDashboard() {
             </Card>
 
 
-            {/* Genesis to Revelation Leaderboard */}
+            {/* Family Night Leaderboard */}
             <Card className="bg-gradient-to-br from-indigo-900/30 to-purple-900/30 backdrop-blur-sm border-white/20">
               <CardHeader>
                 <CardTitle className="text-white text-xl flex items-center gap-2">
                   <Trophy className="h-6 w-6 text-yellow-400" />
-                  Genesis to Revelation Leaderboard
+                  Family Night Leaderboard
                 </CardTitle>
                 <p className="text-gray-900 text-sm font-medium">
-                  Monthly competition • Prizes for top performers
+                  Monthly speed competition • Prizes for top performers
                 </p>
               </CardHeader>
               <CardContent>
-                {Array.isArray(genesisLeaderboard) && genesisLeaderboard.length > 0 ? (
+                {Array.isArray(familyNightLeaderboard) && familyNightLeaderboard.length > 0 ? (
                   <div className="space-y-4">
-                    {/* Top 3 Overall */}
                     <div className="space-y-2">
                       <h4 className="text-white font-semibold text-sm">Top Performers</h4>
-                      {genesisLeaderboard.slice(0, 3).map((entry: any, index: number) => {
+                      {familyNightLeaderboard.slice(0, 3).map((entry: any, index: number) => {
                         const isCurrentUser = entry.userId === (user as any)?.id;
                         return (
                           <div 
@@ -948,7 +947,14 @@ export default function StudentDashboard() {
                 ) : (
                   <div className="text-center py-6">
                     <Trophy className="h-8 w-8 text-blue-400 mx-auto mb-2" />
-                    <p className="text-gray-900 text-sm font-medium">Complete quizzes to see your ranking!</p>
+                    <p className="text-gray-900 text-sm font-medium mb-3">
+                      Leaderboard launches with Family Night quizzes.
+                    </p>
+                    <Link href="/family-night">
+                      <Button size="sm" variant="outline" className="border-purple-400/50">
+                        Go to Family Night
+                      </Button>
+                    </Link>
                   </div>
                 )}
               </CardContent>

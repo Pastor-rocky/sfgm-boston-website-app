@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import { FOOTER_SERVICE_LINES } from "@/lib/church-services";
 
 function Footer() {
   const quickLinks = [
@@ -6,18 +7,10 @@ function Footer() {
     { href: "/instructor-application", label: "Teach with us" },
     { href: "/contact", label: "Contact" },
     { href: "/statement-of-faith", label: "Statement of Faith" },
-    { href: "/genesis-to-revelation", label: "Genesis to Revelation" }
+    { href: "/family-night", label: "Family Night" }
   ];
 
-  const services = [
-    "Sunday Worship - 7:30 PM",
-    "Monday Men's Bible Study - 9:00 PM",
-    "Wednesday Midweek Service - 8:30 PM",
-    "Friday Family Night - 9:00 PM",
-    "Bible School Courses - 9 Available",
-    "Ministry Training - Ongoing",
-    "Community Outreach - Every Saturday"
-  ];
+  const services = FOOTER_SERVICE_LINES;
 
   const socialLinks = [
     { href: "https://instagram.com/sfgm_boston", icon: "fab fa-instagram", label: "Instagram" },
@@ -143,8 +136,8 @@ function Footer() {
                 <i className="fas fa-cross mr-1"></i>Statement of Faith
               </Link>
               
-              <Link href="/genesis-to-revelation" className="text-white hover:text-blue-300 transition-colors">
-                <i className="fas fa-book mr-1"></i>Genesis to Revelation
+              <Link href="/family-night" className="text-white hover:text-blue-300 transition-colors">
+                <i className="fas fa-users mr-1"></i>Family Night
               </Link>
               <Link href="/sunday-messages" className="text-white hover:text-blue-300 transition-colors">
                 <i className="fas fa-video mr-1"></i>Sunday Messages

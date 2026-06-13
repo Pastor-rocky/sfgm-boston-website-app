@@ -41,7 +41,7 @@ async function exportAndImportQuizzes() {
   try {
     console.log("🔄 Exporting quizzes from local database and importing to Neon...\n");
     console.log(`Local DB: ${LOCAL_DB_URL.replace(/:[^:@]+@/, ':****@')}`);
-    console.log(`Neon DB: ${NEON_DB_URL.replace(/:[^:@]+@/, ':****@')}\n`);
+    console.log(`Neon DB: ${NEON_DB_URL!.replace(/:[^:@]+@/, ':****@')}\n`);
 
     // Get all quizzes from local database
     console.log("📥 Fetching all quizzes from local database...");

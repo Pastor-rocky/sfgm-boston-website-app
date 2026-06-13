@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Navigation from "@/components/navigation";
+import { CHURCH_SERVICES } from "@/lib/church-services";
 import sfgmLogo from "@/assets/sfgm-logo.png";
 
 export default function OnlineServices() {
@@ -202,18 +203,14 @@ export default function OnlineServices() {
                     Weekly Schedule
                   </h4>
                   <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span>Sunday Worship</span>
-                      <Badge variant="secondary" className="bg-white/20 text-white">7:00 PM</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>Thursday Bible Study</span>
-                      <Badge variant="secondary" className="bg-white/20 text-white">8:00 PM</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>Saturday Zoom Meeting</span>
-                      <Badge variant="secondary" className="bg-white/20 text-white">Contact for times</Badge>
-                    </div>
+                    {CHURCH_SERVICES.map((service) => (
+                      <div key={service.id} className="flex justify-between items-center gap-4">
+                        <span>{service.label}</span>
+                        <Badge variant="secondary" className="bg-white/20 text-white shrink-0 text-xs">
+                          {service.dayLabel} {service.time}
+                        </Badge>
+                      </div>
+                    ))}
                   </div>
                 </div>
                 <div>

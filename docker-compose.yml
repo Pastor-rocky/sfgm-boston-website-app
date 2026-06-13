@@ -1,0 +1,22 @@
+# Local PostgreSQL for development (requires Docker Desktop).
+# Start:  docker compose up -d
+# Stop:   docker compose down
+# Then set in .env:
+#   DATABASE_URL=postgresql://sfgm:sfgm@localhost:5432/boston_ministry
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: sfgm-boston-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: sfgm
+      POSTGRES_PASSWORD: sfgm
+      POSTGRES_DB: boston_ministry
+    volumes:
+      - sfgm_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  sfgm_postgres_data:

@@ -15,6 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Textarea } from "@/components/ui/textarea";
 import { FinalExamCompletion } from "@/components/final-exam-completion";
+import { isFamilyNightQuizParam, getFamilyNightReturnPath } from "@/lib/family-night-quizzes";
 
 interface Question {
   id: number;
@@ -118,6 +119,21 @@ export default function QuizTake() {
     }
 
     return null;
+  };
+
+  const familyNightQuiz = isFamilyNightQuizParam(id);
+
+  const navigateAfterQuiz = () => {
+    if (familyNightQuiz) {
+      setLocation(getFamilyNightReturnPath());
+      return;
+    }
+    const courseId = getCourseIdForNavigation();
+    if (courseId !== null && courseId !== undefined) {
+      setLocation(`/course/${courseId}`);
+    } else {
+      setLocation("/dashboard");
+    }
   };
   
   // Check if we're in review mode
@@ -484,18 +500,10 @@ export default function QuizTake() {
                     </ul>
                   </div>
                   <Button 
-                    onClick={() => {
-                      // Navigate to the course page using courseId from quiz
-                      let courseId = getCourseIdForNavigation();
-                      if (courseId !== null && courseId !== undefined) {
-                        setLocation(`/course/${courseId}`);
-                      } else {
-                        setLocation('/dashboard'); // Fallback to dashboard if courseId not available
-                      }
-                    }}
+                    onClick={navigateAfterQuiz}
                     className="bg-red-600 hover:bg-red-700 text-white px-8 py-3"
                   >
-                    Return to Course
+                    {familyNightQuiz ? "Return to Family Night" : "Return to Course"}
                   </Button>
                 </div>
               </CardContent>
@@ -516,16 +524,8 @@ export default function QuizTake() {
               <i className="fas fa-exclamation-triangle text-red-500 text-4xl mb-4"></i>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Quiz Not Found</h3>
               <p className="text-gray-600 mb-4">The quiz you're looking for doesn't exist.</p>
-              <Button onClick={() => {
-                // Navigate to the course page - quiz is null here, so use quizId from URL
-                const courseId = getCourseIdForNavigation();
-                if (courseId !== null && courseId !== undefined) {
-                  setLocation(`/course/${courseId}`);
-                } else {
-                  setLocation('/dashboard'); // Fallback to dashboard if courseId not available
-                }
-              }}>
-                Return to Course
+              <Button onClick={navigateAfterQuiz}>
+                {familyNightQuiz ? "Return to Family Night" : "Return to Course"}
               </Button>
             </CardContent>
           </Card>
@@ -583,15 +583,7 @@ export default function QuizTake() {
         mcScore={mcScore}
         totalMcQuestions={totalMcQuestions}
         essayQuestion={essayQuestion}
-        onEssaySubmissionComplete={() => {
-          // Navigate to the course page using courseId from quiz
-          let courseId = getCourseIdForNavigation();
-          if (courseId !== null && courseId !== undefined) {
-            setLocation(`/course/${courseId}`);
-          } else {
-            setLocation('/dashboard'); // Fallback to dashboard if courseId not available
-          }
-        }}
+        onEssaySubmissionComplete={navigateAfterQuiz}
       />
     );
   }
@@ -614,15 +606,7 @@ export default function QuizTake() {
                   <i className="fas fa-eye mr-2"></i>
                   Review Quiz
                 </Button>
-                <Button variant="outline" onClick={() => {
-                  // Navigate to the course page using courseId from quiz
-                  let courseId = getCourseIdForNavigation();
-                  if (courseId !== null && courseId !== undefined) {
-                    setLocation(`/course/${courseId}`);
-                  } else {
-                    setLocation('/dashboard'); // Fallback to dashboard if courseId not available
-                  }
-                }}>
+                <Button variant="outline" onClick={navigateAfterQuiz}>
                   <i className="fas fa-arrow-left mr-2"></i>
                   Return to Course
                 </Button>
@@ -688,15 +672,8 @@ export default function QuizTake() {
               </div>
               
               <div className="text-center">
-                <Button onClick={() => {
-                  const courseId = getCourseIdForNavigation();
-                  if (courseId !== null && courseId !== undefined) {
-                    setLocation(`/course/${courseId}`);
-                  } else {
-                    setLocation('/dashboard'); // Fallback to dashboard if courseId not available
-                  }
-                }} className="mr-4">
-                  Return to Course
+                <Button onClick={navigateAfterQuiz} className="mr-4">
+                  {familyNightQuiz ? "Return to Family Night" : "Return to Course"}
                 </Button>
                 <Button variant="outline" onClick={() => setLocation('/bible-school')}>
                   View Course Materials
@@ -1317,15 +1294,7 @@ export default function QuizTake() {
 
           {isReviewMode ? (
             <Button
-              onClick={() => {
-                // Navigate to the course page using courseId from quiz
-                let courseId = getCourseIdForNavigation();
-                if (courseId !== null && courseId !== undefined) {
-                  setLocation(`/course/${courseId}`);
-                } else {
-                  setLocation('/dashboard'); // Fallback to dashboard if courseId not available
-                }
-              }}
+              onClick={navigateAfterQuiz}
               className="px-4 py-2 text-sm md:px-6 md:py-2 md:text-base font-semibold bg-blue-600 hover:bg-blue-700 text-white"
             >
               <i className="fas fa-arrow-left mr-1 md:mr-2"></i>

@@ -79,6 +79,7 @@ const QUIZ_SLUG_MAP: Record<string, number> = {
   "youth-ministry-week-4": 210,
   "youth-ministry-week-5": 211,
   "youth-ministry-final-exam": 212,
+  "family-night-faith-week-1": 220,
 };
 
 function resolveQuizId(param: string): number | null {

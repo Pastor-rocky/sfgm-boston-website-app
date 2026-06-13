@@ -24,26 +24,24 @@ export default function MiniCourses() {
   const miniCourses: MiniCourse[] = [
     {
       id: 1,
-      title: "Genesis to Revelation Study",
-      description: "Journey through the entire Bible with our comprehensive Genesis to Revelation study program. Discover the continuous thread of God's redemptive plan from creation to the new heavens and earth.",
-      category: "Bible Study",
-      difficulty: "Intermediate",
-      estimatedDuration: "52 weeks",
+      title: "Family Night",
+      description: "Wednesday Midweek Family Night teachings with weekly speed quizzes and monthly leaderboard competitions. Three teachings plus a final exam each cycle — prizes for overall, men's, and women's champions.",
+      category: "Midweek Ministry",
+      difficulty: "Beginner",
+      estimatedDuration: "Monthly cycle",
       features: [
-        "Weekly video teachings",
-        "Interactive quizzes and assessments", 
-        "Competition leaderboards",
-        "Monthly prizes for top performers",
-        "Community discussion forums",
-        "Progress tracking and certificates"
+        "Weekly teaching videos",
+        "Speed-based quiz leaderboard",
+        "Monthly final exam",
+        "Prizes for top performers",
+        "Open to the whole church",
       ],
       highlights: [
-        "🏆 Competition-based learning with prizes",
-        "📚 Complete Bible overview in 52 weeks",
-        "👥 Separate male and female leaderboards",
-        "⭐ Monthly awards for top students",
-        "📊 Real-time progress tracking"
-      ]
+        "🏆 Monthly prizes — overall, men, and women",
+        "⚡ Fastest correct answers win",
+        "📺 Three teachings + final exam per cycle",
+        "👥 Free account to compete",
+      ],
     },
     {
       id: 2,
@@ -106,11 +104,17 @@ export default function MiniCourses() {
               <CardHeader>
                 {/* Course Cover Image */}
                 <div className="flex justify-center mb-6">
-                  <img 
-                    src={course.id === 1 ? "/genesis-revelation-cover.png" : "/power-of-preaching-cover.jpg"} 
-                    alt={`${course.title} Cover`}
-                    className="w-32 h-40 object-cover rounded-lg shadow-xl border-2 border-white/20"
-                  />
+                  {course.id === 1 ? (
+                    <div className="w-32 h-40 rounded-lg shadow-xl border-2 border-purple-400/30 bg-gradient-to-br from-purple-700/60 to-indigo-800/60 flex items-center justify-center">
+                      <Users className="w-12 h-12 text-purple-200" />
+                    </div>
+                  ) : (
+                    <img
+                      src="/power-of-preaching-cover.jpg"
+                      alt={`${course.title} Cover`}
+                      className="w-32 h-40 object-cover rounded-lg shadow-xl border-2 border-white/20"
+                    />
+                  )}
                 </div>
                 
                 <div className="flex justify-between items-start mb-3">
@@ -212,10 +216,10 @@ export default function MiniCourses() {
 
                   {/* Join Bible School CTA */}
                   <div className="pt-2">
-                    <Link href="/bible-school">
+                    <Link href={course.id === 1 ? "/family-night" : "/bible-school"}>
                       <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white">
                         <BookOpen className="w-4 h-4 mr-2" />
-                        Join Bible School to Access
+                        {course.id === 1 ? "Go to Family Night" : "Join Bible School to Access"}
                       </Button>
                     </Link>
                   </div>

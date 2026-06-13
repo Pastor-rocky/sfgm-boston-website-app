@@ -2,7 +2,7 @@ import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Play, X } from "lucide-react";
+import { Play, X, Users } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useState, useEffect } from "react";
@@ -78,45 +78,39 @@ export default function MidweekServices() {
             Midweek Services
           </h1>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-4">
-            Join us for midweek services every Wednesday at 8:00 PM. This is an ongoing sermon series 
-            done by the servants of the church titled 'From Genesis to Revelation: Finding Jesus in Every Book of the Bible'.
+            Midweek Family Night meets every Wednesday at 9:00 PM — teachings, weekly
+            quizzes, and monthly leaderboard competitions for the whole church.
           </p>
           <p className="text-lg text-gray-400 max-w-3xl mx-auto">
-            Journey through the Word together and be strengthened with worship, teaching, and prayer.
+            Watch teachings, take the quiz, and climb the board — prizes for overall, men&apos;s,
+            and women&apos;s champions each month.
           </p>
         </div>
 
-        {/* Genesis to Revelation Link */}
+        {/* Family Night Hub */}
         <div className="max-w-3xl mx-auto mb-8">
-          <Link href="/genesis-to-revelation">
+          <Link href="/family-night">
             <Card className="bg-gradient-to-r from-purple-900/40 via-indigo-900/40 to-blue-900/40 backdrop-blur-sm border-purple-400/30 hover:border-purple-400/60 transition-all duration-300 cursor-pointer group overflow-hidden">
               <CardContent className="p-0">
                 <div className="flex flex-col md:flex-row items-center">
-                  {/* Cover Image */}
-                  <div className="w-full md:w-48 lg:w-56 relative aspect-video md:aspect-[3/4] md:h-auto">
-                    <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 to-indigo-600/20"></div>
-                    <img 
-                      src="/Whisk_a9d6813ad3e9c37877e4536c55cfd0d3dr.jpeg" 
-                      alt="From Genesis to Revelation"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
+                  <div className="w-full md:w-48 lg:w-56 relative aspect-video md:aspect-[3/4] md:h-auto bg-gradient-to-br from-purple-700/40 to-indigo-800/40 flex items-center justify-center">
+                    <Users className="h-16 w-16 text-purple-200/80" />
                   </div>
-                  
-                  {/* Content */}
+
                   <div className="flex-1 p-6 md:p-8">
                     <div className="flex items-center justify-between mb-3">
                       <h2 className="text-2xl md:text-3xl font-bold text-white group-hover:text-purple-300 transition-colors">
-                        <i className="fas fa-book-bible mr-3 text-purple-400"></i>
-                        From Genesis to Revelation
+                        <i className="fas fa-users mr-3 text-purple-400"></i>
+                        Family Night
                       </h2>
                       <i className="fas fa-arrow-right text-2xl text-purple-400 group-hover:translate-x-2 transition-transform ml-4 hidden md:block"></i>
                     </div>
                     <p className="text-gray-300 text-lg mb-4 font-semibold">
-                      Finding Jesus in Every Book of the Bible
+                      Teachings, Quizzes & Leaderboard
                     </p>
                     <p className="text-gray-400 mb-4">
-                      Explore the ongoing sermon series that takes you through every book of the Bible, 
-                      discovering how Jesus is revealed throughout the entire Word of God.
+                      Your hub for monthly midweek teachings, weekly quizzes, and speed
+                      leaderboard competitions.
                     </p>
                     <i className="fas fa-arrow-right text-xl text-purple-400 group-hover:translate-x-2 transition-transform md:hidden"></i>
                   </div>
@@ -334,8 +328,8 @@ export default function MidweekServices() {
                 Service Information
               </h3>
               <p className="text-gray-300 mb-4">
-                Join us live every Wednesday at 8:00 PM for midweek services. 
-                This ongoing series is taught by the servants of the church.
+                Midweek Family Night is every Wednesday at 9:00 PM. Watch past midweek
+                teachings and sermons from the servants of the church.
               </p>
               <div className="flex flex-col md:flex-row justify-center gap-4">
                 <a 

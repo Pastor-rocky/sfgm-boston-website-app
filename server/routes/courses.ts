@@ -316,7 +316,7 @@ export function registerCourseRoutes(app: Express) {
 
   router.get("/api/genesis-leaderboard", requireAuth, async (_req: Request, res: Response) => {
     try {
-      // Placeholder until Genesis-to-Revelation leaderboard is implemented
+      // Placeholder until Family Night leaderboard is implemented
       res.json([]);
     } catch (error) {
       console.error("Error fetching genesis leaderboard:", error);

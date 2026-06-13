@@ -2,32 +2,28 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Link } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
+import { CHURCH_SERVICES, formatServiceSchedule } from "@/lib/church-services";
 import shieldImage from "@/assets/certificate-group-small.png";
 import blueLogo from "@/assets/sfgm-logo-new-blue.png";
 
 export default function HeroSection() {
   const { isAuthenticated } = useAuth();
 
-  const servicesList = [
-    {
-      title: "Sunday Worship",
-      time: "Every Sunday at 7:30 PM - 6 Bourbon St., Peabody, MA 01960",
-      icon: "fas fa-church",
-      color: "text-blue-600"
-    },
-    {
-      title: "Monday Men's Meeting", 
-      time: "Mondays at 8:30 PM - 6 Bourbon St., Peabody, MA 01960",
-      icon: "fas fa-male",
-      color: "text-amber-600"
-    },
-    {
-      title: "Wednesday Midweek Service",
-      time: "Wednesdays at 8:30 PM - 6 Bourbon St., Peabody, MA 01960",
-      icon: "fas fa-book-open", 
-      color: "text-purple-600"
-    }
-  ];
+  const servicesList = CHURCH_SERVICES.map((service) => ({
+    title: service.label,
+    time: formatServiceSchedule(service),
+    icon: service.icon,
+    href: service.href,
+    color:
+      service.id === "sunday-worship" || service.id === "street-ministry"
+        ? "text-blue-600"
+        : service.id === "young-mens-bible-study"
+          ? "text-amber-600"
+          : service.id === "family-night"
+            ? "text-purple-600"
+            : "text-pink-600",
+    href: service.href,
+  }));
 
   return (
     <section className="relative hero-bg text-white overflow-hidden">
@@ -111,19 +107,19 @@ export default function HeroSection() {
                         <div className="flex-1 min-w-0">
                           <h3 className="font-bold text-gray-900 text-sm sm:text-base">{service.title}</h3>
                           <p className={`text-xs sm:text-sm ${service.color} font-medium`}>{service.time}</p>
-                          {service.title === "Sunday Worship" && (
+                          {service.href && service.title === "Wednesday Midweek Family Night" && (
                             <div className="mt-2">
-                              <Link to="/sunday-messages">
+                              <Link to="/family-night">
                                 <Button size="sm" variant="outline" className="text-xs h-8">
-                                  <i className="fas fa-video mr-1"></i>
-                                  View Previous Messages
+                                  <i className="fas fa-users mr-1"></i>
+                                  Family Night
                                 </Button>
                               </Link>
                             </div>
                           )}
-                          {service.title === "Wednesday Midweek Service" && (
+                          {service.href && service.title === "Sunday Worship" && (
                             <div className="mt-2">
-                              <Link to="/genesis-to-revelation">
+                              <Link to="/sunday-messages">
                                 <Button size="sm" variant="outline" className="text-xs h-8">
                                   <i className="fas fa-video mr-1"></i>
                                   View Previous Messages

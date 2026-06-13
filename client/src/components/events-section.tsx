@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useLocation, Link } from "wouter";
+import { CHURCH_SERVICES, getNextServiceDate } from "@/lib/church-services";
 
 export default function EventsSection() {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -55,78 +56,27 @@ export default function EventsSection() {
     }
   };
 
-  const getNextEventTime = (eventType: string) => {
-    const now = new Date();
-    const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
-    const currentHour = now.getHours();
-    const currentMinute = now.getMinutes();
-
-    let nextEvent = new Date(now);
-
-    switch (eventType) {
-      case 'sunday': // Sunday Worship at 7:00 PM
-        if (currentDay === 0 && (currentHour < 19 || (currentHour === 19 && currentMinute === 0))) {
-          // Today is Sunday and it's before 7:00 PM
-          nextEvent.setHours(19, 0, 0, 0);
-        } else {
-          // Next Sunday
-          const daysUntilSunday = currentDay === 0 ? 7 : 7 - currentDay;
-          nextEvent.setDate(now.getDate() + daysUntilSunday);
-          nextEvent.setHours(19, 0, 0, 0);
-        }
-        break;
-      case 'monday': // Monday Choir Practice
-        if (currentDay === 1 && currentHour < 19) {
-          // Today is Monday and it's before evening
-          nextEvent.setHours(19, 0, 0, 0);
-        } else {
-          // Next Monday
-          const daysUntilMonday = currentDay <= 1 ? 1 - currentDay : 8 - currentDay;
-          nextEvent.setDate(now.getDate() + daysUntilMonday);
-          nextEvent.setHours(19, 0, 0, 0);
-        }
-        break;
-      case 'wednesday': // Wednesday Midweek Service at 8:00 PM
-        if (currentDay === 3 && currentHour < 20) {
-          nextEvent.setHours(20, 0, 0, 0);
-        } else {
-          // Next Wednesday
-          const daysUntilWednesday = currentDay < 3 ? 3 - currentDay : 10 - currentDay;
-          nextEvent.setDate(now.getDate() + daysUntilWednesday);
-          nextEvent.setHours(20, 0, 0, 0);
-        }
-        break;
-      case 'thursday': // Thursday Bible Study at 8:30 PM
-        if (currentDay === 4 && (currentHour < 20 || (currentHour === 20 && currentMinute < 30))) {
-          // Today is Thursday and it's before 8:30 PM
-          nextEvent.setHours(20, 30, 0, 0);
-        } else {
-          // Next Thursday
-          const daysUntilThursday = currentDay < 4 ? 4 - currentDay : 11 - currentDay;
-          nextEvent.setDate(now.getDate() + daysUntilThursday);
-          nextEvent.setHours(20, 30, 0, 0);
-        }
-        break;
-      case 'saturday': // Saturday Homeless Ministry at 10:00 AM
-        if (currentDay === 6 && currentHour < 10) {
-          // Today is Saturday and it's before 10:00 AM
-          nextEvent.setHours(10, 0, 0, 0);
-        } else {
-          // Next Saturday
-          const daysUntilSaturday = currentDay < 6 ? 6 - currentDay : 7;
-          nextEvent.setDate(now.getDate() + daysUntilSaturday);
-          nextEvent.setHours(10, 0, 0, 0);
-        }
-        break;
-      default:
-        return null;
+  const getNextEventTime = (serviceId: string) => {
+    const service = CHURCH_SERVICES.find((s) => s.id === serviceId);
+    if (
+      !service ||
+      service.dayOfWeek === undefined ||
+      service.hour === undefined ||
+      service.minute === undefined
+    ) {
+      return null;
     }
 
-    return nextEvent;
+    return getNextServiceDate(
+      service.dayOfWeek,
+      service.hour,
+      service.minute,
+      new Date(),
+    );
   };
 
-  const getCountdown = (eventType: string) => {
-    const nextEvent = getNextEventTime(eventType);
+  const getCountdown = (serviceId: string) => {
+    const nextEvent = getNextEventTime(serviceId);
     if (!nextEvent) return "Contact for schedule";
 
     const timeDiff = nextEvent.getTime() - currentTime.getTime();
@@ -174,40 +124,25 @@ export default function EventsSection() {
     }
   };
 
-  const regularEvents = [
-    {
-      id: 1,
-      title: "Sunday Worship",
-      time: "Every Sunday",
-      schedule: "7:00 PM",
-      description: "Live worship service with inspiring messages and community fellowship.",
-      icon: "fas fa-church",
-      color: "primary",
-      action: "Join Live or Watch Past Services",
-      countdownType: "sunday"
-    },
-    {
-      id: 2,
-      title: "Monday Men's Bible Study",
-      time: "Mondays",
-      schedule: "8:30 PM (Youth) | 9:30 PM (Men's)",
-      description: "A dedicated space for men to grow in faith through biblical study, prayer, and fellowship. Youth meeting begins at 8:30 PM, followed by men's meeting at 9:30 PM - all are welcome. Held at 6 Bourbon St., Peabody, MA.",
-      icon: "fas fa-male",
-      color: "accent",
-      action: "Contact for Information",
-      countdownType: "monday"
-    },
-    {
-      id: 4,
-      title: "Wednesday Midweek Service",
-      time: "Wednesdays",
-      schedule: "8:00 PM",
-      description: "Journey through Genesis to Revelation with our comprehensive sermon series. Every week will be doing a weekly quiz.",
-      icon: "fas fa-book-open",
-      color: "accent",
-      countdownType: "wednesday"
-    }
-  ];
+  const regularEvents = CHURCH_SERVICES.map((service, index) => ({
+    id: index + 1,
+    title: service.label,
+    time: service.dayLabel,
+    schedule: service.time,
+    description: service.description || "",
+    icon: service.icon,
+    color:
+      service.id === "sunday-worship" || service.id === "street-ministry"
+        ? "primary"
+        : service.id === "family-night"
+          ? "secondary"
+          : service.id === "womens-bible-study"
+            ? "blog"
+            : "accent",
+    action: service.href ? "Learn More" : undefined,
+    countdownType: service.id,
+    href: service.href,
+  }));
 
   const specialEvents: Array<never> = [];
 
@@ -382,7 +317,7 @@ export default function EventsSection() {
 
         {/* Regular Events Section */}
         <div>
-          <div className="grid md:grid-cols-3 gap-8 mb-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 mb-8">
             {regularEvents.map((event) => {
               const colors = getColorClasses(event.color);
               return (
@@ -397,7 +332,10 @@ export default function EventsSection() {
                       </div>
                       <div className="flex-1">
                         <h3 className="text-xl font-bold text-white">{event.title}</h3>
-                        <p className={`${colors.textColor} font-medium`}>{event.time}</p>
+                        <p className={`${colors.textColor} font-medium`}>
+                          {event.time}
+                          {event.schedule ? ` • ${event.schedule}` : ""}
+                        </p>
                         {event.countdownType && (
                           <div className="mt-1">
                             <span className="text-sm font-semibold text-white">Next: </span>
@@ -410,11 +348,7 @@ export default function EventsSection() {
                     </div>
                     <p className="text-white mb-4">{event.description}</p>
                     <div className="flex items-center justify-between">
-                      {event.title === "Wednesday Midweek Service" ? (
-                        <div className="flex flex-col space-y-2 w-full">
-                          <span className={`${colors.textColor} font-semibold text-sm`}>Contact for More Info</span>
-                        </div>
-                      ) : event.title === "Sunday Worship" ? (
+                      {event.title === "Sunday Worship" ? (
                         <div className="flex flex-col space-y-2 w-full">
                           <Link to="/past-services">
                             <button className="w-full inline-flex items-center justify-center px-3 py-1 text-sm font-semibold rounded-md bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 transition-all duration-300 mb-2">
@@ -423,8 +357,13 @@ export default function EventsSection() {
                             </button>
                           </Link>
                         </div>
-                      ) : event.action && event.action !== "Contact for Information" ? (
-                        <span className={`${colors.textColor} font-semibold`}>{event.action}</span>
+                      ) : event.href ? (
+                        <Link to={event.href}>
+                          <button className="w-full inline-flex items-center justify-center px-3 py-1 text-sm font-semibold rounded-md bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 transition-all duration-300">
+                            <i className="fas fa-arrow-right mr-2"></i>
+                            Learn More
+                          </button>
+                        </Link>
                       ) : (
                         <span className={`${colors.textColor} font-semibold text-sm`}></span>
                       )}

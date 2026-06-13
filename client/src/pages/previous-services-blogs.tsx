@@ -20,14 +20,14 @@ export default function PreviousServicesBlogs() {
     },
     {
       id: "midweek-service",
-      title: "Midweek Services",
-      subtitle: "Wednesday Evening Teaching",
-      description: "Join us for midweek services every Wednesday at 8:00 PM. This is an ongoing sermon series done by the servants of the church titled 'From Genesis to Revelation: Finding Jesus in Every Book of the Bible'. Journey through the Word together and be strengthened with worship, teaching, and prayer.",
-      icon: "fas fa-book-open",
+      title: "Family Night",
+      subtitle: "Midweek Teachings & Quizzes",
+      description: "Watch Wednesday Midweek Family Night teachings, take weekly quizzes, and compete on the speed leaderboard. Three teachings plus a monthly final exam — prizes for overall, men's, and women's champions.",
+      icon: "fas fa-users",
       gradient: "from-purple-500 via-indigo-500 to-blue-500",
       bgGradient: "from-purple-900/30 via-indigo-900/30 to-blue-900/30",
-      link: "/midweek-services",
-      features: ["Ongoing Series", "Genesis to Revelation", "Finding Jesus", "Bible Study"],
+      link: "/family-night",
+      features: ["Weekly Quizzes", "Speed Leaderboard", "Monthly Prizes", "Family Night"],
       color: "purple"
     },
     {
