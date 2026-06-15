@@ -93,6 +93,8 @@ export const ebookRoutes: RouteDefinition[] = [
   createRoute("/deacon-course-complete-ebook", () => import("@/pages/deacon-course-complete-ebook")),
   createRoute("/youth-ministry-complete-ebook", () => import("@/pages/youth-ministry-complete-ebook")),
   createRoute("/man-of-god-complete-ebook", () => import("@/pages/man-of-god-complete-ebook")),
+  createRoute("/choosing-your-future-complete-ebook", () => import("@/pages/choosing-your-future-complete-ebook")),
+  createRoute("/only-time-could-tell-complete-ebook", () => import("@/pages/only-time-could-tell-complete-ebook")),
 ];
 
 export const audioAndCourseContentRoutes: RouteDefinition[] = [

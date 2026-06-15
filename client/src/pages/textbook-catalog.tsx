@@ -379,6 +379,41 @@ export default function TextbookCatalog() {
         },
       ];
 
+      // Catalogue-only complete textbooks (not Bible School courses)
+      completeTextbooks.push({
+        id: 107,
+        title: "Choosing Your Future",
+        author: "Anthony Lee",
+        description:
+          "The Whole Truth About Fortune Telling. A biblical exposé written for those involved in fortune telling — exposing spiritual deception with Scripture and calling readers to repentance, deliverance, and God's great plan for their lives.",
+        bookCoverUrl: "https://img1.wsimg.com/isteam/ip/cc1ec5d5-2d90-49e2-809f-329d72f697cd/IMG_1972.PNG/:/cr=t:0%25,l:0%25,w:100%25,h:100%25/rs=w:400,cg:true",
+        category: "Spiritual Warfare",
+        difficulty: "Intermediate",
+        chapterCount: 15,
+        estimatedReadingTime: "4-5 hours",
+        isComplete: true,
+        courseId: 107,
+        courseName: "Choosing Your Future",
+        isUpdated: false,
+      });
+
+      completeTextbooks.push({
+        id: 108,
+        title: "How God Moves",
+        author: "Anthony Lee",
+        description:
+          "Only Time Could Tell What God Has Planned For You — a personal testimony of how God moved through tragedy when Anthony Lee's mother passed away at 41, teaching believers to trust God's timing and lean on His understanding.",
+        bookCoverUrl: "https://img1.wsimg.com/isteam/ip/cc1ec5d5-2d90-49e2-809f-329d72f697cd/IMG_1973.PNG/:/cr=t:0%25,l:0%25,w:100%25,h:100%25/rs=w:400,cg:true",
+        category: "Testimony",
+        difficulty: "Intermediate",
+        chapterCount: 18,
+        estimatedReadingTime: "3-4 hours",
+        isComplete: true,
+        courseId: 108,
+        courseName: "How God Moves",
+        isUpdated: false,
+      });
+
       // Add the coming soon textbooks to the array
       completeTextbooks.push(...comingSoonTextbooks);
 
@@ -442,6 +477,18 @@ export default function TextbookCatalog() {
     // For SFGM Man of God Course (courseId 16), navigate to the complete e-book
     if (textbook.courseId === 16) {
       setLocation('/man-of-god-complete-ebook');
+      return;
+    }
+
+    // For Choosing Your Future (catalogue-only, courseId 107)
+    if (textbook.courseId === 107) {
+      setLocation('/choosing-your-future-complete-ebook');
+      return;
+    }
+
+    // For How God Moves (catalogue-only, courseId 108)
+    if (textbook.courseId === 108) {
+      setLocation('/only-time-could-tell-complete-ebook');
       return;
     }
     
@@ -745,6 +792,10 @@ export default function TextbookCatalog() {
                             setLocation('/grow-complete-ebook');
                           } else if (textbook.courseId === 16) {
                             setLocation('/man-of-god-complete-ebook');
+                          } else if (textbook.courseId === 107) {
+                            setLocation('/choosing-your-future-complete-ebook');
+                          } else if (textbook.courseId === 108) {
+                            setLocation('/only-time-could-tell-complete-ebook');
                         } else if (textbook.courseId === 6 || textbook.courseId === 8) {
                           // Check password for locked courses
                           setPasswordCourseId(textbook.courseId);
