@@ -11,6 +11,7 @@ import {
   courseModules,
   essaySubmissions,
 } from "../../shared/schema";
+import { DEFAULT_PASSING_SCORE } from "../../shared/course-constants";
 import { eq, desc, inArray, and, or, sql } from "drizzle-orm";
 import { requireAuth } from "../middleware/requireAuth";
 import { validateBody } from "../middleware/validate";
@@ -402,13 +403,14 @@ export function registerInstructorRoutes(app: Express) {
         const grades = attempts.map((a) => {
           const quiz = quizDetails.find((q: any) => q.id === a.quizId);
           const score = a.score != null ? parseFloat(String(a.score)) : 0;
+          const passingDecimal = ((quiz as any)?.passingScore ?? DEFAULT_PASSING_SCORE) / 100;
           return {
             quizId: a.quizId,
             quizTitle: (quiz as any)?.title ?? "Unknown",
             score,
             scorePercent: (score * 100).toFixed(1),
             completedAt: a.completedAt,
-            passed: score >= 0.6,
+            passed: score >= passingDecimal,
           };
         });
         res.json({ grades });

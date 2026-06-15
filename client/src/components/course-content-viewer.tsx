@@ -10,7 +10,9 @@ import { Link, useLocation } from 'wouter';
 import { apiRequest, queryClient } from '@/lib/queryClient';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useDeduplicatedMutation } from '@/hooks/useDeduplicatedMutation';
-import { MAN_OF_GOD_READING_SCHEDULE, getManOfGodReadingIds } from '@/lib/man-of-god-config';
+import { MAN_OF_GOD_READING_SCHEDULE } from '@/lib/man-of-god-config';
+import { getCourseWeekReadingIds } from "@shared/course-reading-ids";
+import { DEFAULT_PASSING_SCORE, MAN_OF_GOD_WEEK1_PASSING_SCORE } from '@shared/course-constants';
 
 
 interface ContentProgressItem {
@@ -493,7 +495,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
       ? parseFloat(latestAttempt.score || '0')
       : latestAttempt.score || 0;
     const latestScorePercent = normalizeScore(latestRaw);
-    const passingScore = quizzes.find((q: any) => q.id === quizId)?.passingScore || 60;
+    const passingScore = quizzes.find((q: any) => q.id === quizId)?.passingScore || DEFAULT_PASSING_SCORE;
     const latestPassed = latestScorePercent >= passingScore;
 
     return {
@@ -703,9 +705,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
       const totalQuizzesForCourse = 11; // 10 weekly quizzes + 1 final exam
       const totalVideosForCourse = 10; // 10 weeks of video content
       
-      // Count completed reading weeks for Acts in Action (not individual readings)
-      // Each week has 3 readings: Introduction, Chapter, Bible
-      // We count a week as completed when ALL 3 readings for that week are done
+      // Count completed reading weeks (e-book + bible per week)
       const completedReadingWeeks = [];
       for (let week = 1; week <= 10; week++) {
         const weekReadingIds = getCourse1ReadingIds(week);
@@ -1270,214 +1270,37 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
 
   // Get hardcoded reading IDs for Course 1 (Acts in Action)
   // Helper function to get Course 2 reading IDs by week number (like Course 1)
-  const getCourse2ReadingIds = (weekNumber: number): number[] => {
-    // Course 2 has hardcoded readings with specific IDs (starting from 100 to avoid conflicts):
-    // Week 1: IDs 101, 102 (Chapter 1, Bible Chapters 1-4)
-    // Week 2: IDs 103, 104 (Chapter 2, Bible Chapters 5-8)
-    // Week 3: IDs 105, 106 (Chapter 3, Bible Chapters 9-12)
-    // Week 4: IDs 107, 108 (Chapter 4, Bible Chapters 13-16)
-    // Week 5: IDs 109, 110 (Chapter 5, Bible Chapters 17-20)
-    // Week 6: IDs 111, 112 (Chapter 6, Bible Chapters 21-24)
-    // Week 7: IDs 113, 114 (Chapter 7, Bible Chapters 1-5 John)
-    // Week 8: IDs 115, 116 (Chapter 8, Bible Chapters 6-10 John)
-    // Week 9: IDs 117, 118 (Chapter 9, Bible Chapters 11-15 John)
-    // Week 10: IDs 119, 120 (Chapter 10, Bible Chapters 16-21 John)
-    
-    const readingIdMap: { [key: number]: number[] } = {
-      1: [101, 102],   // Chapter 1, Bible 1-4
-      2: [103, 104],   // Chapter 2, Bible 5-8
-      3: [105, 106],   // Chapter 3, Bible 9-12
-      4: [107, 108],   // Chapter 4, Bible 13-16
-      5: [109, 110],   // Chapter 5, Bible 17-20
-      6: [111, 112],   // Chapter 6, Bible 21-24
-      7: [113, 114],   // Chapter 7, Bible John 1-5
-      8: [115, 116],   // Chapter 8, Bible John 6-10
-      9: [117, 118],   // Chapter 9, Bible John 11-15
-      10: [119, 120]   // Chapter 10, Bible John 16-21
-    };
-    
-    return readingIdMap[weekNumber] || [];
-  };
+  const getCourse1ReadingIds = (weekNumber: number): number[] =>
+    getCourseWeekReadingIds(1, weekNumber);
+
+  const getCourse2ReadingIds = (weekNumber: number): number[] =>
+    getCourseWeekReadingIds(2, weekNumber);
+
+  const getCourse3ReadingIds = (weekNumber: number): number[] =>
+    getCourseWeekReadingIds(3, weekNumber);
+
+  const getCourse4ReadingIds = (weekNumber: number): number[] =>
+    getCourseWeekReadingIds(4, weekNumber);
+
+  const getCourse5ReadingIds = (weekNumber: number): number[] =>
+    getCourseWeekReadingIds(5, weekNumber);
+
+  const getCourse6ReadingIds = (weekNumber: number): number[] =>
+    getCourseWeekReadingIds(6, weekNumber);
+
+  const getCourse7ReadingIds = (weekNumber: number): number[] =>
+    getCourseWeekReadingIds(7, weekNumber);
+
+  const getCourse8ReadingIds = (weekNumber: number): number[] =>
+    getCourseWeekReadingIds(8, weekNumber);
+
+  const getManOfGodReadingIds = (weekNumber: number): number[] =>
+    getCourseWeekReadingIds(16, weekNumber);
 
   const getCourse2ReadingAssignmentIds = (weekNumber: number): { chapterId?: number; bibleId?: number } => {
     const ids = getCourse2ReadingIds(weekNumber);
     const [chapterId, bibleId] = ids;
     return { chapterId, bibleId };
-  };
-
-  // Helper function to get Course 3 reading IDs by week number (like Course 1 and 2)
-  const getCourse3ReadingIds = (weekNumber: number): number[] => {
-    // Course 3 has hardcoded readings with specific IDs (starting from 201 to avoid conflicts):
-    // Week 1: IDs 201, 202 (Chapter 1, Bible 1 Timothy 1)
-    // Week 2: IDs 203, 204 (Chapter 2, Bible 1 Timothy 2)
-    // Week 3: IDs 205, 206 (Chapter 3, Bible 1 Timothy 3)
-    // Week 4: IDs 207, 208 (Chapter 4, Bible 1 Timothy 4)
-    // Week 5: IDs 209, 210 (Chapter 5, Bible 1 Timothy 5)
-    // Week 6: IDs 211, 212 (Chapter 6, Bible 1 Timothy 6)
-    // Week 7: IDs 213, 214 (Chapter 7, Bible 2 Timothy 1)
-    // Week 8: IDs 215, 216 (Chapter 8, Bible 2 Timothy 2)
-    // Week 9: IDs 217, 218 (Chapter 9, Bible 2 Timothy 3)
-    // Week 10: IDs 219, 220 (Chapter 10, Bible 2 Timothy 4)
-    // Week 11: IDs 221, 222 (Chapter 11, Bible Titus 1-3)
-    
-    const readingIdMap: { [key: number]: number[] } = {
-      1: [201, 202],   // Chapter 1, Bible 1 Timothy 1
-      2: [203, 204],   // Chapter 2, Bible 1 Timothy 2
-      3: [205, 206],   // Chapter 3, Bible 1 Timothy 3
-      4: [207, 208],   // Chapter 4, Bible 1 Timothy 4
-      5: [209, 210],   // Chapter 5, Bible 1 Timothy 5
-      6: [211, 212],   // Chapter 6, Bible 1 Timothy 6
-      7: [213, 214],   // Chapter 7, Bible 2 Timothy 1
-      8: [215, 216],   // Chapter 8, Bible 2 Timothy 2
-      9: [217, 218],   // Chapter 9, Bible 2 Timothy 3
-      10: [219, 220],  // Chapter 10, Bible 2 Timothy 4
-      11: [221, 222]   // Chapter 11, Bible Titus 1-3
-    };
-    
-    return readingIdMap[weekNumber] || [];
-  };
-
-  const getCourse1ReadingIds = (weekNumber: number): number[] => {
-    // Course 1 has hardcoded readings with specific IDs:
-    // Week 1: IDs 1, 2, 3 (Introduction, Chapter 1, Bible Chapters 1-2)
-    // Week 2: IDs 4, 5 (Chapter 2, Bible Chapters 3-5)
-    // Week 3: IDs 6, 7 (Chapter 3, Bible Chapters 6-8)
-    // Week 4: IDs 8, 9 (Chapter 4, Bible Chapters 9-11)
-    // Week 5: IDs 10, 11 (Chapter 5, Bible Chapters 12-14)
-    // Week 6: IDs 12, 13 (Chapter 6, Bible Chapters 15-17)
-    // Week 7: IDs 14, 15 (Chapter 7, Bible Chapters 18-20)
-    // Week 8: IDs 16, 17 (Chapter 8, Bible Chapters 21-23)
-    // Week 9: IDs 18, 19 (Chapter 9, Bible Chapters 24-26)
-    // Week 10: IDs 20, 21 (Chapter 10, Bible Chapters 27-28)
-    
-    const readingIdMap: { [key: number]: number[] } = {
-      1: [1, 2, 3],   // Introduction, Chapter 1, Bible 1-2
-      2: [4, 5],       // Chapter 2, Bible 3-5
-      3: [6, 7],       // Chapter 3, Bible 6-8
-      4: [8, 9],       // Chapter 4, Bible 9-11
-      5: [10, 11],     // Chapter 5, Bible 12-14
-      6: [12, 13],     // Chapter 6, Bible 15-17
-      7: [14, 15],     // Chapter 7, Bible 18-20
-      8: [16, 17],     // Chapter 8, Bible 21-23
-      9: [18, 19],     // Chapter 9, Bible 24-26
-      10: [20, 21]     // Chapter 10, Bible 27-28
-    };
-    
-    return readingIdMap[weekNumber] || [];
-  };
-
-  // Helper function to get Course 4 reading IDs by week number (G.R.O.W)
-  const getCourse4ReadingIds = (weekNumber: number): number[] => {
-    // Course 4 has hardcoded readings with specific IDs (starting from 301 to avoid conflicts):
-    // Week 1: ID 301 (Chapter 1: Give - Time, Talents, Treasure)
-    // Week 2: ID 302 (Chapter 2: Read - Feed Daily on God's Word)
-    // Week 3: ID 303 (Chapter 3: Obey - Listen and Apply God's Word)
-    // Week 4: ID 304 (Chapter 4: Win - Go, Witness, Make Disciples)
-    
-    const readingIdMap: { [key: number]: number[] } = {
-      1: [301],   // Chapter 1
-      2: [302],   // Chapter 2
-      3: [303],   // Chapter 3
-      4: [304]    // Chapter 4
-    };
-    
-    return readingIdMap[weekNumber] || [];
-  };
-
-  // Helper function to get Course 5 reading IDs by week number (Studying for Service)
-  const getCourse5ReadingIds = (weekNumber: number): number[] => {
-    // Course 5 has hardcoded readings with specific IDs (starting from 401 to avoid conflicts):
-    // Week 1: IDs 401, 402 (Chapter 1, Bible Matthew 1-4)
-    // Week 2: IDs 403, 404 (Chapter 2, Bible Matthew 5-8)
-    // Week 3: IDs 405, 406 (Chapter 3, Bible Matthew 9-12)
-    // Week 4: IDs 407, 408 (Chapter 4, Bible Matthew 13-16)
-    // Week 5: IDs 409, 410 (Chapter 5, Bible Matthew 17-20)
-    // Week 6: IDs 411, 412 (Chapter 6, Bible Matthew 21-24)
-    // Week 7: IDs 413, 414 (Chapter 7, Bible Matthew 25-28)
-    // Week 8: IDs 415, 416 (Chapter 8, Bible Mark 1-4)
-    // Week 9: IDs 417, 418 (Chapter 9, Bible Mark 5-6)
-    // Week 10: IDs 419, 420 (Chapter 10, Bible Mark 7-8)
-    // Week 11: IDs 421, 422 (Chapter 11, Bible Mark 9-11)
-    // Week 12: IDs 423, 424 (Chapter 12, Bible Mark 12-16)
-    
-    const readingIdMap: { [key: number]: number[] } = {
-      1: [401, 402],   // Chapter 1, Bible Matthew 1-4
-      2: [403, 404],   // Chapter 2, Bible Matthew 5-8
-      3: [405, 406],   // Chapter 3, Bible Matthew 9-12
-      4: [407, 408],   // Chapter 4, Bible Matthew 13-16
-      5: [409, 410],   // Chapter 5, Bible Matthew 17-20
-      6: [411, 412],   // Chapter 6, Bible Matthew 21-24
-      7: [413, 414],   // Chapter 7, Bible Matthew 25-28
-      8: [415, 416],   // Chapter 8, Bible Mark 1-4
-      9: [417, 418],   // Chapter 9, Bible Mark 5-6
-      10: [419, 420],  // Chapter 10, Bible Mark 7-8
-      11: [421, 422],  // Chapter 11, Bible Mark 9-11
-      12: [423, 424]   // Chapter 12, Bible Mark 12-16
-    };
-    
-    return readingIdMap[weekNumber] || [];
-  };
-
-  // Helper function to get Course 6 reading IDs by week number (Deacon Course)
-  const getCourse6ReadingIds = (weekNumber: number): number[] => {
-    // Course 6 has hardcoded readings with specific IDs (starting from 501 to avoid conflicts):
-    // Week 1: ID 501 (Introduction/Chapter 1: The Unignorable Nudge)
-    // Week 2: ID 502 (Chapter 2: Laying the Foundation)
-    // Week 3: ID 503 (Chapter 3: The Servant in Motion)
-    // Week 4: ID 504 (Chapter 4: The Spiritual Battlefield)
-    // Week 5: ID 505 (Chapter 5: Commissioned for Impact)
-    
-    const readingIdMap: { [key: number]: number[] } = {
-      1: [501],   // Introduction/Chapter 1
-      2: [502],   // Chapter 2
-      3: [503],   // Chapter 3
-      4: [504],   // Chapter 4
-      5: [505]    // Chapter 5
-    };
-    
-    return readingIdMap[weekNumber] || [];
-  };
-
-  // Helper function to get Course 7 reading IDs by week number (Level Up Leadership)
-  const getCourse7ReadingIds = (weekNumber: number): number[] => {
-    // Course 7 has hardcoded readings with specific IDs (starting from 601 to avoid conflicts):
-    // Week 1: ID 601 (Position Leadership - Pages 1-81)
-    // Week 2: ID 602 (Permission Leadership - Pages 85-129)
-    // Week 3: ID 603 (Production Leadership - Pages 133-178)
-    // Week 4: ID 604 (People Development Leadership - Pages 181-228)
-    // Week 5: ID 605 (Pinnacle Leadership - Pages 229-286)
-    // Week 6: ID 606 (Integration & Application)
-    
-    const readingIdMap: { [key: number]: number[] } = {
-      1: [601],   // Position Leadership
-      2: [602],   // Permission Leadership
-      3: [603],   // Production Leadership
-      4: [604],   // People Development Leadership
-      5: [605],   // Pinnacle Leadership
-      6: [606]    // Integration & Application
-    };
-    
-    return readingIdMap[weekNumber] || [];
-  };
-
-  // Helper function to get Course 8 reading IDs by week number (Youth Ministry)
-  const getCourse8ReadingIds = (weekNumber: number): number[] => {
-    // Course 8 has hardcoded readings with specific IDs (starting from 701 to avoid conflicts):
-    // Week 1: ID 701 (Chapter 1: The Calling)
-    // Week 2: ID 702 (Chapter 2: Requirements)
-    // Week 3: ID 703 (Chapter 3: Responsibilities)
-    // Week 4: ID 704 (Chapter 4: Accountability)
-    // Week 5: ID 705 (Chapter 5: Making New Disciples)
-    
-    const readingIdMap: { [key: number]: number[] } = {
-      1: [701],   // Chapter 1: The Calling
-      2: [702],   // Chapter 2: Requirements
-      3: [703],   // Chapter 3: Responsibilities
-      4: [704],   // Chapter 4: Accountability
-      5: [705]    // Chapter 5: Making New Disciples
-    };
-    
-    return readingIdMap[weekNumber] || [];
   };
 
   // Check if all readings for a specific week are completed
@@ -1709,7 +1532,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
       quizCompleted = weekQuizzes.some((quiz: any) => {
         const attempts = quiz.attempts || 0;
         const bestScore = quiz.bestScore || 0;
-        const passingScore = quiz.passingScore || 60;
+        const passingScore = quiz.passingScore || DEFAULT_PASSING_SCORE;
         return attempts > 0 && bestScore >= passingScore;
       });
     }
@@ -1739,7 +1562,9 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
             Course Progress
           </CardTitle>
           <CardDescription>
-            Week-based progression: complete each week's quiz to unlock the next week
+            {courseId === 16
+              ? "Complete each week's videos and e-book reading before taking the quiz. The final exam unlocks after all 10 weeks."
+              : "Week-based progression: complete each week's quiz to unlock the next week"}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -5860,7 +5685,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
           {quizzes.length > 0 && (
             <div className="space-y-6">
               <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-4 md:mb-6">
-                  {courseId === 1 ? 'Acts in Action Week Quizzes' : 'Course Quizzes'}
+                  {courseId === 16 ? 'SFGM Man of God Course Quizzes' : courseId === 1 ? 'Acts in Action Week Quizzes' : 'Course Quizzes'}
                 </h3>
               
               {/* Dynamic Quiz Cards */}
@@ -5895,16 +5720,16 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                           </h4>
                           <p className="text-xs md:text-sm text-gray-600 mt-1">
                             {isFinalExam
-                              ? `${quiz.questions?.length || 50} questions • 60 minutes • 60% passing score`
+                              ? `${quiz.questions?.length || 51} questions • ${quiz.timeLimit || 60} minutes • ${quiz.passingScore || DEFAULT_PASSING_SCORE}% passing score`
                               : courseId === 16 && (quiz.questions?.length || 0) === 1
-                                ? `Essay reflection • 100 word minimum • ${quiz.timeLimit || 30} minutes`
-                                : `${quiz.questions?.length || 10} questions • ${quiz.timeLimit || 15} minutes • ${quiz.passingScore || 60}% passing score`}
+                                ? `Essay reflection • ${quiz.timeLimit || 30} minutes • ${quiz.passingScore || MAN_OF_GOD_WEEK1_PASSING_SCORE}% passing score`
+                                : `${quiz.questions?.length || 10} questions • ${quiz.timeLimit || 15} minutes • ${quiz.passingScore || DEFAULT_PASSING_SCORE}% passing score`}
                           </p>
                           {isFinalExam && (
                             <div className="mt-2 text-xs md:text-sm text-gray-700">
                               <p className="font-medium text-red-700">📝 Includes Essay Component</p>
-                              <p className="text-xs text-gray-600">• {quiz.questions?.length || 50} multiple choice questions covering all course material</p>
-                              <p className="text-xs text-gray-600">• 100-word minimum essay reflection</p>
+                              <p className="text-xs text-gray-600">• {courseId === 16 ? "50 multiple-choice questions covering all course material" : `${quiz.questions?.length || 50} multiple choice questions covering all course material`}</p>
+                              <p className="text-xs text-gray-600">• {courseId === 16 ? "200-word minimum final essay" : "100-word minimum essay reflection"}</p>
                               <p className="text-xs text-gray-600">• Essay sent to pastor_rocky@sfgmboston.com for review</p>
                               <p className="text-xs text-gray-600">• Course completion certificate via email after review</p>
                             </div>

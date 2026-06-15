@@ -15,6 +15,8 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient } from "@/lib/queryClient";
 import { FaBook } from "react-icons/fa";
+import { MAN_OF_GOD_DESCRIPTION, MAN_OF_GOD_OVERVIEW } from "@/lib/man-of-god-config";
+import { DEFAULT_PASSING_SCORE } from "@shared/course-constants";
 
 // Import course cover images - commented out due to missing files
 // import growCover from "@assets/image_1753296696582.png";
@@ -132,16 +134,15 @@ export default function BibleSchool() {
   // SFGM Bible School Course Catalog - All courses freely accessible
   const courses = [
     {
-      id: 0,
-      name: "G.R.O.W Beginner Course",
+      id: 4,
+      name: "G.R.O.W",
       description: "Welcome orientation and practice course for new Bible school students. Learn how the platform works while exploring G.R.O.W ministry principles: Give, Read, Obey, Win Souls. This ungraded course introduces you to taking quizzes, watching videos, and reading materials before starting your real academic coursework.",
       overview: "Welcome orientation and practice course designed to familiarize new students with the Bible school platform while introducing SFGM Boston's ministry philosophy. This ungraded course serves as training before accessing real academic coursework.",
       weeks: 4,
-      points: calculatePoints(4), // 180 points
+      points: calculatePoints(4),
       category: "Foundation",
       difficulty: "Beginner",
       bookCoverUrl: "/grow-cover.png",
-
     },
     {
       id: 1,
@@ -175,17 +176,6 @@ export default function BibleSchool() {
       category: "Biblical Studies",
       difficulty: "Intermediate",
       bookCoverUrl: "/dont-be-a-jonah-cover.jpg"
-    },
-    {
-      id: 4,
-      name: "GROW",
-      description: "Welcome orientation and practice course for new Bible school students. Learn how the platform works while exploring G.R.O.W ministry principles: Give, Read, Obey, Win Souls. This ungraded course introduces you to taking quizzes, watching videos, and reading materials before starting your real academic coursework.",
-      overview: "Welcome orientation and practice course designed to familiarize new students with the Bible school platform while introducing SFGM Boston's ministry philosophy. This ungraded course serves as training before accessing real academic coursework.",
-      weeks: 4,
-      points: calculatePoints(4), // 180 points
-      category: "Foundation",
-      difficulty: "Beginner",
-      bookCoverUrl: "/grow-cover.png"
     },
     {
       id: 5,
@@ -248,8 +238,8 @@ export default function BibleSchool() {
     {
       id: 16,
       name: "SFGM Man of God Course",
-      description: "The Man of God course is an 8-week Bible study designed to challenge, equip, and empower men to walk boldly in their God-given purpose. This course is taught by two pastors from different SFGM locations, each bringing unique insights to help you grow spiritually and practically. Weeks 1–4: Led by Pastor Kevin from SFGM Columbus. Weeks 5–8: Led by Bishop Anthony Lee from SFGM Orlando. Each week focuses on key biblical principles that build your identity, character, and leadership as a man of God. Lessons cover vital topics such as God's glory, honoring relationships, faithful stewardship, and using your spiritual gifts with humility.",
-      overview: "An intensive 8-week men's discipleship course combining biblical teaching with practical application for developing godly character and leadership.",
+      description: MAN_OF_GOD_DESCRIPTION,
+      overview: MAN_OF_GOD_OVERVIEW,
       weeks: 10,
       points: calculatePoints(10), // 300 points
       category: "Character Development",
@@ -341,7 +331,7 @@ export default function BibleSchool() {
                 <div>D-: 60-62% | F: 0-59%</div>
               </div>
               <p className="text-xs text-slate-500 mt-2">
-                Minimum 60% average required to pass. Complete all assignments within 6 weeks or be automatically unenrolled.
+                Minimum {DEFAULT_PASSING_SCORE}% average required to pass. Complete all assignments within 6 weeks or be automatically unenrolled.
               </p>
             </div>
             <div>

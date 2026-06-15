@@ -2,6 +2,7 @@ import { db } from "./server/db";
 import { courses, courseVideos } from "./shared/schema";
 import { eq, and } from "drizzle-orm";
 import { sql } from "drizzle-orm";
+import { MAN_OF_GOD_DESCRIPTION } from "./shared/man-of-god-course";
 
 const PLAYLIST_ID = "PLXGq3BCCH8NAV3XhXbakIAy-JxZjOYa56";
 const COURSE_ID = 16;
@@ -70,7 +71,7 @@ async function addManOfGodCourseVideos() {
       ) VALUES (
         ${COURSE_ID},
         ${"SFGM Man of God Course"},
-        ${"The Man of God course is an 8-week Bible study designed to challenge, equip, and empower men to walk boldly in their God-given purpose. This course is taught by two pastors from different SFGM locations, each bringing unique insights to help you grow spiritually and practically. Weeks 1–4: Led by Pastor Kevin from SFGM Columbus. Weeks 5–8: Led by Bishop Anthony Lee from SFGM Orlando. Each week focuses on key biblical principles that build your identity, character, and leadership as a man of God. Lessons cover vital topics such as God's glory, honoring relationships, faithful stewardship, and using your spiritual gifts with humility."},
+        ${MAN_OF_GOD_DESCRIPTION},
         ${10},
         ${true},
         ${false},
@@ -88,9 +89,9 @@ async function addManOfGodCourseVideos() {
   } else {
     await db
       .update(courses)
-      .set({ duration: 10, isActive: true })
+      .set({ duration: 10, isActive: true, description: MAN_OF_GOD_DESCRIPTION })
       .where(eq(courses.id, COURSE_ID));
-    console.log("Course 16 already exists — updated duration to 10 weeks.");
+    console.log("Course 16 already exists — updated duration and description.");
   }
 
   const existingVideos = await db

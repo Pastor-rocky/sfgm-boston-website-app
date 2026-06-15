@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState, useMemo } from "react";
+import { DEFAULT_PASSING_SCORE } from "@shared/course-constants";
 import { 
   Search, 
   Filter, 
@@ -126,7 +127,7 @@ export default function StudentProgress() {
 
   // Calculate quiz statistics
   const completedQuizzes = (quizData as any[]).filter((quiz: any) => quiz.completed);
-  const passedQuizzes = completedQuizzes.filter((quiz: any) => quiz.bestScore >= (quiz.passingScore || 75));
+  const passedQuizzes = completedQuizzes.filter((quiz: any) => quiz.bestScore >= (quiz.passingScore || DEFAULT_PASSING_SCORE));
   const averageQuizScore = completedQuizzes.length > 0 
     ? completedQuizzes.reduce((sum: number, quiz: any) => sum + (quiz.bestScore || 0), 0) / completedQuizzes.length 
     : 0;
@@ -566,12 +567,12 @@ export default function StudentProgress() {
                             <Badge 
                               variant="outline" 
                               className={`${
-                                (quiz.bestScore || 0) >= (quiz.passingScore || 75) 
+                                (quiz.bestScore || 0) >= (quiz.passingScore || DEFAULT_PASSING_SCORE) 
                                   ? 'text-green-400 border-green-400' 
                                   : 'text-red-400 border-red-400'
                               }`}
                             >
-                              {quiz.bestScore}% - {(quiz.bestScore || 0) >= (quiz.passingScore || 75) ? 'PASSED' : 'FAILED'}
+                              {quiz.bestScore}% - {(quiz.bestScore || 0) >= (quiz.passingScore || DEFAULT_PASSING_SCORE) ? 'PASSED' : 'FAILED'}
                             </Badge>
                           ) : (
                             <Badge variant="outline" className="text-gray-400 border-gray-400">
@@ -588,7 +589,7 @@ export default function StudentProgress() {
                         </div>
                         <div>
                           <span className="text-gray-400">Passing Score:</span>
-                          <span className="text-white ml-2">{quiz.passingScore || 75}%</span>
+                          <span className="text-white ml-2">{quiz.passingScore || DEFAULT_PASSING_SCORE}%</span>
                         </div>
                         <div>
                           <span className="text-gray-400">Time Limit:</span>

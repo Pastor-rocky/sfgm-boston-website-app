@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, BookOpen, CheckCircle, Target } from "lucide-react";
+import { DEFAULT_PASSING_SCORE } from "@shared/course-constants";
 
 export default function LevelUpLeadershipWeek6() {
   const [, setLocation] = useLocation();
@@ -191,7 +192,7 @@ export default function LevelUpLeadershipWeek6() {
                 <ul className="text-red-800 space-y-2">
                   <li>• <strong>50 Multiple Choice Questions</strong> (10 questions per leadership level)</li>
                   <li>• <strong>200-word Essay Question</strong> on leadership application</li>
-                  <li>• <strong>65% Minimum Passing Score</strong></li>
+                  <li>• <strong>{DEFAULT_PASSING_SCORE}% Minimum Passing Score</strong></li>
                   <li>• <strong>1 Hour Time Limit</strong></li>
                   <li>• <strong>Must complete all weekly quizzes first</strong></li>
                 </ul>

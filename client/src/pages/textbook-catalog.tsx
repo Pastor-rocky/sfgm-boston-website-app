@@ -12,6 +12,7 @@ import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { FaBook, FaEye, FaUser, FaCalendar, FaGraduationCap, FaTimes, FaBookmark, FaCheck, FaPlus, FaBookOpen } from "react-icons/fa";
 import CoursePasswordPrompt, { COURSE_PASSWORDS } from "@/components/course-password-prompt";
+import { MAN_OF_GOD_DESCRIPTION } from "@/lib/man-of-god-config";
 // import growCover from "@assets/image_1753296696582.png";
 // import studyingForServiceCover from "@assets/Image 2_1753137106145.jpg";
 // import dontBeAJonahCover from "@assets/Image_1753137060328.jpg";
@@ -307,20 +308,20 @@ export default function TextbookCatalog() {
         });
       }
 
-      // Add "SFGM Man of God Course" textbook (content coming soon)
+      // SFGM Man of God Course (course 16)
       const manOfGodCourse = courses.find((c: any) => c.id === 16);
       if (manOfGodCourse) {
         completeTextbooks.push({
           id: 16,
           title: "SFGM Man of God Course",
           author: "Pastor Kevin & Bishop Anthony Lee",
-          description: "The Man of God course is an 8-week Bible study designed to challenge, equip, and empower men to walk boldly in their God-given purpose. This course is taught by two pastors from different SFGM locations, each bringing unique insights to help you grow spiritually and practically. Weeks 1–4: Led by Pastor Kevin from SFGM Columbus. Weeks 5–8: Led by Bishop Anthony Lee from SFGM Orlando. Each week focuses on key biblical principles that build your identity, character, and leadership as a man of God. Lessons cover vital topics such as God's glory, honoring relationships, faithful stewardship, and using your spiritual gifts with humility.",
-          bookCoverUrl: undefined,
+          description: MAN_OF_GOD_DESCRIPTION,
+          bookCoverUrl: "/man-of-god-course-cover.webp",
           category: "Character Development",
           difficulty: "Intermediate",
-          chapterCount: manOfGodCourse.duration || 8,
+          chapterCount: manOfGodCourse.duration || 10,
           estimatedReadingTime: "5-6 hours",
-          isComplete: false, // Content coming soon
+          isComplete: true,
           courseId: 16,
           courseName: "SFGM Man of God Course",
           isUpdated: manOfGodCourse.isUpdated || false
@@ -376,21 +377,6 @@ export default function TextbookCatalog() {
           courseName: "Theology 101",
           isUpdated: false
         },
-        {
-          id: 105, // Display order 105
-          title: "Men of God",
-          author: "Pastor Kevin & Bishop Anthony Lee",
-          description: "The Man of God course is an 8-week Bible study designed to challenge, equip, and empower men to walk boldly in their God-given purpose. This course is taught by two pastors from different SFGM locations, each bringing unique insights to help you grow spiritually and practically.",
-          bookCoverUrl: "/man-of-god-course-cover.webp",
-          category: "Character Development",
-          difficulty: "Intermediate",
-          chapterCount: 8,
-          estimatedReadingTime: "5-6 hours",
-          isComplete: false,
-          courseId: 105,
-          courseName: "Men of God",
-          isUpdated: false
-        }
       ];
 
       // Add the coming soon textbooks to the array

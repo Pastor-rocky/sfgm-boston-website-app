@@ -1,3 +1,8 @@
+/** Detect quiz questions that require research outside Scripture. */
+export function isResearchQuestion(questionText: string): boolean {
+  return /research\s+outside\s+the\s+bible/i.test(questionText);
+}
+
 /** Detect quiz questions tied to the weekly video lesson (participation-style grading). */
 export function isVideoQuestion(questionText: string): boolean {
   const q = questionText.toLowerCase();

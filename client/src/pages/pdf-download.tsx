@@ -16,7 +16,7 @@ interface PDFInfo {
 
 const pdfCourses: PDFInfo[] = [
   {
-    courseId: 0,
+    courseId: 4,
     title: "SFGM GROW Conference",
     description: "A comprehensive study of spiritual growth and development",
     filename: "SFGM GROW CONFRENCE.pdf",

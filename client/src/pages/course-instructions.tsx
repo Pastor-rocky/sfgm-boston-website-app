@@ -4,9 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BookOpen, Video, FileText, CheckCircle2, ArrowRight, Play, Users, Clock } from "lucide-react";
+import {
+  MAN_OF_GOD_DESCRIPTION,
+  MAN_OF_GOD_WEEKS,
+} from "@/lib/man-of-god-config";
+import { DEFAULT_PASSING_SCORE, MAN_OF_GOD_WEEK1_PASSING_SCORE } from "@shared/course-constants";
 
 export default function CourseInstructions() {
   const { courseId } = useParams();
+  const isManOfGod = courseId === "16";
   
   const { data: course, isLoading } = useQuery<any>({
     queryKey: [`/api/courses/${courseId}`],
@@ -43,6 +49,7 @@ export default function CourseInstructions() {
                   courseId === "3" ? "/dont-be-a-jonah-cover.jpg" :
                   courseId === "4" ? "/grow-cover.png" :
                   courseId === "5" ? "/studying-for-service-cover.jpg" :
+                  courseId === "16" ? "/man-of-god-course-cover.webp" :
                   "/course-cover-placeholder.png"} 
             alt={`${course?.name || 'Course'} Cover`}
             className="w-32 h-40 object-cover rounded-lg shadow-xl border-2 border-gray-200"
@@ -53,14 +60,16 @@ export default function CourseInstructions() {
           <BookOpen className="h-12 w-12 text-blue-600 mr-3" />
           <div>
             <h1 className="text-3xl font-bold text-gray-900">{course?.name || 'Course'}</h1>
-            <p className="text-gray-600 mt-2">{course?.description || 'Course description'}</p>
+            <p className="text-gray-600 mt-2">
+              {isManOfGod ? MAN_OF_GOD_DESCRIPTION : (course?.description || "Course description")}
+            </p>
           </div>
         </div>
         
         <div className="flex items-center justify-center gap-4 mt-4">
           <Badge variant="secondary" className="flex items-center gap-1">
             <Clock className="h-4 w-4" />
-            {course?.duration || '10'} weeks
+            {isManOfGod ? MAN_OF_GOD_WEEKS : (course?.duration || "10")} weeks
           </Badge>
           <Badge variant="outline" className="flex items-center gap-1">
             <Users className="h-4 w-4" />
@@ -94,9 +103,15 @@ export default function CourseInstructions() {
           <div className="bg-blue-50 p-4 rounded-lg mb-4">
             <h4 className="font-semibold text-blue-800 mb-2">📚 Week-Based Learning</h4>
             <p className="text-blue-700">
-              You must complete each week's requirements before moving to the next week. 
+              You must complete each week's requirements before moving to the next week.
               This ensures you build a solid foundation as you progress through the course.
             </p>
+            {isManOfGod && (
+              <p className="text-blue-700 mt-3 text-sm">
+                <strong>Weeks 1–5</strong> are taught by Pastor Kevin (SFGM Columbus).{" "}
+                <strong>Weeks 6–10</strong> are taught by Bishop Anthony Lee (SFGM Orlando).
+              </p>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -138,8 +153,21 @@ export default function CourseInstructions() {
                   <h4 className="font-semibold">Complete Reading Assignments</h4>
                 </div>
                 <p className="text-gray-600 text-sm mb-3">
-                  Complete both reading requirements using the blue and green buttons:
+                  {isManOfGod
+                    ? "Read the weekly e-book chapter using the E-book button on the course page:"
+                    : "Complete both reading requirements using the blue and green buttons:"}
                 </p>
+                {isManOfGod ? (
+                  <div className="bg-emerald-100 p-3 rounded border-l-4 border-emerald-500">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-lg">📖</span>
+                      <span className="font-medium text-emerald-700">E-book Button</span>
+                    </div>
+                    <p className="text-emerald-600 text-sm">
+                      Weekly Man of God chapter with optional audio — one reading per week (no separate Bible assignment)
+                    </p>
+                  </div>
+                ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div className="bg-blue-100 p-3 rounded border-l-4 border-blue-500">
                     <div className="flex items-center gap-2 mb-1">
@@ -156,6 +184,7 @@ export default function CourseInstructions() {
                     <p className="text-green-600 text-sm">Bible reading assignments</p>
                   </div>
                 </div>
+                )}
               </div>
             </div>
 
@@ -170,8 +199,18 @@ export default function CourseInstructions() {
                   <h4 className="font-semibold">Pass the Quiz</h4>
                 </div>
                 <p className="text-gray-600 text-sm">
-                  Take the weekly quiz and score 60% or higher to unlock the next week. 
-                  Each quiz is one attempt only. Contact your instructor if you need a retake.
+                  {isManOfGod ? (
+                    <>
+                      <strong>Week 1</strong> is a reflection essay (submit to pass).{" "}
+                      <strong>Weeks 2–10</strong> require <strong>{DEFAULT_PASSING_SCORE}% or higher</strong> to pass.
+                      Each quiz is one attempt only. Contact your instructor if you need a retake.
+                    </>
+                  ) : (
+                    <>
+                      Take the weekly quiz and score {DEFAULT_PASSING_SCORE}% or higher to pass.
+                      Each quiz is one attempt only. Contact your instructor if you need a retake.
+                    </>
+                  )}
                 </p>
               </div>
             </div>
@@ -193,7 +232,7 @@ export default function CourseInstructions() {
             <div className="bg-purple-50 p-4 rounded-lg">
               <h4 className="font-semibold text-purple-800 mb-3">📝 Weekly Quiz Structure</h4>
               {courseId === "1" ? (
-                // Special structure for this course: 20 questions total (10 textbook + 10 Bible)
+                // Special structure for Acts in Action: 20 questions total (10 textbook + 10 Bible)
                 <div className="space-y-3">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div className="bg-white p-3 rounded border border-purple-200">
@@ -215,6 +254,31 @@ export default function CourseInstructions() {
                     <div className="text-lg font-bold">Total: 20 Questions per Weekly Quiz</div>
                     <div className="text-sm text-purple-100">Textbook + Bible only</div>
                   </div>
+                </div>
+              ) : isManOfGod ? (
+                <div className="space-y-3">
+                  <p className="text-purple-700">Each week includes a quiz based on the video and e-book chapter:</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="bg-white p-3 rounded border border-purple-200">
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-emerald-600">Week 1</div>
+                        <div className="text-sm text-emerald-700">Reflection Essay</div>
+                        <div className="text-xs text-gray-600 mt-1">30 minutes • submit essay to pass</div>
+                      </div>
+                    </div>
+                    <div className="bg-white p-3 rounded border border-purple-200">
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-purple-600">Weeks 2–10</div>
+                        <div className="text-sm text-purple-700">MC + Character Essay</div>
+                        <div className="text-xs text-gray-600 mt-1">30 minutes • {DEFAULT_PASSING_SCORE}% to pass</div>
+                      </div>
+                    </div>
+                  </div>
+                  <ul className="text-purple-700 space-y-1 ml-4 text-sm">
+                    <li>• 🎥 Weekly video lesson (Pastor Kevin, Weeks 1–5; Bishop Anthony, Weeks 6–10)</li>
+                    <li>• 📖 E-book chapter reading with optional audio</li>
+                    <li>• 📝 Multiple-choice questions plus short character essays (Weeks 2–10)</li>
+                  </ul>
                 </div>
               ) : (
                 // Standard structure for other courses
@@ -240,8 +304,11 @@ export default function CourseInstructions() {
                 <div>
                   <h5 className="font-medium text-green-700 mb-2">Passing Requirements:</h5>
                   <ul className="text-green-700 space-y-1 text-sm">
-                    <li>• <strong>60% minimum</strong> to pass weekly quizzes</li>
-                    <li>• <strong>65% minimum</strong> to pass final exams</li>
+                    {isManOfGod && (
+                      <li>• <strong>Week 1:</strong> reflection essay (submit to pass)</li>
+                    )}
+                    <li>• <strong>{DEFAULT_PASSING_SCORE}% minimum</strong> to pass weekly quizzes</li>
+                    <li>• <strong>{DEFAULT_PASSING_SCORE}% minimum</strong> to pass final exams</li>
                     <li>• Must pass to unlock next week</li>
                     <li>• <strong>ONE ATTEMPT ONLY</strong> per quiz</li>
                     <li>• Contact instructor for retake permission</li>
@@ -278,9 +345,35 @@ export default function CourseInstructions() {
                     <h5 className="font-medium text-red-700 mb-2">Requirements:</h5>
                     <ul className="text-red-700 space-y-1 text-sm">
                       <li>• Complete all 5 weekly quizzes first</li>
-                      <li>• <strong>65% minimum passing score</strong></li>
+                      <li>• <strong>{DEFAULT_PASSING_SCORE}% minimum passing score</strong></li>
                       <li>• Essay must be approved by instructor</li>
                       <li>• 1 hour time limit on final exam</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {isManOfGod && (
+              <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+                <h4 className="font-semibold text-red-800 mb-3">🎓 Final Examination</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <h5 className="font-medium text-red-700 mb-2">Exam Structure:</h5>
+                    <ul className="text-red-700 space-y-1 text-sm">
+                      <li>• <strong>50 multiple-choice questions</strong> drawn from Weeks 2–10</li>
+                      <li>• <strong>200-word minimum final essay</strong></li>
+                      <li>• Covers the full 10-week course</li>
+                      <li>• <strong>60-minute</strong> time limit</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h5 className="font-medium text-red-700 mb-2">Requirements:</h5>
+                    <ul className="text-red-700 space-y-1 text-sm">
+                      <li>• Complete all 10 weekly quizzes first</li>
+                      <li>• <strong>{DEFAULT_PASSING_SCORE}% minimum passing score</strong></li>
+                      <li>• Essay reviewed by instructor</li>
+                      <li>• Course certificate after final review</li>
                     </ul>
                   </div>
                 </div>
@@ -337,7 +430,7 @@ export default function CourseInstructions() {
                   <li>• 10 weekly quizzes (20 questions each)</li>
                   <li>• 10 textbook + 10 Bible questions per quiz</li>
                   <li>• Covers both "Fire Starter" book + Luke Gospel</li>
-                  <li>• 60% required to advance to next week</li>
+                  <li>• {DEFAULT_PASSING_SCORE}% required to advance to next week</li>
                 </ul>
               </div>
               <div className="bg-white p-4 rounded-lg border border-orange-200">
@@ -349,7 +442,7 @@ export default function CourseInstructions() {
                   <li>• 50 comprehensive questions</li>
                   <li>• 25 textbook + 25 Luke Bible questions</li>
                   <li>• 60-minute time limit</li>
-                  <li>• 65% passing score required</li>
+                  <li>• {DEFAULT_PASSING_SCORE}% passing score required</li>
                 </ul>
               </div>
             </div>
@@ -384,10 +477,21 @@ export default function CourseInstructions() {
               <div>
                 <h4 className="font-semibold text-purple-800 mb-2">How to Save Progress</h4>
                 <ol className="list-decimal list-inside space-y-1 text-purple-700 text-sm">
-                  <li>When reading textbook chapters, use the <strong>"Save Progress"</strong> button</li>
-                  <li>Your current page and chapter location will be remembered</li>
-                  <li>Return anytime and pick up exactly where you left off</li>
-                  <li>Each course maintains separate progress tracking</li>
+                  {isManOfGod ? (
+                    <>
+                      <li>Open each week&apos;s e-book chapter from the course page</li>
+                      <li>Completion is tracked when you finish the reading assignment</li>
+                      <li>Each chapter also includes optional audio you can listen to while you read</li>
+                      <li>Each course maintains separate progress tracking</li>
+                    </>
+                  ) : (
+                    <>
+                      <li>When reading textbook chapters, use the <strong>"Save Progress"</strong> button</li>
+                      <li>Your current page and chapter location will be remembered</li>
+                      <li>Return anytime and pick up exactly where you left off</li>
+                      <li>Each course maintains separate progress tracking</li>
+                    </>
+                  )}
                 </ol>
               </div>
             </div>
@@ -405,7 +509,9 @@ export default function CourseInstructions() {
             <div className="bg-orange-50 p-3 rounded-lg">
               <h4 className="font-semibold text-orange-800 mb-2">Button Tooltips</h4>
               <p className="text-orange-700 text-sm">
-                Hover over blue and green buttons to see specific chapter assignments
+                {isManOfGod
+                  ? "Use the E-book button on each week card to open that week's chapter"
+                  : "Hover over blue and green buttons to see specific chapter assignments"}
               </p>
             </div>
             <div className="bg-orange-50 p-3 rounded-lg">

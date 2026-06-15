@@ -48,6 +48,10 @@ export function rateLimit(options: RateLimitOptions = {}) {
   } = options;
 
   return (req: Request, res: Response, next: NextFunction) => {
+    if (process.env.NODE_ENV === "development") {
+      return next();
+    }
+
     const key = keyGenerator(req);
     const now = Date.now();
 

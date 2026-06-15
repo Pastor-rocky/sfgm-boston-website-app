@@ -22,7 +22,6 @@ export default function HeroSection() {
           : service.id === "family-night"
             ? "text-purple-600"
             : "text-pink-600",
-    href: service.href,
   }));
 
   return (

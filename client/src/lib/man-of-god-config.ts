@@ -1,9 +1,19 @@
 /**
  * SFGM Man of God Course — shared chapter metadata (course ID 16).
- * E-book text lives in client/src/pages/content/man-of-god-ch*.txt
+ * E-book text lives in client/src/components/man-of-god-*-content.tsx
  */
 
-export const MAN_OF_GOD_COURSE_ID = 16;
+export {
+  MAN_OF_GOD_COURSE_ID,
+  MAN_OF_GOD_DESCRIPTION,
+  MAN_OF_GOD_OVERVIEW,
+  MAN_OF_GOD_WEEKS,
+  MAN_OF_GOD_WEEKLY_PASSING_SCORE,
+  MAN_OF_GOD_WHAT_YOULL_LEARN,
+} from "@shared/man-of-god-course";
+
+export { DEFAULT_PASSING_SCORE, MAN_OF_GOD_WEEK1_PASSING_SCORE } from "@shared/course-constants";
+
 /** Main course hub (videos, readings, quizzes) */
 export const MAN_OF_GOD_COURSE_URL = "/course/16";
 /** Short bookmark URL — redirects to course hub */

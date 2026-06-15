@@ -139,7 +139,7 @@ export const quizzes = pgTable("quizzes", {
   moduleId: integer("module_id").references(() => courseModules.id),
   title: varchar("title", { length: 255 }).notNull(),
   timeLimit: integer("time_limit"), // in minutes
-  passingScore: integer("passing_score").default(60),
+  passingScore: integer("passing_score").default(70),
   isFinalExam: boolean("is_final_exam").default(false),
   isPublished: boolean("is_published").default(false),
   publishedAt: timestamp("published_at"),

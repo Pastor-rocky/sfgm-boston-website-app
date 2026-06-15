@@ -12,6 +12,7 @@ import {
   AlertCircle, Calendar, FileText, Download
 } from "lucide-react";
 import { useState } from "react";
+import { DEFAULT_PASSING_SCORE } from "@shared/course-constants";
 
 // Grade Card Component
 function GradeCard({ 
@@ -28,7 +29,7 @@ function GradeCard({
   // Calculate course statistics
   const totalQuizzes = quizAttempts.length;
   const passedQuizzes = quizAttempts.filter(attempt => 
-    (parseFloat(attempt.score || '0') * 100) >= (attempt.passingScore || 60)
+    (parseFloat(attempt.score || '0') * 100) >= (attempt.passingScore || DEFAULT_PASSING_SCORE)
   ).length;
   const averageScore = totalQuizzes > 0 
     ? quizAttempts.reduce((sum, attempt) => sum + (parseFloat(attempt.score || '0') * 100), 0) / totalQuizzes
@@ -141,7 +142,7 @@ function GradeCard({
                             {Math.round(parseFloat(attempt.score || '0') * 100)}%
                           </div>
                           <div className="text-xs text-gray-900 font-medium">
-                            {(parseFloat(attempt.score || '0') * 100) >= (attempt.passingScore || 60) ? 'Passed' : 'Failed'}
+                            {(parseFloat(attempt.score || '0') * 100) >= (attempt.passingScore || DEFAULT_PASSING_SCORE) ? 'Passed' : 'Failed'}
                           </div>
                         </div>
                       </div>
@@ -196,7 +197,7 @@ export default function StudentGrades() {
   const totalCourses = (enrollments as any[]).length;
   const totalQuizzes = (allQuizAttempts as any[]).length;
   const totalPassed = (allQuizAttempts as any[]).filter((attempt: any) => 
-    (parseFloat(attempt.score || '0') * 100) >= (attempt.passingScore || 60)
+    (parseFloat(attempt.score || '0') * 100) >= (attempt.passingScore || DEFAULT_PASSING_SCORE)
   ).length;
   const overallAverage = totalQuizzes > 0 
     ? (allQuizAttempts as any[]).reduce((sum: number, attempt: any) => sum + (parseFloat(attempt.score || '0') * 100), 0) / totalQuizzes

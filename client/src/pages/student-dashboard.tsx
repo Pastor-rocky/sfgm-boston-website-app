@@ -13,6 +13,7 @@ import {
   ChevronRight, CheckCircle, AlertCircle
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { DEFAULT_PASSING_SCORE } from "@shared/course-constants";
 import { useEffect, useState } from "react";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -170,7 +171,7 @@ function EnhancedCourseCard({ enrollment, instructors, onUnenroll, onContinue }:
     const quizId = attempt.quizId;
     const score = parseFloat(attempt.score || '0');
     const scorePercent = score <= 1 ? score * 100 : score;
-    const passingScore = attempt.passingScore || 60;
+    const passingScore = attempt.passingScore || DEFAULT_PASSING_SCORE;
     
     if (!bestScoresByQuiz.has(quizId) || scorePercent > (bestScoresByQuiz.get(quizId)?.score || 0)) {
       bestScoresByQuiz.set(quizId, { score: scorePercent, passingScore });
@@ -215,7 +216,7 @@ function EnhancedCourseCard({ enrollment, instructors, onUnenroll, onContinue }:
     for (let i = 0; i < attempts.length; i++) {
       const score = parseFloat(attempts[i].score || '0');
       const scorePercent = score <= 1 ? score * 100 : score;
-      const passingScore = attempts[i].passingScore || 60;
+      const passingScore = attempts[i].passingScore || DEFAULT_PASSING_SCORE;
       if (scorePercent >= passingScore) {
         streak++;
       } else {

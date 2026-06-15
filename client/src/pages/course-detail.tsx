@@ -13,6 +13,8 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { getAudioUrl } from "@/lib/audio-storage";
 import CoursePasswordPrompt from "@/components/course-password-prompt";
+import { MAN_OF_GOD_DESCRIPTION, MAN_OF_GOD_WHAT_YOULL_LEARN } from "@/lib/man-of-god-config";
+import { DEFAULT_PASSING_SCORE } from "@shared/course-constants";
 
 
 export default function CourseDetail() {
@@ -25,14 +27,14 @@ export default function CourseDetail() {
   // Locked courses that require password
   const LOCKED_COURSES = [6, 8]; // Deacon Course and Youth Ministry Course
 
-  // Redirect course 18 (G.R.O.W) to proper interface
+  // Redirect legacy G.R.O.W course IDs to canonical course 4
   useEffect(() => {
-    if (id === '18') {
-      setLocation('/course/0');
+    if (id === '18' || id === '0') {
+      setLocation('/course/4');
     }
   }, [id, setLocation]);
 
-  const { data: course, isLoading } = useQuery({
+  const { data: course, isLoading, isError, error } = useQuery({
     queryKey: [`/api/courses/${id}`],
     enabled: !!id,
   });
@@ -83,6 +85,30 @@ export default function CourseDetail() {
     );
   }
 
+  if (isError) {
+    const message = error instanceof Error ? error.message : "Failed to load course";
+    const isRateLimited = message.includes("429");
+    return (
+      <div className="min-h-screen bg-slate-50">
+        <Navigation />
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <Card>
+            <CardContent className="text-center py-8">
+              <h2 className="text-2xl font-bold text-slate-900 mb-2">
+                {isRateLimited ? "Please Wait a Moment" : "Unable to Load Course"}
+              </h2>
+              <p className="text-slate-600">
+                {isRateLimited
+                  ? "The server is temporarily limiting requests. Refresh the page in a minute and the course should load normally."
+                  : "Something went wrong while loading this course. Please refresh and try again."}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
   if (!course) {
     return (
       <div className="min-h-screen bg-slate-50">
@@ -118,6 +144,7 @@ export default function CourseDetail() {
                     id === "6" ? "/deacon-course-cover.png" :
                     id === "7" ? "/level-up-leadership-cover.png" :
                     id === "8" ? "/sfgm-youth-ministry-cover.png" :
+                    id === "16" ? "/man-of-god-course-cover.webp" :
                     "/course-cover-placeholder.png"} 
               alt={`${(course as any)?.name || 'Course'} Cover`}
               className={`${id === "6" || id === "7" || id === "8" ? "w-48 h-48 md:w-72 md:h-72" : "w-48 h-64 md:w-56 md:h-80"} object-contain rounded-lg shadow-2xl border-4 border-white/20 mx-auto`}
@@ -208,13 +235,25 @@ export default function CourseDetail() {
           <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-6 max-w-4xl mx-auto text-left mb-8">
             <h2 className="text-2xl font-bold text-yellow-300 mb-2">📘 Course Information</h2>
             <p className="text-purple-100 mb-3">
-              Welcome to your course! This course is designed to help you grow in your faith and understanding of God's Word.
+              {id === "16"
+                ? MAN_OF_GOD_DESCRIPTION
+                : "Welcome to your course! This course is designed to help you grow in your faith and understanding of God's Word."}
             </p>
             <ul className="list-disc list-inside text-purple-100 space-y-2 text-sm">
               <li><strong>Complete all videos and readings</strong> for each week before taking the quiz</li>
-              <li><strong>Quizzes require 60% to pass</strong> and unlock the next week's content</li>
-              <li><strong>One attempt per quiz</strong> - contact your instructor if you need assistance</li>
-              <li><strong>Final exam</strong> is available after completing all weekly content</li>
+              {id === "16" ? (
+                <>
+                  <li><strong>Week 1</strong> is a reflection essay; <strong>Weeks 2–10 quizzes require {DEFAULT_PASSING_SCORE}% to pass</strong></li>
+                  <li><strong>One attempt per quiz</strong> — contact your instructor if you need assistance</li>
+                  <li><strong>Final exam</strong> (50 multiple-choice questions + 200-word essay) is available after completing all 10 weeks</li>
+                </>
+              ) : (
+                <>
+                  <li><strong>Quizzes require {DEFAULT_PASSING_SCORE}% to pass</strong></li>
+                  <li><strong>One attempt per quiz</strong> — contact your instructor if you need assistance</li>
+                  <li><strong>Final exam</strong> is available after completing all weekly content</li>
+                </>
+              )}
               <li><strong>Track your progress</strong> using the completion badges and statistics</li>
             </ul>
             <p className="text-purple-100 mt-4 text-sm">
@@ -917,22 +956,20 @@ export default function CourseDetail() {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2 text-sm">
-                  <li className="flex items-center text-purple-200">
-                    <i className="fas fa-check text-green-400 mr-2"></i>
-                    Deep biblical understanding
-                  </li>
-                  <li className="flex items-center text-purple-200">
-                    <i className="fas fa-check text-green-400 mr-2"></i>
-                    Practical application principles
-                  </li>
-                  <li className="flex items-center text-purple-200">
-                    <i className="fas fa-check text-green-400 mr-2"></i>
-                    Spiritual growth techniques
-                  </li>
-                  <li className="flex items-center text-purple-200">
-                    <i className="fas fa-check text-green-400 mr-2"></i>
-                    Ministry leadership skills
-                  </li>
+                  {(id === "16"
+                    ? MAN_OF_GOD_WHAT_YOULL_LEARN
+                    : [
+                        "Deep biblical understanding",
+                        "Practical application principles",
+                        "Spiritual growth techniques",
+                        "Ministry leadership skills",
+                      ]
+                  ).map((item) => (
+                    <li key={item} className="flex items-center text-purple-200">
+                      <i className="fas fa-check text-green-400 mr-2"></i>
+                      {item}
+                    </li>
+                  ))}
                 </ul>
               </CardContent>
             </Card>

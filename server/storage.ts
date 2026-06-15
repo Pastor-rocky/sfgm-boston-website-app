@@ -69,6 +69,7 @@ import {
   type ForumReply,
   type InsertForumReply,
 } from "../shared/schema";
+import { DEFAULT_PASSING_SCORE, normalizeCourseId } from "../shared/course-constants";
 import { db } from "./db";
 import { eq, and, or, desc, asc, avg, count, lt, gte, sql, ilike, like, isNotNull, inArray } from "drizzle-orm";
 import { quizService } from "./services/quizService";
@@ -978,9 +979,10 @@ After completing this chapter, proceed to the next module or assessment as direc
 
   async calculateCourseProgress(studentId: string, courseId: number): Promise<number> {
     try {
-      const configuredCourse = courseProgressConfig[courseId];
+      const normalizedId = normalizeCourseId(courseId);
+      const configuredCourse = courseProgressConfig[normalizedId];
       if (configuredCourse) {
-        return await this.calculateConfiguredCourseProgress(studentId, courseId, configuredCourse);
+        return await this.calculateConfiguredCourseProgress(studentId, normalizedId, configuredCourse);
       }
       
       if (courseId === 1) {
@@ -996,7 +998,7 @@ After completing this chapter, proceed to the next module or assessment as direc
           .where(and(
             eq(quizAttempts.studentId, studentId),
             isNotNull(quizAttempts.completedAt),
-            gte(quizAttempts.score as any, 0.7) // 70% passing score (0.7 as decimal)
+            gte(quizAttempts.score as any, DEFAULT_PASSING_SCORE / 100)
           ));
         
         // Get quiz details to filter by title
@@ -1087,7 +1089,7 @@ After completing this chapter, proceed to the next module or assessment as direc
         const passedQuizIds = new Set();
         attempts.forEach(attempt => {
           const quiz = quizDetails.find(q => q.id === attempt.quizId);
-          const passingScore = (quiz?.passingScore || 60) / 100; // Convert to decimal
+          const passingScore = (quiz?.passingScore || DEFAULT_PASSING_SCORE) / 100; // Convert to decimal
           const score = parseFloat(attempt.score || '0');
           const passed = score >= passingScore;
           console.log(`[Course 2 Progress] Quiz ${attempt.quizId}: score=${score}, passingScore=${passingScore}, passed=${passed}`);
@@ -1180,7 +1182,7 @@ After completing this chapter, proceed to the next module or assessment as direc
         const passedQuizIds = new Set();
         attempts.forEach(attempt => {
           const quiz = quizDetails.find(q => q.id === attempt.quizId);
-          const passingScore = (quiz?.passingScore || 60) / 100; // Convert to decimal
+          const passingScore = (quiz?.passingScore || DEFAULT_PASSING_SCORE) / 100; // Convert to decimal
           const score = parseFloat(attempt.score || '0');
           const passed = score >= passingScore;
           console.log(`[Course 3 Progress] Quiz ${attempt.quizId}: score=${score}, passingScore=${passingScore}, passed=${passed}`);
@@ -1300,12 +1302,12 @@ After completing this chapter, proceed to the next module or assessment as direc
       .from(quizzes)
       .where(inArray(quizzes.id, quizIds));
 
-    const passingScoreMap = new Map(quizDetails.map(q => [q.id, q.passingScore || 60]));
+    const passingScoreMap = new Map(quizDetails.map(q => [q.id, q.passingScore || DEFAULT_PASSING_SCORE]));
     const passedQuizIds = new Set<number>();
     quizAttemptsData.forEach(attempt => {
       const rawScore = parseFloat(attempt.score || '0');
       const normalizedScore = rawScore > 1 ? rawScore / 100 : rawScore;
-      const passingScorePercent = passingScoreMap.get(attempt.quizId) ?? 60;
+      const passingScorePercent = passingScoreMap.get(attempt.quizId) ?? DEFAULT_PASSING_SCORE;
       const passingScoreDecimal = passingScorePercent > 1 ? passingScorePercent / 100 : passingScorePercent;
       if (normalizedScore >= passingScoreDecimal) {
         passedQuizIds.add(attempt.quizId);
@@ -1477,43 +1479,19 @@ After completing this chapter, proceed to the next module or assessment as direc
   }
 
   async getQuizAttemptsByCourse(studentId: string, courseId: number): Promise<any[]> {
-    let quizIds: number[] = [];
-    
-    // Handle Course 2 (Fire Starter) quizzes directly by ID
-    if (courseId === 2) {
-      quizIds = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58]; // 10 weekly + 1 final
-    } else if (courseId === 1) {
-      // Course 1 (Acts in Action): Quizzes 13-23
-      quizIds = [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]; // 10 weekly + 1 final
-    } else if (courseId === 3) {
-      // Course 3 (Don't Be a Jonah): Quizzes 26, 46, 37-45, 47
-      quizIds = [26, 46, 37, 38, 39, 40, 41, 42, 43, 44, 45, 47]; // 11 weekly + 1 final
-    } else if (courseId === 4) {
-      // Course 4 (G.R.O.W): Quizzes 71-75
-      quizIds = [71, 72, 73, 74, 75]; // 4 weekly + 1 final
-    } else if (courseId === 5) {
-      // Course 5 (Studying for Service): Quizzes 59-70
-      quizIds = [59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70]; // 12 weekly + 1 final (estimated)
-    } else if (courseId === 6) {
-      // Course 6 (Deacon Course): Quizzes 76-80 + final exam
-      quizIds = [76, 77, 78, 79, 80, 82];
-    } else if (courseId === 8) {
-      // Course 8 (Youth Ministry): Quizzes 207-212
-      quizIds = [207, 208, 209, 210, 211, 212];
-    } else if (courseId === 16) {
-      // Course 16 (SFGM Man of God): weekly essay quizzes (221+)
-      quizIds = [221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231];
-    } else {
-      // For other courses, try to get quiz IDs from courseModules
+    const normalizedId = normalizeCourseId(courseId);
+    const config = courseProgressConfig[normalizedId];
+    let quizIds = config?.quizIds ?? [];
+
+    if (quizIds.length === 0) {
       const courseQuizIds = await db
         .select({ id: quizzes.id })
         .from(quizzes)
         .innerJoin(courseModules, eq(quizzes.moduleId, courseModules.id))
-        .where(eq(courseModules.courseId, courseId));
-      
-      quizIds = courseQuizIds.map(q => q.id);
+        .where(eq(courseModules.courseId, normalizedId));
+      quizIds = courseQuizIds.map((q) => q.id);
     }
-    
+
     if (quizIds.length === 0) {
       return [];
     }
@@ -1781,7 +1759,7 @@ After completing this chapter, proceed to the next module or assessment as direc
           id: attempt.id,
           quizId: attempt.quizId,
           score: parseFloat(attempt.score || '0'),
-          passingScore: quiz?.passingScore || 70,
+          passingScore: quiz?.passingScore || DEFAULT_PASSING_SCORE,
           completedAt: attempt.completedAt,
           timeSpent: attempt.timeSpent,
           quizTitle: quiz?.title || 'Unknown Quiz'

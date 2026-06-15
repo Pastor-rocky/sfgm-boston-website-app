@@ -16,7 +16,13 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Textarea } from "@/components/ui/textarea";
 import { FinalExamCompletion } from "@/components/final-exam-completion";
 import { isFamilyNightQuizParam, getFamilyNightReturnPath } from "@/lib/family-night-quizzes";
-import { isVideoQuestion, isAnswerProvided } from "@shared/quiz-scoring";
+import { isVideoQuestion, isAnswerProvided, isResearchQuestion } from "@shared/quiz-scoring";
+import { DEFAULT_PASSING_SCORE } from "@shared/course-constants";
+
+function scoreToPercent(raw: number): number {
+  if (Number.isNaN(raw)) return 0;
+  return raw <= 1 ? raw * 100 : raw;
+}
 
 interface Question {
   id: number;
@@ -382,16 +388,17 @@ export default function QuizTake() {
       setIsSubmitted(true);
       // Clear saved progress when quiz is submitted
       localStorage.removeItem(sessionKey);
-      const score = result.score || 0;
+      const scorePercent = scoreToPercent(result.score || 0);
+      const passingScore = quiz?.passingScore || DEFAULT_PASSING_SCORE;
       
       // For final exams, show the transition component instead of immediate toast
-      if (quiz?.isFinalExam && score >= quiz.passingScore) {
+      if (quiz?.isFinalExam && scorePercent >= passingScore) {
         setShowFinalExamCompletion(true);
       } else {
         // Regular quiz or failed final exam - show normal toast
         toast({
-          title: score >= (quiz?.passingScore || 60) ? "Quiz Passed!" : "Quiz Completed",
-          description: `Your score: ${Math.round(score * 100)}% ${score >= (quiz?.passingScore || 60) ? '- Well done!' : '- Week complete.'}`,
+          title: scorePercent >= passingScore ? "Quiz Passed!" : "Quiz Completed",
+          description: `Your score: ${Math.round(scorePercent)}% ${scorePercent >= passingScore ? '- Well done!' : '- Week complete.'}`,
         });
       }
       
@@ -562,7 +569,7 @@ export default function QuizTake() {
   // Show final exam completion transition
   if (showFinalExamCompletion && quiz?.isFinalExam) {
     // Calculate the multiple choice score
-    const mcScore = Math.round((quiz.questions.filter(q => !q.isBonus).length * (quiz.passingScore || 60) / 100));
+    const mcScore = Math.round((quiz.questions.filter(q => !q.isBonus).length * (quiz.passingScore || DEFAULT_PASSING_SCORE) / 100));
     const totalMcQuestions = quiz.questions.filter(q => !q.isBonus).length;
     
     // Determine course and essay question based on quiz title
@@ -728,6 +735,13 @@ export default function QuizTake() {
       );
     }
     
+    const sortedQuestions = [...quiz.questions].sort((a, b) => a.orderIndex - b.orderIndex);
+    const researchQuestionNumbers = sortedQuestions
+      .map((q, index) => (isResearchQuestion(q.question) ? index + 1 : null))
+      .filter((n): n is number => n !== null);
+    const hasResearchQuestion = researchQuestionNumbers.length > 0;
+    const passingScoreDisplay = quiz.passingScore ?? DEFAULT_PASSING_SCORE;
+    
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
         <Navigation />
@@ -755,11 +769,11 @@ export default function QuizTake() {
                     </div>
                     <div className="flex items-center">
                       <i className="fas fa-clock mr-3"></i>
-                      <span>Time limit: {formatTime(quiz.timeLimit)} minutes</span>
+                      <span>Time limit: {quiz.timeLimit} minute{quiz.timeLimit === 1 ? '' : 's'}</span>
                     </div>
                     <div className="flex items-center">
                       <i className="fas fa-target mr-3"></i>
-                      <span>Passing score: {quiz.passingScore}%</span>
+                      <span>Passing score: {passingScoreDisplay}%</span>
                     </div>
                     {quiz.isFinalExam && (
                       <div className="flex items-center">
@@ -780,13 +794,18 @@ export default function QuizTake() {
                   </ul>
                 </div>
 
+                {hasResearchQuestion && (
                 <div className="bg-green-50 p-6 rounded-lg border border-green-200">
                   <h4 className="font-semibold text-green-900 mb-2">Research Question:</h4>
                   <p className="text-green-800 text-sm">
                     <i className="fas fa-search mr-2"></i>
-                    Question 10 requires research outside the Bible. You may leave this quiz to research and return - your progress will be saved automatically. Extra time (45 minutes total) has been provided for research.
+                    {researchQuestionNumbers.length === 1
+                      ? `Question ${researchQuestionNumbers[0]} requires research outside the Bible.`
+                      : `Questions ${researchQuestionNumbers.join(', ')} require research outside the Bible.`}{' '}
+                    You may leave this quiz to research and return — your progress will be saved automatically.
                   </p>
                 </div>
+                )}
 
                 <div className="text-center">
                   <Button 
@@ -933,7 +952,7 @@ export default function QuizTake() {
                     {(() => {
                       const rawScore = quizAttempt.attempt.score ?? 0;
                       const scorePercent = rawScore <= 1 ? rawScore * 100 : rawScore;
-                      const passingScore = quizAttempt.quiz?.passingScore || 60;
+                      const passingScore = quizAttempt.quiz?.passingScore || DEFAULT_PASSING_SCORE;
                       const passed = scorePercent >= passingScore;
                       return (
                         <Badge variant={passed ? "default" : "destructive"}>
@@ -1004,7 +1023,7 @@ export default function QuizTake() {
           </CardHeader>
           <CardContent>
             {/* Special indicator for research question */}
-            {currentQ.question.includes('Research outside the Bible') && (
+            {isResearchQuestion(currentQ.question) && (
               <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
                 <div className="flex items-center text-green-800">
                   <i className="fas fa-search mr-2"></i>
