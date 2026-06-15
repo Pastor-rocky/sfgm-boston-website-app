@@ -453,8 +453,14 @@ export default function TextbookCatalog() {
       return;
     }
     
-    // For coming soon courses (courseId 16, 9), show locked modal
-    if (textbook.courseId === 16 || textbook.courseId === 9) {
+    // For SFGM Man of God Course (courseId 16), navigate to the complete e-book
+    if (textbook.courseId === 16) {
+      setLocation('/man-of-god-complete-ebook');
+      return;
+    }
+    
+    // For coming soon courses (courseId 9), show locked modal
+    if (textbook.courseId === 9) {
       setSelectedTextbook(textbook);
       setShowModal(true);
       return;
@@ -639,7 +645,7 @@ export default function TextbookCatalog() {
                           <FaTimes className="text-lg" />
                         </button>
                         <div className="text-center">
-                          {(selectedTextbook?.courseId === 5 || selectedTextbook?.courseId === 16 || selectedTextbook?.courseId === 8 || selectedTextbook?.courseId === 9) ? (
+                          {(selectedTextbook?.courseId === 5 || selectedTextbook?.courseId === 8 || selectedTextbook?.courseId === 9) ? (
                             <>
                               <i className="fas fa-lock text-4xl text-orange-600 mb-4"></i>
                               <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
@@ -714,8 +720,8 @@ export default function TextbookCatalog() {
                   </span>
                 </div>
 
-                {/* Action Buttons - Hidden for Coming Soon courses (IDs 101-106, 9, 16) */}
-                {!(textbook.courseId >= 101 && textbook.courseId <= 106) && textbook.courseId !== 9 && textbook.courseId !== 16 && (
+                {/* Action Buttons - Hidden for Coming Soon courses (IDs 101-106, 9) */}
+                {!(textbook.courseId >= 101 && textbook.courseId <= 106) && textbook.courseId !== 9 && (
                   <div className="space-y-2 mt-auto">
                     {/* Read E-Book Button */}
                     {textbook.courseId === 7 ? (
@@ -751,6 +757,8 @@ export default function TextbookCatalog() {
                           } else if (textbook.courseId === 4) {
                             // Navigate to the complete e-book for G.R.O.W
                             setLocation('/grow-complete-ebook');
+                          } else if (textbook.courseId === 16) {
+                            setLocation('/man-of-god-complete-ebook');
                         } else if (textbook.courseId === 6 || textbook.courseId === 8) {
                           // Check password for locked courses
                           setPasswordCourseId(textbook.courseId);

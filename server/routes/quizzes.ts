@@ -80,6 +80,17 @@ const QUIZ_SLUG_MAP: Record<string, number> = {
   "youth-ministry-week-5": 211,
   "youth-ministry-final-exam": 212,
   "family-night-faith-week-1": 220,
+  "man-of-god-week-1": 221,
+  "man-of-god-week-2": 222,
+  "man-of-god-week-3": 223,
+  "man-of-god-week-4": 224,
+  "man-of-god-week-5": 225,
+  "man-of-god-week-6": 226,
+  "man-of-god-week-7": 227,
+  "man-of-god-week-8": 228,
+  "man-of-god-week-9": 229,
+  "man-of-god-week-10": 230,
+  "man-of-god-final-exam": 231,
 };
 
 function resolveQuizId(param: string): number | null {

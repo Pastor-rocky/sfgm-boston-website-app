@@ -77,5 +77,10 @@ export const courseProgressConfig: Record<number, CourseProgressDefinition> = {
     reading: { type: 'placeholderSingle', baseId: 9000, weeks: 5 },
     video: { type: 'none' },
   },
+  16: {
+    quizIds: [221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231],
+    reading: { type: "placeholderSingle", baseId: 16000, weeks: 10 },
+    video: { type: "published" },
+  },
 };
 

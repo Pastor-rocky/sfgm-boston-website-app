@@ -3,6 +3,7 @@ import * as schema from "../../shared/schema";
 import { quizAttempts, quizQuestions } from "../../shared/schema";
 import { eq, and, desc } from "drizzle-orm";
 import type { InsertQuizAttempt, QuizAttempt, QuizQuestion } from "../../shared/schema";
+import { isQuestionCorrect } from "../../shared/quiz-scoring";
 import { quizMonitoring } from "./quizMonitoring";
 
 /**
@@ -10,6 +11,19 @@ import { quizMonitoring } from "./quizMonitoring";
  * Extracted from storage.ts to separate concerns and enable better monitoring
  */
 export class QuizService {
+  private getEssayMinWords(question: QuizQuestion): number {
+    if (question.question.includes("at least 200 words")) {
+      return 200;
+    }
+    if (question.question.includes("Character Essay") || question.question.includes("at least 100 words")) {
+      return 100;
+    }
+    if (question.question.includes("Bonus question") || question.question.includes("Write your answer(s)")) {
+      return 1;
+    }
+    return 100;
+  }
+
   /**
    * Calculate quiz score based on provided answers
    */
@@ -18,10 +32,20 @@ export class QuizService {
     let totalQuestions = 0;
 
     for (const question of questions) {
+      const userAnswer = providedAnswers[question.id];
+
       if (question.type === "multiple_choice" && question.correctAnswer) {
         totalQuestions++;
-        const userAnswer = providedAnswers[question.id];
-        if (userAnswer === question.correctAnswer) {
+        if (isQuestionCorrect(question, userAnswer, this.getEssayMinWords(question))) {
+          correctAnswers++;
+        }
+      } else if (
+        question.type === "essay" ||
+        question.type === "text_with_voice" ||
+        question.type === "subjective"
+      ) {
+        totalQuestions++;
+        if (isQuestionCorrect(question, userAnswer, this.getEssayMinWords(question))) {
           correctAnswers++;
         }
       }

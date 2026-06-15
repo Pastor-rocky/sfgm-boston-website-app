@@ -296,6 +296,11 @@ export default function MyPersonalLibrary() {
         window.location.href = '/deacon-course-complete-ebook';
         return;
       }
+      // Special handling for SFGM Man of God Course - navigate to complete e-book
+      if (book.title === 'SFGM Man of God Course') {
+        window.location.href = '/man-of-god-complete-ebook';
+        return;
+      }
       // Open textbook reader
       window.location.href = `/course/${book.courseId}`;
     } else if (book.type === 'pdf' && book.pdfUrl) {
@@ -531,6 +536,8 @@ export default function MyPersonalLibrary() {
                             window.location.href = '/youth-ministry-complete-ebook';
                           } else if (title === 'Deaconship Course: Answering the Call' || title === 'Deaconship Course') {
                             window.location.href = '/deacon-course-complete-ebook';
+                          } else if (title === 'SFGM Man of God Course') {
+                            window.location.href = '/man-of-god-complete-ebook';
                           } else {
                             window.location.href = `/course/${getTextbookCourseId(title)}`;
                           }

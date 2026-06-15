@@ -150,7 +150,7 @@ export const quizQuestions = pgTable("quiz_questions", {
   id: serial("id").primaryKey(),
   quizId: integer("quiz_id").references(() => quizzes.id),
   question: text("question").notNull(),
-  type: varchar("type", { enum: ["multiple_choice", "true_false", "fill_blank", "yes_no_with_text"] }).notNull(),
+  type: varchar("type", { enum: ["multiple_choice", "true_false", "fill_blank", "yes_no_with_text", "essay", "text_with_voice", "subjective"] }).notNull(),
   options: jsonb("options"), // for multiple choice questions
   correctAnswer: text("correct_answer").notNull(),
   points: integer("points").default(1),

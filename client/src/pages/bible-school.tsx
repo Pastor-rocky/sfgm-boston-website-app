@@ -250,12 +250,11 @@ export default function BibleSchool() {
       name: "SFGM Man of God Course",
       description: "The Man of God course is an 8-week Bible study designed to challenge, equip, and empower men to walk boldly in their God-given purpose. This course is taught by two pastors from different SFGM locations, each bringing unique insights to help you grow spiritually and practically. Weeks 1–4: Led by Pastor Kevin from SFGM Columbus. Weeks 5–8: Led by Bishop Anthony Lee from SFGM Orlando. Each week focuses on key biblical principles that build your identity, character, and leadership as a man of God. Lessons cover vital topics such as God's glory, honoring relationships, faithful stewardship, and using your spiritual gifts with humility.",
       overview: "An intensive 8-week men's discipleship course combining biblical teaching with practical application for developing godly character and leadership.",
-      weeks: 8,
-      points: calculatePoints(8), // 260 points
+      weeks: 10,
+      points: calculatePoints(10), // 300 points
       category: "Character Development",
       difficulty: "Intermediate",
       bookCoverUrl: "/man-of-god-course-cover.webp",
-      comingSoon: true // Badge coming soon
     }
   ];
 

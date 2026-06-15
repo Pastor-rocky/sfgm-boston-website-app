@@ -152,17 +152,16 @@ export default function BibleSchoolSection() {
     {
       id: 16,
       name: "SFGM Man of God Course",
-      duration: "8 Weeks",
-      points: 260,
+      duration: "10 Weeks",
+      points: 300,
       description: "The Man of God course is an 8-week Bible study designed to challenge, equip, and empower men to walk boldly in their God-given purpose. This course is taught by two pastors from different SFGM locations, each bringing unique insights to help you grow spiritually and practically.",
       color: "emerald",
       category: "Character Development",
       difficulty: "Intermediate",
-      overview: "An intensive 8-week men's discipleship course combining biblical teaching with practical application for developing godly character and leadership.",
+      overview: "An intensive men's discipleship course combining biblical teaching with practical application for developing godly character and leadership.",
       assignments: "Character assessments, leadership exercises, and practical ministry applications",
-      grading: "8 weekly quizzes (20 points each) + Final exam (100 points) = 260 total points",
+      grading: "10 weekly quizzes (20 points each) + Final exam (100 points) = 300 total points",
       forum: "Share testimonies, discuss character development, and encourage Christian brotherhood",
-      comingSoon: true
     }
   ];
 

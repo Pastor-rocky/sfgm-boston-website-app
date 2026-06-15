@@ -1500,6 +1500,9 @@ After completing this chapter, proceed to the next module or assessment as direc
     } else if (courseId === 8) {
       // Course 8 (Youth Ministry): Quizzes 207-212
       quizIds = [207, 208, 209, 210, 211, 212];
+    } else if (courseId === 16) {
+      // Course 16 (SFGM Man of God): weekly essay quizzes (221+)
+      quizIds = [221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231];
     } else {
       // For other courses, try to get quiz IDs from courseModules
       const courseQuizIds = await db

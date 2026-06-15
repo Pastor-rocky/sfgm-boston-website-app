@@ -10,6 +10,7 @@ import { Link, useLocation } from 'wouter';
 import { apiRequest, queryClient } from '@/lib/queryClient';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useDeduplicatedMutation } from '@/hooks/useDeduplicatedMutation';
+import { MAN_OF_GOD_READING_SCHEDULE, getManOfGodReadingIds } from '@/lib/man-of-god-config';
 
 
 interface ContentProgressItem {
@@ -263,6 +264,13 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
       q.title && q.title.includes('Youth Ministry')
     );
   }
+
+  // Special handling for SFGM Man of God Course (courseId = 16)
+  if (courseId === 16) {
+    quizzes = allQuizzes.filter((q: any) =>
+      q.title && q.title.includes('Man of God')
+    );
+  }
   
   // Quiz filtering complete
 
@@ -346,6 +354,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
     { week: 4, title: 'Chapter 4: Accountability', route: '/youth-ministry-course-ch4' },
     { week: 5, title: 'Chapter 5: Making New Disciples', route: '/youth-ministry-course-ch5' },
   ];
+
+  const manOfGodReadingSchedule = MAN_OF_GOD_READING_SCHEDULE;
 
   // Load manual completions from API once
   React.useEffect(() => {
@@ -1018,6 +1028,44 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
         quizzes: { completed: completedQuizzesForYouth, total: totalQuizzesForCourse },
       };
     }
+
+    // Special handling for SFGM Man of God Course (courseId = 16)
+    if (courseId === 16) {
+      const totalReadings = 10;
+      const totalQuizzesForCourse = quizzes.length;
+      const totalVideosForCourse = publishedVideos.length;
+
+      const completedVideosForManOfGod = contentProgress.filter((p: any) =>
+        p.courseId === courseId && p.contentType === 'video' && p.completed
+      ).length;
+
+      const validReadingIds = MAN_OF_GOD_READING_SCHEDULE.map((_, i) => 1601 + i);
+      const completedReadingWeeks = [];
+      for (let week = 1; week <= 10; week++) {
+        const weekReadingIds = getManOfGodReadingIds(week);
+        const allWeekReadingsCompleted = weekReadingIds.every(id =>
+          contentProgress.some((p: any) =>
+            p.courseId === courseId &&
+            p.contentType === 'reading' &&
+            p.contentId === id &&
+            p.completed &&
+            validReadingIds.includes(p.contentId)
+          )
+        );
+        if (allWeekReadingsCompleted) {
+          completedReadingWeeks.push(week);
+        }
+      }
+      const completedReadingsForManOfGod = completedReadingWeeks.length;
+
+      const completedQuizzesForManOfGod = quizzes.filter((q: any) => q.attempts > 0).length;
+
+      return {
+        videos: { completed: completedVideosForManOfGod, total: totalVideosForCourse },
+        readings: { completed: completedReadingsForManOfGod, total: totalReadings },
+        quizzes: { completed: completedQuizzesForManOfGod, total: totalQuizzesForCourse },
+      };
+    }
     
     // Special handling for G.R.O.W course (courseId = 4)
     if (courseId === 4) {
@@ -1146,6 +1194,11 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
       // Special handling for Course 8 (Youth Ministry) - has hardcoded readings
       const hardcodedReadingIds = getCourse8ReadingIds(weekNumber);
       allReadingsCompleted = hardcodedReadingIds.length === 0 || hardcodedReadingIds.every(id => 
+        isContentCompleted('reading', id)
+      );
+    } else if (courseId === 16) {
+      const hardcodedReadingIds = getManOfGodReadingIds(weekNumber);
+      allReadingsCompleted = hardcodedReadingIds.length === 0 || hardcodedReadingIds.every(id =>
         isContentCompleted('reading', id)
       );
     } else {
@@ -1483,6 +1536,12 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
       const hardcodedReadingIds = getCourse8ReadingIds(weekNumber);
       if (hardcodedReadingIds.length === 0) return false;
       return hardcodedReadingIds.every(id => 
+        isContentCompleted('reading', id)
+      );
+    } else if (courseId === 16) {
+      const hardcodedReadingIds = getManOfGodReadingIds(weekNumber);
+      if (hardcodedReadingIds.length === 0) return false;
+      return hardcodedReadingIds.every(id =>
         isContentCompleted('reading', id)
       );
     } else {
@@ -5112,6 +5171,61 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                 </CardContent>
               </Card>
             </div>
+          ) : courseId === 16 ? (
+            <div className="space-y-4">
+              {manOfGodReadingSchedule.map(({ week, title, route }) => {
+                const isAccessible = canAccessWeek(week);
+                const readingId = getManOfGodReadingIds(week)[0];
+                const isCompleted = readingId ? isContentCompleted('reading', readingId) : false;
+
+                return (
+                  <Card
+                    key={week}
+                    className={`border-l-4 ${isAccessible ? 'border-emerald-500' : 'border-gray-300'} ${!isAccessible ? 'opacity-60' : ''}`}
+                  >
+                    <CardContent className="text-center py-8">
+                      <h3 className="text-2xl font-bold text-gray-800 text-center mb-6">Required Reading Week {week}</h3>
+                      <div className="bg-emerald-50 p-4 rounded-lg border border-emerald-200 mb-4">
+                        <div className="flex items-center justify-between">
+                          <div className="text-left flex-1">
+                            <p className="text-emerald-900 font-semibold text-xl mb-1">SFGM Man of God Course</p>
+                            <p className="text-gray-700 text-lg">{title}</p>
+                            {!isAccessible && (
+                              <Badge variant="secondary" className="bg-gray-100 text-gray-600 text-xs mt-2">
+                                <i className="fas fa-lock mr-1"></i>
+                                Locked - Complete previous week first
+                              </Badge>
+                            )}
+                            {isAccessible && isCompleted && (
+                              <Badge variant="secondary" className="bg-green-100 text-green-800 text-xs mt-2">
+                                <i className="fas fa-check mr-1"></i>
+                                Completed
+                              </Badge>
+                            )}
+                          </div>
+                          {isAccessible ? (
+                            <Button
+                              onClick={createReadingProgressHandler(readingId, () => window.location.href = route)}
+                              className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                            >
+                              E-book
+                            </Button>
+                          ) : (
+                            <Button
+                              disabled
+                              className="bg-gray-400 text-gray-200 cursor-not-allowed"
+                            >
+                              <i className="fas fa-lock mr-2"></i>
+                              Locked
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
           ) : courseId === 8 ? (
             <div className="space-y-4">
               {/* Week 1 Required Reading for Youth Ministry Course */}
@@ -5780,9 +5894,11 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                             {quiz.title}
                           </h4>
                           <p className="text-xs md:text-sm text-gray-600 mt-1">
-                            {isFinalExam 
+                            {isFinalExam
                               ? `${quiz.questions?.length || 50} questions • 60 minutes • 60% passing score`
-                              : `${quiz.questions?.length || 10} questions • 15 minutes • 60% passing score`}
+                              : courseId === 16 && (quiz.questions?.length || 0) === 1
+                                ? `Essay reflection • 100 word minimum • ${quiz.timeLimit || 30} minutes`
+                                : `${quiz.questions?.length || 10} questions • ${quiz.timeLimit || 15} minutes • ${quiz.passingScore || 60}% passing score`}
                           </p>
                           {isFinalExam && (
                             <div className="mt-2 text-xs md:text-sm text-gray-700">
@@ -5850,6 +5966,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                                   quizUrl = isFinalExam ? '/quiz/deacon-course-final-exam' : `/quiz/deacon-course-week-${quizNumber}`;
                                 } else if (courseId === 8) {
                                   quizUrl = isFinalExam ? '/quiz/youth-ministry-final-exam' : `/quiz/youth-ministry-week-${quizNumber}`;
+                                } else if (courseId === 16) {
+                                  quizUrl = isFinalExam ? '/quiz/man-of-god-final-exam' : `/quiz/man-of-god-week-${quizNumber}`;
                                 } else {
                                   quizUrl = `/quiz/${quiz.id}`;
                                 }
@@ -5886,6 +6004,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                                   quizUrl = isFinalExam ? '/quiz/deacon-course-final-exam' : `/quiz/deacon-course-week-${quizNumber}`;
                                 } else if (courseId === 8) {
                                   quizUrl = isFinalExam ? '/quiz/youth-ministry-final-exam' : `/quiz/youth-ministry-week-${quizNumber}`;
+                                } else if (courseId === 16) {
+                                  quizUrl = isFinalExam ? '/quiz/man-of-god-final-exam' : `/quiz/man-of-god-week-${quizNumber}`;
                                 } else {
                                   quizUrl = `/quiz/${quiz.id}`;
                                 }

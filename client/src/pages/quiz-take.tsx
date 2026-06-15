@@ -16,6 +16,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Textarea } from "@/components/ui/textarea";
 import { FinalExamCompletion } from "@/components/final-exam-completion";
 import { isFamilyNightQuizParam, getFamilyNightReturnPath } from "@/lib/family-night-quizzes";
+import { isVideoQuestion, isAnswerProvided } from "@shared/quiz-scoring";
 
 interface Question {
   id: number;
@@ -61,6 +62,17 @@ export default function QuizTake() {
     "studying-for-service-week-7": 5, "studying-for-service-week-8": 5, "studying-for-service-week-9": 5,
     "studying-for-service-week-10": 5, "studying-for-service-week-11": 5, "studying-for-service-final-exam": 5,
     "grow-week-1": 4, "grow-week-2": 4, "grow-week-3": 4, "grow-week-4": 4, "grow-final-exam": 4,
+    "man-of-god-week-1": 16,
+    "man-of-god-week-2": 16,
+    "man-of-god-week-3": 16,
+    "man-of-god-week-4": 16,
+    "man-of-god-week-5": 16,
+    "man-of-god-week-6": 16,
+    "man-of-god-week-7": 16,
+    "man-of-god-week-8": 16,
+    "man-of-god-week-9": 16,
+    "man-of-god-week-10": 16,
+    "man-of-god-final-exam": 16,
   };
 
   // Helper function to determine courseId from quizId
@@ -83,6 +95,8 @@ export default function QuizTake() {
     if ((quizId >= 200 && quizId <= 204) || quizId === 206) return 7;
     // Course 8 (Youth Ministry): Quizzes 207-212
     if (quizId >= 207 && quizId <= 212) return 8;
+    // Course 16 (SFGM Man of God): Quizzes 221+
+    if (quizId >= 221 && quizId <= 230) return 16;
     
     return null;
   };
@@ -432,12 +446,23 @@ export default function QuizTake() {
 
   };
 
+  const getEssayMinWords = (question: Question) => {
+    if (question.question.includes("at least 200 words")) {
+      return 200;
+    }
+    if (question.question.includes("Character Essay") || question.question.includes("at least 100 words")) {
+      return 100;
+    }
+    if (question.question.includes("Bonus question") || question.question.includes("Write your answer(s)")) {
+      return 1;
+    }
+    return 100;
+  };
+
   const getProgress = () => {
     if (!quiz?.questions) return 0;
-    const visibleQuestions = quiz.questions.filter(q => 
-      !q.isBonus || showBonusQuestions.has(q.id)
-    );
-    return (Object.keys(answers).length / visibleQuestions.length) * 100;
+    const allQuestions = [...quiz.questions].sort((a, b) => a.orderIndex - b.orderIndex);
+    return (Object.keys(answers).length / allQuestions.length) * 100;
   };
 
   const formatTime = (minutes: number) => {
@@ -921,33 +946,57 @@ export default function QuizTake() {
                 {/* Answer Comparison for Current Question */}
                 {currentQ.type === 'multiple_choice' && currentQ.correctAnswer && (
                   <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
-                    <h4 className="font-semibold text-gray-800 mb-2">Your Answer vs Correct Answer:</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      <div className={`p-3 rounded-lg border-2 ${
-                        answers[currentQ.id] === currentQ.correctAnswer
-                          ? 'bg-green-50 border-green-300'
-                          : 'bg-red-50 border-red-300'
-                      }`}>
-                        <div className="text-sm font-medium text-gray-600 mb-1">Your Answer:</div>
-                        <div className="text-base font-semibold">
-                          {answers[currentQ.id] 
-                            ? answers[currentQ.id].replace(/^[A-D]\)\s*/, '')
-                            : 'No answer provided'}
+                    {isVideoQuestion(currentQ.question) ? (
+                      <>
+                        <h4 className="font-semibold text-gray-800 mb-2">Your Answer:</h4>
+                        <div className={`p-3 rounded-lg border-2 ${
+                          isAnswerProvided(answers[currentQ.id])
+                            ? 'bg-green-50 border-green-300'
+                            : 'bg-red-50 border-red-300'
+                        }`}>
+                          <div className="text-base font-semibold">
+                            {answers[currentQ.id]
+                              ? answers[currentQ.id].replace(/^[A-D]\)\s*/, '')
+                              : 'No answer provided'}
+                          </div>
+                          {isAnswerProvided(answers[currentQ.id]) ? (
+                            <div className="text-sm text-green-700 mt-1">✓ Answer recorded (video participation)</div>
+                          ) : (
+                            <div className="text-sm text-red-700 mt-1">✗ No answer — point not awarded</div>
+                          )}
                         </div>
-                        {answers[currentQ.id] === currentQ.correctAnswer && (
-                          <div className="text-sm text-green-700 mt-1">✓ Correct!</div>
-                        )}
-                        {answers[currentQ.id] && answers[currentQ.id] !== currentQ.correctAnswer && (
-                          <div className="text-sm text-red-700 mt-1">✗ Incorrect</div>
-                        )}
-                      </div>
-                      <div className="p-3 rounded-lg border-2 bg-green-50 border-green-300">
-                        <div className="text-sm font-medium text-gray-600 mb-1">Correct Answer:</div>
-                        <div className="text-base font-semibold text-green-800">
-                          {currentQ.correctAnswer.replace(/^[A-D]\)\s*/, '')}
+                      </>
+                    ) : (
+                      <>
+                        <h4 className="font-semibold text-gray-800 mb-2">Your Answer vs Correct Answer:</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          <div className={`p-3 rounded-lg border-2 ${
+                            answers[currentQ.id] === currentQ.correctAnswer
+                              ? 'bg-green-50 border-green-300'
+                              : 'bg-red-50 border-red-300'
+                          }`}>
+                            <div className="text-sm font-medium text-gray-600 mb-1">Your Answer:</div>
+                            <div className="text-base font-semibold">
+                              {answers[currentQ.id] 
+                                ? answers[currentQ.id].replace(/^[A-D]\)\s*/, '')
+                                : 'No answer provided'}
+                            </div>
+                            {answers[currentQ.id] === currentQ.correctAnswer && (
+                              <div className="text-sm text-green-700 mt-1">✓ Correct!</div>
+                            )}
+                            {answers[currentQ.id] && answers[currentQ.id] !== currentQ.correctAnswer && (
+                              <div className="text-sm text-red-700 mt-1">✗ Incorrect</div>
+                            )}
+                          </div>
+                          <div className="p-3 rounded-lg border-2 bg-green-50 border-green-300">
+                            <div className="text-sm font-medium text-gray-600 mb-1">Correct Answer:</div>
+                            <div className="text-base font-semibold text-green-800">
+                              {currentQ.correctAnswer.replace(/^[A-D]\)\s*/, '')}
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
+                      </>
+                    )}
                   </div>
                 )}
               </div>
@@ -1011,10 +1060,10 @@ export default function QuizTake() {
                     
                     // Review mode styling
                     const isUserAnswer = answers[currentQ.id] === option;
-                    // Compare the full option text with the correct answer from the quiz object
+                    const isVideoParticipation = isVideoQuestion(currentQ.question);
                     const isCorrectAnswer = isReviewMode && option === currentQ.correctAnswer;
-                    const isIncorrectUserAnswer = isReviewMode && isUserAnswer && !isCorrectAnswer;
-                    const isCorrectUserAnswer = isReviewMode && isUserAnswer && isCorrectAnswer;
+                    const isIncorrectUserAnswer = isReviewMode && isUserAnswer && !isCorrectAnswer && !isVideoParticipation;
+                    const isCorrectUserAnswer = isReviewMode && isUserAnswer && (isCorrectAnswer || isVideoParticipation);
                     
                     let optionClass = "flex items-center space-x-3 p-3 rounded-lg border";
                     if (isReviewMode) {
@@ -1136,28 +1185,68 @@ export default function QuizTake() {
               )}
 
 
-              {((currentQ as any).type === 'essay' || (currentQ as any).type === 'text_with_voice' || (currentQ as any).type === 'subjective') && (
+              {((currentQ as any).type === 'essay' || (currentQ as any).type === 'text_with_voice' || (currentQ as any).type === 'subjective') && (() => {
+                const minEssayWords = getEssayMinWords(currentQ);
+                const wordCount = (answers[currentQ.id] || '').trim().split(/\s+/).filter(word => word.length > 0).length;
+                const isBonusEssay = currentQ.question.includes('Bonus question');
+                const isCharacterEssay = currentQ.question.includes('Character Essay') || currentQ.question.includes('at least 100 words');
+                const isFinalEssay = currentQ.question.includes('at least 200 words');
+                const isOpenResponse = currentQ.question.includes('Write your answer(s)');
+
+                return (
                 <div className="space-y-4">
-                  {/* Essay Requirements */}
                   <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 text-sm text-blue-800 dark:text-blue-200">
-                    <h4 className="font-semibold mb-2">Essay Requirements:</h4>
+                    <h4 className="font-semibold mb-2">
+                      {isFinalEssay ? 'Final Exam Essay Requirements:' : isCharacterEssay ? 'Character Essay Requirements:' : isBonusEssay ? 'Bonus Question:' : isOpenResponse ? 'Written Response:' : 'Essay Requirements:'}
+                    </h4>
                     <ul className="space-y-1 ml-4">
-                      <li>• Minimum 100 words required</li>
-                      <li>• Use specific examples from the course materials</li>
-                      <li>• Explain how principles apply to your spiritual journey</li>
-                      <li>• Be thorough and thoughtful in your response</li>
+                      {isFinalEssay ? (
+                        <>
+                          <li>• Minimum 200 words required</li>
+                          <li>• Reflect on key themes from the entire Man of God course</li>
+                          <li>• Explain how these truths apply to your life and ministry</li>
+                          <li>• Be thorough and thoughtful in your response</li>
+                        </>
+                      ) : isCharacterEssay ? (
+                        <>
+                          <li>• Minimum 100 words required</li>
+                          <li>• Provide a biblical character who worked hard in business or ministry</li>
+                          <li>• Use specific examples from Scripture</li>
+                        </>
+                      ) : isBonusEssay || isOpenResponse ? (
+                        <>
+                          <li>• Write your answer in your own words</li>
+                          <li>• Use specific examples from the course materials where helpful</li>
+                          <li>• Be thoughtful and thorough in your response</li>
+                        </>
+                      ) : (
+                        <>
+                          <li>• Minimum 100 words required</li>
+                          <li>• Use specific examples from the course materials</li>
+                          <li>• Explain how principles apply to your spiritual journey</li>
+                          <li>• Be thorough and thoughtful in your response</li>
+                        </>
+                      )}
                     </ul>
                   </div>
 
-                  {/* Word Count Display */}
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                      <Badge variant={((answers[currentQ.id] || '').trim().split(/\s+/).filter(word => word.length > 0).length) >= 100 ? "default" : "destructive"} className="text-sm">
-                        Word Count: {(answers[currentQ.id] || '').trim().split(/\s+/).filter(word => word.length > 0).length} / 100 minimum
-                      </Badge>
-                      {((answers[currentQ.id] || '').trim().split(/\s+/).filter(word => word.length > 0).length) >= 100 && (
+                      {minEssayWords > 1 && (
+                        <>
+                          <Badge variant={wordCount >= minEssayWords ? "default" : "destructive"} className="text-sm">
+                            Word Count: {wordCount} / {minEssayWords} minimum
+                          </Badge>
+                          {wordCount >= minEssayWords && (
+                            <Badge variant="outline" className="text-green-600 border-green-600">
+                              ✓ Requirement Met
+                            </Badge>
+                          )}
+                        </>
+                      )}
+                      {minEssayWords === 1 && wordCount > 0 && (
                         <Badge variant="outline" className="text-green-600 border-green-600">
-                          ✓ Requirement Met
+                          Word Count: {wordCount}
                         </Badge>
                       )}
                     </div>
@@ -1252,7 +1341,8 @@ export default function QuizTake() {
                     </div>
                   )}
                 </div>
-              )}
+              );
+              })()}
 
 
             </div>

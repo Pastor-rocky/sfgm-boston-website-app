@@ -92,6 +92,7 @@ export const ebookRoutes: RouteDefinition[] = [
   createRoute("/grow-complete-ebook", () => import("@/pages/grow-complete-ebook")),
   createRoute("/deacon-course-complete-ebook", () => import("@/pages/deacon-course-complete-ebook")),
   createRoute("/youth-ministry-complete-ebook", () => import("@/pages/youth-ministry-complete-ebook")),
+  createRoute("/man-of-god-complete-ebook", () => import("@/pages/man-of-god-complete-ebook")),
 ];
 
 export const audioAndCourseContentRoutes: RouteDefinition[] = [
@@ -159,6 +160,17 @@ export const audioAndCourseContentRoutes: RouteDefinition[] = [
   createRoute("/level-up-leadership-week4", () => import("@/pages/level-up-leadership-week4")),
   createRoute("/level-up-leadership-week5", () => import("@/pages/level-up-leadership-week5")),
   createRoute("/level-up-leadership-week6", () => import("@/pages/level-up-leadership-week6")),
+  createRoute("/man-of-god", () => import("@/pages/man-of-god")),
+  createRoute("/man-of-god-ch1", () => import("@/pages/man-of-god-ch1")),
+  createRoute("/man-of-god-ch2", () => import("@/pages/man-of-god-ch2")),
+  createRoute("/man-of-god-ch3", () => import("@/pages/man-of-god-ch3")),
+  createRoute("/man-of-god-ch4", () => import("@/pages/man-of-god-ch4")),
+  createRoute("/man-of-god-ch5", () => import("@/pages/man-of-god-ch5")),
+  createRoute("/man-of-god-ch6", () => import("@/pages/man-of-god-ch6")),
+  createRoute("/man-of-god-ch7", () => import("@/pages/man-of-god-ch7")),
+  createRoute("/man-of-god-ch8", () => import("@/pages/man-of-god-ch8")),
+  createRoute("/man-of-god-ch9", () => import("@/pages/man-of-god-ch9")),
+  createRoute("/man-of-god-ch10", () => import("@/pages/man-of-god-ch10")),
 ];
 
 export const catchAllRoute = lazy(() => import("@/pages/not-found"));
