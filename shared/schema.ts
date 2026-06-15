@@ -932,6 +932,19 @@ export const images = pgTable("images", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Instructor-to-student messages (portal, email, SMS)
+export const instructorMessages = pgTable("instructor_messages", {
+  id: serial("id").primaryKey(),
+  instructorId: varchar("instructor_id").notNull().references(() => users.id),
+  studentId: varchar("student_id").notNull().references(() => users.id),
+  channel: varchar("channel", { length: 20 }).notNull(),
+  subject: varchar("subject", { length: 255 }),
+  body: text("body").notNull(),
+  sentAt: timestamp("sent_at").defaultNow().notNull(),
+  emailDelivered: boolean("email_delivered").default(false),
+  readAt: timestamp("read_at"),
+});
+
 // Essay submissions table for final exam essays
 export const essaySubmissions = pgTable("essay_submissions", {
   id: serial("id").primaryKey(),

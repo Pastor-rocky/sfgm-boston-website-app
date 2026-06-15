@@ -16,6 +16,7 @@ import { useToast } from "@/hooks/use-toast";
 import { DEFAULT_PASSING_SCORE } from "@shared/course-constants";
 import { useEffect, useState } from "react";
 import { apiRequest } from "@/lib/queryClient";
+import StudentInboxDropdown from "@/components/student-inbox-dropdown";
 
 // Animated Progress Ring Component
 function AnimatedProgressRing({ progress, size = 120, strokeWidth = 8, color = "blue" }: {
@@ -421,6 +422,20 @@ export default function StudentDashboard() {
   const [hasShownBirthday, setHasShownBirthday] = useState(false);
   const [, setLocation] = useLocation();
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("notice") === "instructor-only") {
+      toast({
+        title: "Instructor access only",
+        description:
+          "That area is for instructors, deans, and admins. If you teach a course, ask Pastor Rocky to set your account role to Instructor.",
+        variant: "destructive",
+        duration: 9000,
+      });
+      window.history.replaceState({}, "", "/dashboard");
+    }
+  }, [toast]);
+
   // Check for birthday and show message
   useEffect(() => {
     if (!user || hasShownBirthday) return;
@@ -584,32 +599,37 @@ export default function StudentDashboard() {
       <Navigation />
       
       <main className="max-w-7xl mx-auto py-8 px-4">
-        {/* Enhanced Welcome Header - entire block links to profile (student-profile = full profile editor) */}
-        <div className="text-center mb-8">
-          <button
-            type="button"
-            onClick={() => setLocation('/student-profile')}
-            className="inline-flex items-center gap-3 mb-4 no-underline group cursor-pointer bg-transparent border-0 p-0 text-left"
-            title="Go to profile"
-          >
-            <div className="relative w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:from-blue-600 group-hover:to-purple-700 group-hover:shadow-lg">
-              <span className="text-2xl font-bold text-white group-hover:scale-110 transition-transform">
-                {user?.firstName?.charAt(0)?.toUpperCase() || 'S'}{user?.lastName?.charAt(0)?.toUpperCase() || ''}
-              </span>
-              <div className="absolute inset-0 rounded-full bg-black/0 group-hover:bg-black/10 transition-colors" />
-              <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-md">
-                <i className="fas fa-edit text-blue-600 text-xs" />
+        {/* Welcome header + instructor message inbox */}
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
+          <div className="text-center sm:text-left flex-1">
+            <button
+              type="button"
+              onClick={() => setLocation('/student-profile')}
+              className="inline-flex items-center gap-3 mb-4 no-underline group cursor-pointer bg-transparent border-0 p-0 text-left"
+              title="Go to profile"
+            >
+              <div className="relative w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:from-blue-600 group-hover:to-purple-700 group-hover:shadow-lg">
+                <span className="text-2xl font-bold text-white group-hover:scale-110 transition-transform">
+                  {user?.firstName?.charAt(0)?.toUpperCase() || 'S'}{user?.lastName?.charAt(0)?.toUpperCase() || ''}
+                </span>
+                <div className="absolute inset-0 rounded-full bg-black/0 group-hover:bg-black/10 transition-colors" />
+                <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-md">
+                  <i className="fas fa-edit text-blue-600 text-xs" />
+                </div>
               </div>
-            </div>
-            <div className="text-left">
-              <h1 className="text-4xl font-bold text-white group-hover:text-blue-100 transition-colors">
-                Welcome back, {(user as any)?.firstName || 'Student'}!
-              </h1>
-              <p className="text-xl text-blue-200">
-                Continue your spiritual journey with us
-              </p>
-            </div>
-          </button>
+              <div className="text-left">
+                <h1 className="text-4xl font-bold text-white group-hover:text-blue-100 transition-colors">
+                  Welcome back, {(user as any)?.firstName || 'Student'}!
+                </h1>
+                <p className="text-xl text-blue-200">
+                  Continue your spiritual journey with us
+                </p>
+              </div>
+            </button>
+          </div>
+          <div className="flex justify-center sm:justify-end sm:pt-2">
+            <StudentInboxDropdown />
+          </div>
         </div>
 
 

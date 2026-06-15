@@ -259,7 +259,7 @@ export default function MessageStudent() {
 
                 {/* Action Buttons */}
                 <div className="flex gap-4">
-                  <Link href="/instructor-dashboard">
+                  <Link href="/instructor-portal">
                     <Button type="button" variant="outline" className="flex-1 border-white/30 text-white hover:bg-white/10">
                       <i className="fas fa-arrow-left mr-2"></i>
                       Back to Dashboard

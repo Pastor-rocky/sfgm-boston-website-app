@@ -58,7 +58,7 @@ export const CURRENT_FAMILY_NIGHT_CYCLE: FamilyNightCycle = {
       description: "Second Family Night teaching for our Faith series.",
       videoUrl: "https://www.instagram.com/p/DZbdDY9DnP-/",
       isInstagram: true,
-      quizPath: null,
+      quizPath: "/quiz/232",
       contentId: 102,
     },
     {

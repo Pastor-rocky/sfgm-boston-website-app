@@ -307,3 +307,67 @@ export async function sendTestEmail(toEmail: string): Promise<EmailDeliveryResul
 
   return result;
 }
+
+interface EssayPortalNotificationPayload {
+  toEmail: string;
+  instructorName?: string;
+  studentName: string;
+  courseTitle: string;
+  wordCount: number;
+  essayId: number;
+  portalUrl: string;
+}
+
+export async function sendEssayPortalNotification(
+  payload: EssayPortalNotificationPayload,
+): Promise<EmailDeliveryResult> {
+  const subject = `New essay to review — ${payload.studentName}`;
+  const textBody = [
+    payload.instructorName ? `Hello ${payload.instructorName},` : "Hello,",
+    "",
+    `${payload.studentName} submitted a final exam essay for ${payload.courseTitle}.`,
+    `Word count: ${payload.wordCount}`,
+    "",
+    "The full essay is in your Instructor Portal — not in this email.",
+    `Review it here: ${payload.portalUrl}`,
+    "",
+    "SFGM Boston Bible School",
+  ].join("\n");
+
+  if (!emailEnabled()) {
+    console.log("[email] Essay portal notification (disabled):", payload.toEmail, subject);
+    return { delivered: false, reason: "Email delivery disabled" };
+  }
+
+  return sendPostmarkEmail({ to: payload.toEmail, subject, textBody });
+}
+
+interface InstructorMessageEmailPayload {
+  toEmail: string;
+  studentName: string;
+  subject: string;
+  body: string;
+}
+
+export async function sendInstructorMessageEmail(
+  payload: InstructorMessageEmailPayload,
+): Promise<EmailDeliveryResult> {
+  const textBody = [
+    `Hello ${payload.studentName},`,
+    "",
+    payload.body,
+    "",
+    "— SFGM Boston Bible School",
+  ].join("\n");
+
+  if (!emailEnabled()) {
+    console.log("[email] Instructor message (disabled):", payload.toEmail);
+    return { delivered: false, reason: "Email delivery disabled" };
+  }
+
+  return sendPostmarkEmail({
+    to: payload.toEmail,
+    subject: payload.subject,
+    textBody,
+  });
+}

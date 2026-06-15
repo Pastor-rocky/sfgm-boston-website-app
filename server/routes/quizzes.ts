@@ -80,6 +80,7 @@ const QUIZ_SLUG_MAP: Record<string, number> = {
   "youth-ministry-week-5": 211,
   "youth-ministry-final-exam": 212,
   "family-night-faith-week-1": 220,
+  "family-night-faith-week-2": 232,
   "man-of-god-week-1": 221,
   "man-of-god-week-2": 222,
   "man-of-god-week-3": 223,

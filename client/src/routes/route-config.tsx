@@ -75,11 +75,18 @@ export const studentRoutes: RouteDefinition[] = [
   createRoute("/my-certificates", () => import("@/pages/my-certificates")),
   createRoute("/my-personal-library", () => import("@/pages/my-personal-library")),
   createRoute("/admin-panel", () => import("@/pages/admin-panel")),
-  createRoute("/instructor-dashboard", () => import("@/pages/instructor-dashboard")),
+  createRoute("/instructor-dashboard", () => import("@/pages/instructor-portal-redirect")),
+  createRoute("/instructor-portal", () => import("@/pages/instructor-portal-home")),
+  createRoute("/instructor-portal/essays", () => import("@/pages/instructor-portal-essays")),
+  createRoute("/instructor-portal/students", () => import("@/pages/instructor-portal-students")),
+  createRoute("/instructor-portal/students/:id", () => import("@/pages/instructor-portal-student")),
+  createRoute("/instructor-portal/messages", () => import("@/pages/instructor-portal-messages")),
+  createRoute("/instructor-portal/certificates", () => import("@/pages/instructor-portal-certificates")),
 ];
 
 export const authRoutes: RouteDefinition[] = [
   createRoute("/login", () => import("@/pages/login")),
+  createRoute("/instructor-login", () => import("@/pages/login")),
   createRoute("/register", () => import("@/pages/register")),
   createRoute("/logout", () => import("@/pages/logout")),
 ];

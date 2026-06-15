@@ -1775,11 +1775,13 @@ After completing this chapter, proceed to the next module or assessment as direc
 
   async getStudentCertificates(studentId: string): Promise<any[]> {
     try {
-      // For now, return empty array since certificates table may not exist or have issues
-      // This can be implemented when certificate system is fully set up
-      return [];
+      return await db
+        .select()
+        .from(certificates)
+        .where(eq(certificates.userId, studentId))
+        .orderBy(desc(certificates.issueDate));
     } catch (error) {
-      console.log('Error fetching certificates:', error);
+      console.log("Error fetching certificates:", error);
       return [];
     }
   }

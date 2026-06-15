@@ -11,6 +11,7 @@ import { Link, useLocation } from "wouter";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import sfgmLogoBlue from "@/assets/sfgm-logo-new-blue.png";
+import { canAccessInstructorPortal, resolvePostLoginRedirect } from "@/lib/auth-redirect";
 
 
 interface LoginFormData {
@@ -31,6 +32,10 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [keepLoggedIn, setKeepLoggedIn] = useState(false);
   const [location] = useLocation();
+  const isInstructorLogin =
+    location.startsWith("/instructor-login") ||
+    new URLSearchParams(window.location.search).get("instructor") === "1";
+  const returnTo = new URLSearchParams(window.location.search).get("returnTo");
   
   // Check for error in URL params
   useEffect(() => {
@@ -49,9 +54,15 @@ export default function Login() {
 
   // Redirect if already authenticated
   if (isAuthenticated && user) {
-    const redirectUrl = (user as any).isDean ? '/dean' :
-                       (user as any).roles?.includes('admin') ? '/admin' :
-                       (user as any).roles?.includes('instructor') ? '/instructor-home' : '/dashboard';
+    const role = (user as any).role;
+    if (isInstructorLogin && !canAccessInstructorPortal(role)) {
+      window.location.href = "/dashboard?notice=instructor-only";
+      return null;
+    }
+    const redirectUrl = resolvePostLoginRedirect(role, {
+      returnTo,
+      instructorFlow: isInstructorLogin,
+    });
     window.location.href = redirectUrl;
     return null;
   }
@@ -83,11 +94,25 @@ export default function Login() {
       }
 
       toast({
-        title: "Login Successful",
-        description: "Welcome back to SFGM Bible School!",
+        title: isInstructorLogin ? "Welcome to the Instructor Portal" : "Login Successful",
+        description: isInstructorLogin
+          ? "Opening your instructor dashboard…"
+          : "Welcome back to SFGM Bible School!",
       });
-      // Use server-provided redirect URL for role-based routing
-      const redirectUrl = data.user?.redirectUrl || '/dashboard';
+
+      const role = data.user?.role;
+      if (isInstructorLogin && !canAccessInstructorPortal(role)) {
+        window.location.href = "/dashboard?notice=instructor-only";
+        return;
+      }
+
+      const redirectUrl =
+        resolvePostLoginRedirect(role, {
+          returnTo,
+          instructorFlow: isInstructorLogin,
+        }) ||
+        data.user?.redirectUrl ||
+        "/dashboard";
       
       // Force page reload to update authentication state
       window.location.href = redirectUrl;
@@ -140,11 +165,13 @@ export default function Login() {
               </div>
             </div>
             
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
-              Welcome Back! 👋
+            <h1 className={`text-4xl font-bold mb-4 ${isInstructorLogin ? "text-[#0b4f6c]" : "bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"}`}>
+              {isInstructorLogin ? "Instructor Portal" : "Welcome Back! 👋"}
             </h1>
             <p className="text-gray-600 text-lg leading-relaxed mb-6">
-              Continue your spiritual journey and grow in faith
+              {isInstructorLogin
+                ? "Sign in with your instructor, admin, or dean account to review students and essays."
+                : "Continue your spiritual journey and grow in faith"}
             </p>
             
             {/* Scripture Quote */}
@@ -162,12 +189,12 @@ export default function Login() {
         {/* Single Login Card */}
         <div className="max-w-md mx-auto">
           <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur-sm rounded-2xl overflow-hidden">
-            <CardHeader className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 text-white p-6">
+            <CardHeader className={`text-white p-6 ${isInstructorLogin ? "bg-[#0b4f6c]" : "bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600"}`}>
               <CardTitle className="flex items-center text-xl justify-center font-bold">
                 <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mr-3">
-                  <i className="fas fa-sign-in-alt text-white"></i>
+                  <i className={`fas ${isInstructorLogin ? "fa-chalkboard-teacher" : "fa-sign-in-alt"} text-white`}></i>
                 </div>
-                Sign In to Your Account
+                {isInstructorLogin ? "Instructor Sign In" : "Sign In to Your Account"}
               </CardTitle>
             </CardHeader>
             
@@ -184,8 +211,18 @@ export default function Login() {
               {/* Login Instructions */}
               <div className="mb-6">
                 <p className="text-sm text-gray-600 text-center">
-                  Use your email, username, or phone number to sign in
+                  {isInstructorLogin
+                    ? "Use the email or username for your instructor account"
+                    : "Use your email, username, or phone number to sign in"}
                 </p>
+                {isInstructorLogin ? (
+                  <p className="text-xs text-center text-slate-500 mt-2">
+                    Student account?{" "}
+                    <Link href="/login" className="text-[#0b4f6c] hover:underline font-medium">
+                      Sign in on the student login page
+                    </Link>
+                  </p>
+                ) : null}
               </div>
 
               <form onSubmit={handleLogin} className="space-y-5">
@@ -284,7 +321,11 @@ export default function Login() {
                 {/* Login Button */}
                 <Button 
                   type="submit" 
-                  className="w-full h-14 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700 text-white font-bold text-lg rounded-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg hover:shadow-xl"
+                  className={`w-full h-14 text-white font-bold text-lg rounded-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg hover:shadow-xl ${
+                    isInstructorLogin
+                      ? "bg-[#0b4f6c] hover:bg-[#093d54]"
+                      : "bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700"
+                  }`}
                   disabled={isLoading}
                 >
                   {isLoading ? (
@@ -295,22 +336,42 @@ export default function Login() {
                   ) : (
                     <div className="flex items-center justify-center">
                       <i className="fas fa-sign-in-alt mr-3 text-xl"></i>
-                      Sign In
+                      {isInstructorLogin ? "Enter Instructor Portal" : "Sign In"}
                     </div>
                   )}
                 </Button>
 
-                {/* Register Link */}
-                <div className="text-center pt-4">
-                  <p className="text-sm text-gray-600">
-                    Don't have an account?{" "}
-                    <Link 
-                      href="/register" 
-                      className="text-blue-600 hover:text-blue-800 font-semibold transition-colors"
-                    >
-                      Sign up here
-                    </Link>
-                  </p>
+                {/* Register / apply links */}
+                <div className="text-center pt-4 space-y-2">
+                  {isInstructorLogin ? (
+                    <>
+                      <p className="text-sm text-gray-600">
+                        Want to teach with SFGM?{" "}
+                        <Link
+                          href="/instructor-application"
+                          className="text-[#0b4f6c] hover:text-[#093d54] font-semibold transition-colors"
+                        >
+                          Apply to become an instructor
+                        </Link>
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        Need a student account?{" "}
+                        <Link href="/register" className="text-blue-600 hover:underline">
+                          Register here
+                        </Link>
+                      </p>
+                    </>
+                  ) : (
+                    <p className="text-sm text-gray-600">
+                      Don&apos;t have an account?{" "}
+                      <Link
+                        href="/register"
+                        className="text-blue-600 hover:text-blue-800 font-semibold transition-colors"
+                      >
+                        Sign up here
+                      </Link>
+                    </p>
+                  )}
                 </div>
               </form>
             </CardContent>

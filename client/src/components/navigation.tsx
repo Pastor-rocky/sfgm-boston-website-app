@@ -208,9 +208,9 @@ export default function Navigation() {
 
                     {isInstructorRole && (
                       <DropdownMenuItem asChild>
-                        <Link href="/instructor-dashboard" className="cursor-pointer text-amber-700 font-medium">
+                        <Link href="/instructor-login" className="cursor-pointer text-amber-700 font-medium">
                           <i className="fas fa-chalkboard-teacher mr-2 text-amber-700"></i>
-                          Instructor Dashboard 📋
+                          Instructor Portal
                         </Link>
                       </DropdownMenuItem>
                     )}
@@ -323,9 +323,9 @@ export default function Navigation() {
                           </Button>
                         </Link>
                         {isInstructorRole && (
-                          <Link href="/instructor-dashboard" onClick={() => setIsOpen(false)}>
+                          <Link href="/instructor-login" onClick={() => setIsOpen(false)}>
                             <Button variant="ghost" className="w-full justify-start text-amber-700 font-medium">
-                              <i className="fas fa-chalkboard-teacher mr-2 text-amber-700"></i>Instructor Dashboard 📋
+                              <i className="fas fa-chalkboard-teacher mr-2 text-amber-700"></i>Instructor Portal
                             </Button>
                           </Link>
                         )}
