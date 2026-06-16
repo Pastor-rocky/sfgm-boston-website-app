@@ -36,14 +36,7 @@ export function clearAuthCookies(res: Response) {
 }
 
 export function buildAuthResponse(user: any, token: string) {
-  const role = (user?.role || "").toLowerCase();
-  const redirectUrl = user?.primaryRole === "dean" || role === "dean"
-    ? "/instructor-portal"
-    : role === "admin"
-      ? "/admin"
-      : role === "instructor"
-        ? "/instructor-portal"
-        : "/dashboard";
+  const redirectUrl = "/dashboard";
 
   return {
     token,
