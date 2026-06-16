@@ -48,6 +48,10 @@ export function isQuestionCorrect(
     return userAnswer === correctAnswer;
   }
 
+  if (type === "true_false" && correctAnswer) {
+    return userAnswer === correctAnswer;
+  }
+
   if (type === "essay" || type === "text_with_voice" || type === "subjective") {
     const wordCount = String(userAnswer || "")
       .trim()

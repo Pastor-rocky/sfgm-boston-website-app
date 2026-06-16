@@ -39,6 +39,11 @@ export class QuizService {
         if (isQuestionCorrect(question, userAnswer, this.getEssayMinWords(question))) {
           correctAnswers++;
         }
+      } else if (question.type === "true_false" && question.correctAnswer) {
+        totalQuestions++;
+        if (isQuestionCorrect(question, userAnswer, this.getEssayMinWords(question))) {
+          correctAnswers++;
+        }
       } else if (
         question.type === "essay" ||
         question.type === "text_with_voice" ||

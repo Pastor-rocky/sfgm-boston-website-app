@@ -27,7 +27,7 @@ function scoreToPercent(raw: number): number {
 interface Question {
   id: number;
   question: string;
-  type: 'multiple_choice' | 'yes_no_with_text';
+  type: 'multiple_choice' | 'true_false' | 'yes_no_with_text';
   options?: string[];
   points: number;
   orderIndex: number;
@@ -232,7 +232,7 @@ export default function QuizTake() {
       let questionText = `Question ${currentQuestion + 1}. ${currentQ.question}`;
       
       // Add options for multiple choice questions
-      if (currentQ.type === 'multiple_choice' && currentQ.options) {
+      if ((currentQ.type === 'multiple_choice' || currentQ.type === 'true_false') && currentQ.options) {
         questionText += '. The answers are: ';
         currentQ.options.forEach((option: string, index: number) => {
           // Remove A), B), C), D) prefixes from the option text
@@ -963,7 +963,7 @@ export default function QuizTake() {
                   </div>
                 </div>
                 {/* Answer Comparison for Current Question */}
-                {currentQ.type === 'multiple_choice' && currentQ.correctAnswer && (
+                {(currentQ.type === 'multiple_choice' || currentQ.type === 'true_false') && currentQ.correctAnswer && (
                   <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
                     {isVideoQuestion(currentQ.question) ? (
                       <>
@@ -1067,7 +1067,7 @@ export default function QuizTake() {
             </div>
 
             <div className="space-y-4">
-              {currentQ.type === 'multiple_choice' && currentQ.options && (
+              {(currentQ.type === 'multiple_choice' || currentQ.type === 'true_false') && currentQ.options && (
                 <RadioGroup
                   value={answers[currentQ.id] || ''}
                   onValueChange={(value) => !isReviewMode && handleAnswerChange(currentQ.id, value)}
