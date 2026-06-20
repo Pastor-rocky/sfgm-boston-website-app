@@ -6,6 +6,11 @@ import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Play, Pause, SkipBack, SkipForward, ArrowLeft, Volume2 } from "lucide-react";
 import { getAudioUrl } from "@/lib/audio-storage";
+import {
+  EbookNextChapterNav,
+  getEbookNextChapterLabel,
+  goToNextEbookChapter,
+} from "@/components/ebook/ebook-next-chapter-nav";
 
 export default function YouthMinistryCompleteEbook() {
   const [, setLocation] = useLocation();
@@ -26,6 +31,7 @@ export default function YouthMinistryCompleteEbook() {
   ];
 
   const currentChapterData = chapters[currentChapter - 1];
+  const nextChapterLabel = getEbookNextChapterLabel(chapters, currentChapter);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -914,6 +920,14 @@ export default function YouthMinistryCompleteEbook() {
         <Card className="bg-white shadow-xl">
           <CardContent className="p-6 sm:p-8 prose max-w-none">
             {getChapterContent(currentChapter)}
+            <EbookNextChapterNav
+              currentChapter={currentChapter}
+              totalChapters={chapters.length}
+              nextChapterLabel={nextChapterLabel}
+              onGoToNextChapter={() => goToNextEbookChapter(chapters.length, setCurrentChapter)}
+              buttonClassName="bg-orange-600 hover:bg-orange-700 text-white"
+              borderClassName="border-orange-200"
+            />
           </CardContent>
         </Card>
       </div>

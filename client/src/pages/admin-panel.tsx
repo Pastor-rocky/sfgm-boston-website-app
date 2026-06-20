@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { Link } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
@@ -89,6 +89,13 @@ export default function AdminPanel() {
 
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const adminPasswordInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (isLoggedIn && !isAuthenticated) {
+      adminPasswordInputRef.current?.focus();
+    }
+  }, [isLoggedIn, isAuthenticated]);
 
   // Custom API request with admin headers (uses typed password)
   const adminApiRequest = async (method: string, url: string, data?: unknown): Promise<Response> => {
@@ -762,80 +769,90 @@ export default function AdminPanel() {
   const courses = coursesData?.courses || [];
   const grades = gradesData?.grades || [];
 
+  const adminGateBackground = (
+    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-indigo-900 to-purple-900 relative overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse" />
+      </div>
+      <Navigation />
+    </div>
+  );
+
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-indigo-900 to-purple-900 relative overflow-hidden">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-        </div>
-        <Navigation />
-        <Card className="w-full max-w-md bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl relative z-10">
-          <CardHeader>
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                <Shield className="w-6 h-6 text-white" />
-              </div>
-              <CardTitle className="text-white text-2xl">Authentication Required</CardTitle>
-            </div>
-            <CardDescription className="text-blue-200">You must be logged in to access the admin panel</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button 
-              onClick={() => window.location.href = '/login'} 
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg"
-            >
-              Go to Login
-            </Button>
-          </CardContent>
-        </Card>
-        <Footer />
-      </div>
+      <>
+        {adminGateBackground}
+        <Dialog open>
+          <DialogContent
+            className="bg-gradient-to-br from-slate-900 to-slate-800 border-white/20 text-white sm:max-w-md [&>button]:hidden"
+            onInteractOutside={(event) => event.preventDefault()}
+            onEscapeKeyDown={(event) => event.preventDefault()}
+          >
+            <DialogHeader>
+              <DialogTitle className="text-white flex items-center gap-2">
+                <Shield className="w-5 h-5 text-purple-300" />
+                Sign in required
+              </DialogTitle>
+              <DialogDescription className="text-blue-200">
+                Log in to your SFGM account before opening the admin panel.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button
+                onClick={() => { window.location.href = "/login"; }}
+                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
+              >
+                Go to Login
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </>
     );
   }
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-indigo-900 to-purple-900 relative overflow-hidden">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-        </div>
-        <Navigation />
-        <Card className="w-full max-w-md bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl relative z-10">
-          <CardHeader>
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                <Shield className="w-6 h-6 text-white" />
-              </div>
-              <CardTitle className="text-white text-2xl">Admin Panel Access</CardTitle>
-            </div>
-            <CardDescription className="text-blue-200">Enter the admin password to continue</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
+      <>
+        {adminGateBackground}
+        <Dialog open>
+          <DialogContent
+            className="bg-gradient-to-br from-slate-900 to-slate-800 border-white/20 text-white sm:max-w-md [&>button]:hidden"
+            onInteractOutside={(event) => event.preventDefault()}
+            onEscapeKeyDown={(event) => event.preventDefault()}
+          >
+            <DialogHeader>
+              <DialogTitle className="text-white flex items-center gap-2">
+                <Shield className="w-5 h-5 text-purple-300" />
+                Admin Panel
+              </DialogTitle>
+              <DialogDescription className="text-blue-200">
+                Enter the admin password to continue.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-2">
               <Input
+                ref={adminPasswordInputRef}
                 type="password"
-                placeholder="Admin Password"
+                placeholder="Admin password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleLogin()}
                 className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
+                autoComplete="current-password"
               />
-              <Button 
-                onClick={handleLogin} 
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg"
+              <Button
+                onClick={handleLogin}
+                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
               >
                 <Shield className="w-4 h-4 mr-2" />
-                Access Admin Panel
+                Continue
               </Button>
             </div>
-          </CardContent>
-        </Card>
-        <Footer />
-      </div>
+          </DialogContent>
+        </Dialog>
+      </>
     );
   }
 

@@ -92,6 +92,16 @@ const QUIZ_SLUG_MAP: Record<string, number> = {
   "man-of-god-week-9": 229,
   "man-of-god-week-10": 230,
   "man-of-god-final-exam": 231,
+  "introduction-to-prophecy-week-1": 233,
+  "introduction-to-prophecy-week-2": 234,
+  "introduction-to-prophecy-week-3": 235,
+  "introduction-to-prophecy-week-4": 236,
+  "introduction-to-prophecy-week-5": 237,
+  "introduction-to-prophecy-week-6": 238,
+  "introduction-to-prophecy-week-7": 239,
+  "introduction-to-prophecy-week-8": 240,
+  "introduction-to-prophecy-week-9": 241,
+  "introduction-to-prophecy-week-10": 242,
 };
 
 function resolveQuizId(param: string): number | null {

@@ -70,4 +70,9 @@ export const courseProgressConfig: Record<number, CourseProgressDefinition> = {
     reading: explicitReading(16),
     video: { type: "published" },
   },
+  10: {
+    quizIds: [234, 235, 236, 237, 238, 239, 240, 241, 242],
+    reading: explicitReading(10),
+    video: { type: "published" },
+  },
 };

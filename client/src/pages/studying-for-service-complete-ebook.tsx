@@ -6,6 +6,11 @@ import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Play, Pause, SkipBack, SkipForward, ArrowLeft, Volume2, Download } from "lucide-react";
 import { getAudioUrl } from "@/lib/audio-storage";
+import {
+  EbookNextChapterNav,
+  getEbookNextChapterLabel,
+  goToNextEbookChapter,
+} from "@/components/ebook/ebook-next-chapter-nav";
 
 export default function StudyingForServiceCompleteEbook() {
   const [, setLocation] = useLocation();
@@ -38,6 +43,7 @@ export default function StudyingForServiceCompleteEbook() {
   ];
 
   const currentChapterData = chapters[currentChapter - 1];
+  const nextChapterLabel = getEbookNextChapterLabel(chapters, currentChapter);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -4073,6 +4079,14 @@ Within minutes after the service ended, the two teenagers were at the old man's 
             <Card className="bg-white/95 backdrop-blur-sm border-blue-400/30 shadow-xl">
               <CardContent className="p-8 prose max-w-none">
                 {getChapterContent(currentChapter)}
+                <EbookNextChapterNav
+                  currentChapter={currentChapter}
+                  totalChapters={chapters.length}
+                  nextChapterLabel={nextChapterLabel}
+                  onGoToNextChapter={() => goToNextEbookChapter(chapters.length, setCurrentChapter)}
+                  buttonClassName="bg-blue-700 hover:bg-blue-800 text-white"
+                  borderClassName="border-blue-200"
+                />
               </CardContent>
             </Card>
           </div>

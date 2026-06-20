@@ -24,7 +24,7 @@ export function resolvePostLoginRedirect(
       return returnTo;
     }
     if (normalized === "dean" || normalized === "instructor") return "/instructor-portal";
-    if (normalized === "admin") return "/admin";
+    if (normalized === "admin") return "/admin-panel";
     return "/dashboard";
   }
 

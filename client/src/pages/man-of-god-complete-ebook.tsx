@@ -21,6 +21,11 @@ import { ManOfGodFaithfulManContent } from "@/components/man-of-god-faithful-man
 import { ManOfGodGraciousContentManContent } from "@/components/man-of-god-gracious-content-man-content";
 import { ManOfGodGiftedManContent } from "@/components/man-of-god-gifted-man-content";
 import { ManOfGodRealManContent } from "@/components/man-of-god-real-man-content";
+import {
+  EbookNextChapterNav,
+  getEbookNextChapterLabel,
+  goToNextEbookChapter,
+} from "@/components/ebook/ebook-next-chapter-nav";
 
 const chapterTexts: Record<number, string> = {};
 
@@ -41,6 +46,7 @@ export default function ManOfGodCompleteEbook() {
   }));
 
   const currentChapterData = chapters[currentChapter - 1];
+  const nextChapterLabel = getEbookNextChapterLabel(chapters, currentChapter);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -219,6 +225,14 @@ export default function ManOfGodCompleteEbook() {
           <CardContent className="p-8">
             <h2 className="text-2xl font-bold mb-6 text-emerald-900">{currentChapterData.title}</h2>
             {getChapterContent()}
+            <EbookNextChapterNav
+              currentChapter={currentChapter}
+              totalChapters={chapters.length}
+              nextChapterLabel={nextChapterLabel}
+              onGoToNextChapter={() => goToNextEbookChapter(chapters.length, setCurrentChapter)}
+              buttonClassName="bg-emerald-700 hover:bg-emerald-800 text-white"
+              borderClassName="border-emerald-200"
+            />
           </CardContent>
         </Card>
       </div>

@@ -132,7 +132,7 @@ export default function MyPersonalLibrary() {
       'Acts in Action Course': 1,
       'Acts In Action Course': 1,
       'Power of Preaching': 6,
-      'Introduction to Prophecy': 103,
+      'Introduction to Prophecy': 109,
       'The Watchmen Project': 8,
       'The Watchmen Series': 102,
       'Theology 101': 104,
@@ -299,6 +299,10 @@ export default function MyPersonalLibrary() {
       // Special handling for SFGM Man of God Course - navigate to complete e-book
       if (book.title === 'SFGM Man of God Course') {
         window.location.href = '/man-of-god-complete-ebook';
+        return;
+      }
+      if (book.title === 'Introduction to Prophecy') {
+        window.location.href = '/introduction-to-prophecy-complete-ebook';
         return;
       }
       // Open textbook reader

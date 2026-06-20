@@ -79,6 +79,16 @@ export default function QuizTake() {
     "man-of-god-week-9": 16,
     "man-of-god-week-10": 16,
     "man-of-god-final-exam": 16,
+    "introduction-to-prophecy-week-1": 10,
+    "introduction-to-prophecy-week-2": 10,
+    "introduction-to-prophecy-week-3": 10,
+    "introduction-to-prophecy-week-4": 10,
+    "introduction-to-prophecy-week-5": 10,
+    "introduction-to-prophecy-week-6": 10,
+    "introduction-to-prophecy-week-7": 10,
+    "introduction-to-prophecy-week-8": 10,
+    "introduction-to-prophecy-week-9": 10,
+    "introduction-to-prophecy-week-10": 10,
   };
 
   // Helper function to determine courseId from quizId
@@ -102,7 +112,9 @@ export default function QuizTake() {
     // Course 8 (Youth Ministry): Quizzes 207-212
     if (quizId >= 207 && quizId <= 212) return 8;
     // Course 16 (SFGM Man of God): Quizzes 221+
-    if (quizId >= 221 && quizId <= 230) return 16;
+    if (quizId >= 221 && quizId <= 231) return 16;
+    // Course 10 (Introduction to Prophecy): Quizzes 233-242
+    if (quizId >= 233 && quizId <= 242) return 10;
     
     return null;
   };

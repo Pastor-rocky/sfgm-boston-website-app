@@ -7,6 +7,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Play, Pause, SkipBack, SkipForward, ArrowLeft, Volume2, Download } from "lucide-react";
 import { getAudioUrl } from "@/lib/audio-storage";
 import {
+  EbookNextChapterNav,
+  getEbookNextChapterLabel,
+  goToNextEbookChapter,
+} from "@/components/ebook/ebook-next-chapter-nav";
+import {
   Paragraph,
   BlueSection,
   GreenSection,
@@ -50,6 +55,7 @@ export default function BecomingAFireStarterCompleteEbook() {
   ];
 
   const currentChapterData = chapters[currentChapter - 1];
+  const nextChapterLabel = getEbookNextChapterLabel(chapters, currentChapter);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -3991,6 +3997,14 @@ export default function BecomingAFireStarterCompleteEbook() {
           <CardContent className="p-8">
             <div className="prose prose-lg max-w-none">
               {getChapterContent(currentChapter)}
+              <EbookNextChapterNav
+                currentChapter={currentChapter}
+                totalChapters={chapters.length}
+                nextChapterLabel={nextChapterLabel}
+                onGoToNextChapter={() => goToNextEbookChapter(chapters.length, setCurrentChapter)}
+                buttonClassName="bg-orange-600 hover:bg-orange-700 text-white"
+                borderClassName="border-orange-200"
+              />
             </div>
           </CardContent>
         </Card>

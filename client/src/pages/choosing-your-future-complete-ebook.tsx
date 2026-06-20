@@ -9,6 +9,11 @@ import {
   type ChoosingYourFutureBlock,
   type ChoosingYourFutureChapter,
 } from "@shared/choosing-your-future-content";
+import {
+  EbookNextChapterNav,
+  getEbookNextChapterLabel,
+  goToNextEbookChapter,
+} from "@/components/ebook/ebook-next-chapter-nav";
 
 function getChapterDisplayTitle(chapter: ChoosingYourFutureChapter): string {
   if (chapter.title === "Introduction") return "Introduction";
@@ -69,6 +74,12 @@ export default function ChoosingYourFutureCompleteEbook() {
 
   const currentChapterData = choosingYourFutureChapters[currentChapter - 1];
   const chapterLabel = getChapterDisplayTitle(currentChapterData);
+  const nextChapterLabel = getEbookNextChapterLabel(
+    choosingYourFutureChapters.map((chapter) => ({
+      title: getChapterDisplayTitle(chapter),
+    })),
+    currentChapter,
+  );
   const coverUrl =
     "https://img1.wsimg.com/isteam/ip/cc1ec5d5-2d90-49e2-809f-329d72f697cd/IMG_1972.PNG/:/cr=t:0%25,l:0%25,w:100%25,h:100%25/rs=w:400,cg:true";
 
@@ -135,6 +146,16 @@ export default function ChoosingYourFutureCompleteEbook() {
                 {getChapterHeading(currentChapterData)}
               </h2>
               {currentChapterData.blocks.map((block, index) => renderBlock(block, index))}
+              <EbookNextChapterNav
+                currentChapter={currentChapter}
+                totalChapters={choosingYourFutureChapters.length}
+                nextChapterLabel={nextChapterLabel}
+                onGoToNextChapter={() =>
+                  goToNextEbookChapter(choosingYourFutureChapters.length, setCurrentChapter)
+                }
+                buttonClassName="bg-indigo-700 hover:bg-indigo-800 text-white"
+                borderClassName="border-indigo-200"
+              />
             </div>
           </CardContent>
         </Card>

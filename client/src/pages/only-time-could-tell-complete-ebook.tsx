@@ -9,6 +9,11 @@ import {
   type OnlyTimeCouldTellBlock,
   type OnlyTimeCouldTellChapter,
 } from "@shared/only-time-could-tell-content";
+import {
+  EbookNextChapterNav,
+  getEbookNextChapterLabel,
+  goToNextEbookChapter,
+} from "@/components/ebook/ebook-next-chapter-nav";
 
 function getChapterDisplayTitle(chapter: OnlyTimeCouldTellChapter): string {
   if (chapter.title === "Introduction") return "Introduction";
@@ -71,6 +76,12 @@ export default function OnlyTimeCouldTellCompleteEbook() {
 
   const currentChapterData = onlyTimeCouldTellChapters[currentChapter - 1];
   const chapterLabel = getChapterDisplayTitle(currentChapterData);
+  const nextChapterLabel = getEbookNextChapterLabel(
+    onlyTimeCouldTellChapters.map((chapter) => ({
+      title: getChapterDisplayTitle(chapter),
+    })),
+    currentChapter,
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-900 via-red-900 to-amber-900 p-4 sm:p-6 lg:p-8">
@@ -135,6 +146,16 @@ export default function OnlyTimeCouldTellCompleteEbook() {
                 {getChapterHeading(currentChapterData)}
               </h2>
               {currentChapterData.blocks.map((block, index) => renderBlock(block, index))}
+              <EbookNextChapterNav
+                currentChapter={currentChapter}
+                totalChapters={onlyTimeCouldTellChapters.length}
+                nextChapterLabel={nextChapterLabel}
+                onGoToNextChapter={() =>
+                  goToNextEbookChapter(onlyTimeCouldTellChapters.length, setCurrentChapter)
+                }
+                buttonClassName="bg-rose-700 hover:bg-rose-800 text-white"
+                borderClassName="border-rose-200"
+              />
             </div>
           </CardContent>
         </Card>

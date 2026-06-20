@@ -2,12 +2,16 @@ import type { Express, Request, Response } from "express";
 import { Router } from "express";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
-import { randomUUID } from "crypto";
+import { randomUUID, randomBytes } from "crypto";
+import { and, eq, gt, isNull } from "drizzle-orm";
 import { storage } from "../storage";
+import { db } from "../db";
+import { authTokens, passwordResetTokens, users } from "../../shared/schema";
 import { extractAuthToken, setAuthCookies, clearAuthCookies, buildAuthResponse } from "../utils/auth";
 import { sendErrorResponse } from "../utils/errorHandler";
 import { withRetry, isRetryableError, shouldNotRetry } from "../utils/retry";
-import { sendWelcomeEmail, sendAdminRegistrationNotification } from "../services/emailService";
+import { sendWelcomeEmail, sendAdminRegistrationNotification, sendPasswordResetEmail } from "../services/emailService";
+import { rateLimit } from "../middleware/rateLimit";
 
 const loginSchema = z.object({
   identifier: z.string().min(1, "Email, username, or phone is required").optional(),
@@ -76,6 +80,33 @@ async function ensureUniqueUsername(desired: string) {
   }
 
   return attempt;
+}
+
+const PASSWORD_RESET_EXPIRY_MS = 60 * 60 * 1000;
+
+const forgotPasswordSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+});
+
+const resetPasswordSchema = z.object({
+  token: z.string().min(1, "Reset token is required"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+const passwordResetRateLimit = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  maxRequests: 5,
+  message: "Too many password reset attempts. Please try again later.",
+  keyGenerator: (req) => `pw-reset:${req.ip || "anonymous"}`,
+});
+
+function getAppBaseUrl(req: Request): string {
+  const configured = process.env.APP_URL || process.env.PUBLIC_APP_URL;
+  if (configured) return configured.replace(/\/$/, "");
+  const proto = (req.headers["x-forwarded-proto"] as string) || req.protocol || "https";
+  const host = (req.headers["x-forwarded-host"] as string) || req.get("host");
+  if (host) return `${proto}://${host}`;
+  return "https://sfgmboston.com";
 }
 
 export function registerAuthRoutes(app: Express) {
@@ -291,6 +322,144 @@ export function registerAuthRoutes(app: Express) {
 
   router.get("/me", handleCurrentUser);
   router.get("/user", handleCurrentUser);
+
+  router.post("/forgot-password", passwordResetRateLimit, async (req: Request, res: Response) => {
+    try {
+      const { email } = forgotPasswordSchema.parse(req.body);
+      const normalizedEmail = email.toLowerCase().trim();
+      const genericMessage =
+        "If an account exists with that email, you will receive password reset instructions shortly.";
+
+      const user = await storage.getUserByEmail(normalizedEmail);
+      if (!user?.email || !user.password) {
+        return res.json({ message: genericMessage });
+      }
+
+      const token = randomBytes(32).toString("hex");
+      const expiresAt = new Date(Date.now() + PASSWORD_RESET_EXPIRY_MS);
+
+      await db
+        .delete(passwordResetTokens)
+        .where(and(eq(passwordResetTokens.userId, user.id), isNull(passwordResetTokens.usedAt)));
+
+      await db.insert(passwordResetTokens).values({
+        userId: user.id,
+        token,
+        expiresAt,
+      });
+
+      const resetUrl = `${getAppBaseUrl(req)}/reset-password?token=${encodeURIComponent(token)}`;
+
+      const emailResult = await sendPasswordResetEmail({
+        firstName: user.firstName || user.username || "Student",
+        email: user.email,
+        resetUrl,
+      });
+
+      if (!emailResult.delivered) {
+        console.warn("[email] Password reset not delivered:", emailResult.reason, resetUrl);
+        if (emailResult.reason?.includes("non-browser")) {
+          console.warn(
+            "[email] Enable server-side API access at https://dashboard.emailjs.com/admin/account/security",
+          );
+        }
+      }
+
+      return res.json({
+        message: genericMessage,
+        ...(process.env.NODE_ENV === "development" && !emailResult.delivered
+          ? {
+              devNote: emailResult.reason?.includes("non-browser")
+                ? "EmailJS is blocking server-side sends. In EmailJS → Account → Security, enable API access from non-browser environments, then try again."
+                : "Email is not configured locally. Use the reset link below or check the server console.",
+              devResetUrl: resetUrl,
+            }
+          : {}),
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: error.errors[0]?.message || "Invalid email" });
+      }
+      sendErrorResponse(res, error, "Forgot Password");
+    }
+  });
+
+  router.get("/reset-password/validate", async (req: Request, res: Response) => {
+    try {
+      const token = String(req.query.token || "").trim();
+      if (!token) {
+        return res.status(400).json({ valid: false, message: "Missing reset token" });
+      }
+
+      const [record] = await db
+        .select()
+        .from(passwordResetTokens)
+        .where(
+          and(
+            eq(passwordResetTokens.token, token),
+            isNull(passwordResetTokens.usedAt),
+            gt(passwordResetTokens.expiresAt, new Date()),
+          ),
+        )
+        .limit(1);
+
+      if (!record) {
+        return res.status(400).json({ valid: false, message: "This reset link is invalid or has expired." });
+      }
+
+      return res.json({ valid: true });
+    } catch (error) {
+      sendErrorResponse(res, error, "Validate Reset Token");
+    }
+  });
+
+  router.post("/reset-password", passwordResetRateLimit, async (req: Request, res: Response) => {
+    try {
+      const payload = resetPasswordSchema.parse(req.body);
+
+      const [record] = await db
+        .select()
+        .from(passwordResetTokens)
+        .where(
+          and(
+            eq(passwordResetTokens.token, payload.token),
+            isNull(passwordResetTokens.usedAt),
+            gt(passwordResetTokens.expiresAt, new Date()),
+          ),
+        )
+        .limit(1);
+
+      if (!record) {
+        return res.status(400).json({ message: "This reset link is invalid or has expired." });
+      }
+
+      const hashedPassword = await bcrypt.hash(payload.password, 10);
+      const now = new Date();
+
+      await db.transaction(async (tx) => {
+        await tx
+          .update(users)
+          .set({ password: hashedPassword, updatedAt: now })
+          .where(eq(users.id, record.userId));
+
+        await tx
+          .update(passwordResetTokens)
+          .set({ usedAt: now })
+          .where(eq(passwordResetTokens.id, record.id));
+
+        await tx.delete(authTokens).where(eq(authTokens.userId, record.userId));
+      });
+
+      return res.json({
+        message: "Your password has been updated. You can sign in with your new password.",
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: error.errors[0]?.message || "Invalid payload" });
+      }
+      sendErrorResponse(res, error, "Reset Password");
+    }
+  });
 
 
 

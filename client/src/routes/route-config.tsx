@@ -75,6 +75,7 @@ export const studentRoutes: RouteDefinition[] = [
   createRoute("/my-certificates", () => import("@/pages/my-certificates")),
   createRoute("/my-personal-library", () => import("@/pages/my-personal-library")),
   createRoute("/admin-panel", () => import("@/pages/admin-panel")),
+  createRoute("/admin", () => import("@/pages/admin-panel")),
   createRoute("/instructor-dashboard", () => import("@/pages/instructor-portal-redirect")),
   createRoute("/instructor-portal", () => import("@/pages/instructor-portal-home")),
   createRoute("/instructor-portal/essays", () => import("@/pages/instructor-portal-essays")),
@@ -88,6 +89,8 @@ export const authRoutes: RouteDefinition[] = [
   createRoute("/login", () => import("@/pages/login")),
   createRoute("/instructor-login", () => import("@/pages/login")),
   createRoute("/register", () => import("@/pages/register")),
+  createRoute("/forgot-password", () => import("@/pages/forgot-password")),
+  createRoute("/reset-password", () => import("@/pages/reset-password")),
   createRoute("/logout", () => import("@/pages/logout")),
 ];
 
@@ -102,6 +105,17 @@ export const ebookRoutes: RouteDefinition[] = [
   createRoute("/man-of-god-complete-ebook", () => import("@/pages/man-of-god-complete-ebook")),
   createRoute("/choosing-your-future-complete-ebook", () => import("@/pages/choosing-your-future-complete-ebook")),
   createRoute("/only-time-could-tell-complete-ebook", () => import("@/pages/only-time-could-tell-complete-ebook")),
+  createRoute("/introduction-to-prophecy-complete-ebook", () => import("@/pages/introduction-to-prophecy-complete-ebook")),
+  createRoute("/introduction-to-prophecy-ch1", () => import("@/pages/introduction-to-prophecy-ch1")),
+  createRoute("/introduction-to-prophecy-ch2", () => import("@/pages/introduction-to-prophecy-ch2")),
+  createRoute("/introduction-to-prophecy-ch3", () => import("@/pages/introduction-to-prophecy-ch3")),
+  createRoute("/introduction-to-prophecy-ch4", () => import("@/pages/introduction-to-prophecy-ch4")),
+  createRoute("/introduction-to-prophecy-ch5", () => import("@/pages/introduction-to-prophecy-ch5")),
+  createRoute("/introduction-to-prophecy-ch6", () => import("@/pages/introduction-to-prophecy-ch6")),
+  createRoute("/introduction-to-prophecy-ch7", () => import("@/pages/introduction-to-prophecy-ch7")),
+  createRoute("/introduction-to-prophecy-ch8", () => import("@/pages/introduction-to-prophecy-ch8")),
+  createRoute("/introduction-to-prophecy-ch9", () => import("@/pages/introduction-to-prophecy-ch9")),
+  createRoute("/introduction-to-prophecy-ch10", () => import("@/pages/introduction-to-prophecy-ch10")),
 ];
 
 export const audioAndCourseContentRoutes: RouteDefinition[] = [

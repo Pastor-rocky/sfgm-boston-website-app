@@ -41,6 +41,20 @@ export const MAN_OF_GOD_WEEK_READING_IDS: Record<number, number[]> = {
   6: [1606], 7: [1607], 8: [1608], 9: [1609], 10: [1610],
 };
 
+/** Introduction to Prophecy — 10 chapter weeks (Introduction + Lessons 1–9). */
+export const INTRODUCTION_TO_PROPHECY_WEEK_READING_IDS: Record<number, number[]> = {
+  1: [1001],
+  2: [1002],
+  3: [1003],
+  4: [1004],
+  5: [1005],
+  6: [1006],
+  7: [1007],
+  8: [1008],
+  9: [1009],
+  10: [1010],
+};
+
 const COURSE_WEEK_READING_MAP: Record<number, Record<number, number[]>> = {
   1: ACTS_IN_ACTION_WEEK_READING_IDS,
   2: FIRE_STARTER_WEEK_READING_IDS,
@@ -51,6 +65,7 @@ const COURSE_WEEK_READING_MAP: Record<number, Record<number, number[]>> = {
   7: LEVEL_UP_LEADERSHIP_WEEK_READING_IDS,
   8: YOUTH_MINISTRY_WEEK_READING_IDS,
   16: MAN_OF_GOD_WEEK_READING_IDS,
+  10: INTRODUCTION_TO_PROPHECY_WEEK_READING_IDS,
 };
 
 export function getCourseWeekReadingIds(courseId: number, weekNumber: number): number[] {

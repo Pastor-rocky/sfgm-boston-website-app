@@ -7,6 +7,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Play, Pause, SkipBack, SkipForward, ArrowLeft, Volume2, Download } from "lucide-react";
 import { AudioPlayerTextTemplate } from "@/components/audio-player-text-template";
 import { getAudioUrl } from "@/lib/audio-storage";
+import {
+  EbookNextChapterNav,
+  getEbookNextChapterLabel,
+  goToNextEbookChapter,
+} from "@/components/ebook/ebook-next-chapter-nav";
 
 export default function DontBeAJonahCompleteBook() {
   const [, setLocation] = useLocation();
@@ -38,6 +43,7 @@ export default function DontBeAJonahCompleteBook() {
   ];
 
   const currentChapterData = chapters[currentChapter - 1];
+  const nextChapterLabel = getEbookNextChapterLabel(chapters, currentChapter);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -2251,6 +2257,15 @@ export default function DontBeAJonahCompleteBook() {
                   {getChapterContent(currentChapter)}
                 </div>
               )}
+
+              <EbookNextChapterNav
+                currentChapter={currentChapter}
+                totalChapters={chapters.length}
+                nextChapterLabel={nextChapterLabel}
+                onGoToNextChapter={() => goToNextEbookChapter(chapters.length, setCurrentChapter)}
+                buttonClassName="bg-yellow-500 hover:bg-yellow-600 text-slate-900"
+                borderClassName="border-white/20"
+              />
             </div>
           </CardContent>
         </Card>

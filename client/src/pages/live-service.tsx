@@ -111,7 +111,7 @@ export default function LiveService() {
           {/* Admin Edit Link */}
           {isAdmin && (
             <div className="mt-4 flex space-x-3">
-              <Link href="/admin">
+              <Link href="/admin-panel">
                 <Button
                   variant="outline"
                   size="sm"

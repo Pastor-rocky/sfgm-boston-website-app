@@ -45,7 +45,7 @@ export default function Navigation() {
   // Direct access to dashboards with access codes
   const handleDashboardAccess = (type: 'admin' | 'dean' | 'instructor') => {
     const routes = {
-      admin: '/admin',
+      admin: '/admin-panel',
       dean: '/dean',
       instructor: '/instructor'
     };
@@ -132,7 +132,7 @@ export default function Navigation() {
               </DropdownMenuTrigger>
               <DropdownMenuContent 
                 align="end" 
-                className="w-80 md:w-56 max-h-[75vh] overflow-y-auto z-[9999] bg-white border border-slate-200 shadow-xl rounded-lg mobile-dropdown-menu"
+                className="w-80 md:w-56 max-h-[75vh] overflow-y-auto overscroll-contain touch-pan-y [-webkit-overflow-scrolling:touch] z-[9999] bg-white border border-slate-200 shadow-xl rounded-lg mobile-dropdown-menu"
                 side="bottom"
                 sideOffset={4}
                 avoidCollisions={true}
@@ -246,7 +246,7 @@ export default function Navigation() {
                   </div>
                 </Button>
               </SheetTrigger>
-              <SheetContent>
+              <SheetContent className="overflow-y-auto overscroll-contain max-h-[100dvh] pb-8">
                 <div className="flex flex-col space-y-2 mt-8">
                   {/* Mobile Navigation Links */}
                   {navLinks.map((link) => (

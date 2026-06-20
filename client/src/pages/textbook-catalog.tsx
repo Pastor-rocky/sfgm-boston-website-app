@@ -348,21 +348,6 @@ export default function TextbookCatalog() {
           isUpdated: false
         },
         {
-          id: 103, // Display order 103
-          title: "Introduction to Prophecy",
-          author: "Teacher Larry Kaslov",
-          description: "A foundational course exploring biblical prophecy and end times. Students will study various prophetic perspectives and their biblical foundations with practical applications for modern ministry.",
-          bookCoverUrl: "/introduction-to-prophecy-cover.png",
-          category: "Prophecy",
-          difficulty: "Intermediate",
-          chapterCount: 5,
-          estimatedReadingTime: "3-4 hours",
-          isComplete: false,
-          courseId: 103,
-          courseName: "Introduction to Prophecy",
-          isUpdated: false
-        },
-        {
           id: 104, // Display order 104
           title: "Theology 101",
           author: "Bishop Anthony Lee and Pastor Mark",
@@ -378,6 +363,25 @@ export default function TextbookCatalog() {
           isUpdated: false
         },
       ];
+
+      completeTextbooks.push({
+        id: 109,
+        title: "Introduction to Prophecy",
+        author: "Teacher Larry Kaslov",
+        description:
+          "Decoding the Divine Timeline — a 9-week journey into biblical prophecy by Teacher Larry Kaslov with co-author Pastor Rocky Kaslov. Explore Jesus in prophecy, Daniel's 70 weeks, the feasts, the seven churches, the Rapture, and the Master Key.",
+        bookCoverUrl: "/introduction-to-prophecy-cover.png",
+        category: "Prophecy",
+        difficulty: "Intermediate",
+        chapterCount: 10,
+        estimatedReadingTime: "8-10 hours",
+        isComplete: true,
+        courseId: 109,
+        courseName: "Introduction to Prophecy",
+        isUpdated: false,
+      });
+
+      // Add the coming soon textbooks to the array
 
       // Catalogue-only complete textbooks (not Bible School courses)
       completeTextbooks.push({
@@ -489,6 +493,12 @@ export default function TextbookCatalog() {
     // For How God Moves (catalogue-only, courseId 108)
     if (textbook.courseId === 108) {
       setLocation('/only-time-could-tell-complete-ebook');
+      return;
+    }
+
+    // For Introduction to Prophecy (catalogue-only book, courseId 109)
+    if (textbook.courseId === 109) {
+      setLocation('/introduction-to-prophecy-complete-ebook');
       return;
     }
     

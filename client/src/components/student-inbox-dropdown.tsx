@@ -95,10 +95,10 @@ export default function StudentInboxDropdown() {
 
       <DropdownMenuContent
         align="end"
-        className="w-[min(24rem,calc(100vw-2rem))] p-0 overflow-hidden"
+        className="w-[min(24rem,calc(100vw-2rem))] p-0 flex flex-col max-h-[min(22rem,var(--radix-dropdown-menu-content-available-height))] overflow-hidden overscroll-contain"
         sideOffset={8}
       >
-        <div className="flex items-center justify-between border-b px-4 py-3 bg-slate-50">
+        <div className="flex items-center justify-between border-b px-4 py-3 bg-slate-50 shrink-0">
           <div className="flex items-center gap-2">
             <Inbox className="h-4 w-4 text-[#0b4f6c]" />
             <p className="font-semibold text-slate-900 text-sm">From your instructor</p>
@@ -115,7 +115,7 @@ export default function StudentInboxDropdown() {
           ) : null}
         </div>
 
-        <div className="max-h-[22rem] overflow-y-auto">
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain touch-pan-y [-webkit-overflow-scrolling:touch]">
           {isLoading ? (
             <p className="px-4 py-8 text-sm text-slate-500 text-center">Loading messages…</p>
           ) : messages.length === 0 ? (

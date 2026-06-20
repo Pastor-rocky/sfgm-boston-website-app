@@ -7,6 +7,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Play, Pause, SkipBack, SkipForward, ArrowLeft, Volume2, Download } from "lucide-react";
 import { getAudioUrl } from "@/lib/audio-storage";
 import {
+  EbookNextChapterNav,
+  getEbookNextChapterLabel,
+  goToNextEbookChapter,
+} from "@/components/ebook/ebook-next-chapter-nav";
+import {
   SectionHeading,
   BlueSection,
   GreenSection,
@@ -50,6 +55,7 @@ export default function ActsInActionEbook() {
   ];
 
   const currentChapterData = chapters[currentChapter - 1];
+  const nextChapterLabel = getEbookNextChapterLabel(chapters, currentChapter);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -1914,6 +1920,14 @@ export default function ActsInActionEbook() {
           <CardContent className="p-8 prose prose-invert max-w-none">
             <div className="text-white leading-relaxed">
               {getChapterContent(currentChapter)}
+              <EbookNextChapterNav
+                currentChapter={currentChapter}
+                totalChapters={chapters.length}
+                nextChapterLabel={nextChapterLabel}
+                onGoToNextChapter={() => goToNextEbookChapter(chapters.length, setCurrentChapter)}
+                buttonClassName="bg-blue-500 hover:bg-blue-600 text-white"
+                borderClassName="border-white/20"
+              />
             </div>
           </CardContent>
         </Card>

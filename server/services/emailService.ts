@@ -1,3 +1,4 @@
+import emailjs from "@emailjs/nodejs";
 import { ServerClient } from "postmark";
 
 interface EssayEmailPayload {
@@ -17,7 +18,30 @@ interface EmailDeliveryResult {
   reason?: string;
 }
 
+interface DeliverEmailArgs {
+  to: string;
+  subject: string;
+  textBody: string;
+  htmlBody?: string;
+  emailJs?: {
+    templateId?: string;
+    params: Record<string, string>;
+  };
+}
+
 const DEFAULT_REVIEW_EMAIL = "pastor_rocky@sfgmboston.com";
+
+function formatEmailError(error: unknown): string {
+  if (typeof error === "string") return error;
+  if (error && typeof error === "object") {
+    const emailJsError = error as { text?: string; status?: number; message?: string };
+    if (emailJsError.text) {
+      return emailJsError.status ? `${emailJsError.status}: ${emailJsError.text}` : emailJsError.text;
+    }
+    if (emailJsError.message) return emailJsError.message;
+  }
+  return "Unknown error";
+}
 
 const emailEnabled = () => {
   return (process.env.EMAIL_ENABLED || "").toLowerCase() === "true";
@@ -42,11 +66,36 @@ function getFromAddress(): string | null {
 
   if (!fromEmail) return null;
   if (fromName && fromName.trim().length > 0) {
-    // Postmark accepts: "Display Name <email@domain>"
     return `${fromName.trim()} <${fromEmail.trim()}>`;
   }
 
   return fromEmail.trim();
+}
+
+function getEmailJsConfig() {
+  const serviceId = process.env.EMAILJS_SERVICE_ID;
+  const publicKey = process.env.EMAILJS_PUBLIC_KEY;
+  const privateKey = process.env.EMAILJS_PRIVATE_KEY;
+
+  if (!serviceId || !publicKey || !privateKey) {
+    return null;
+  }
+
+  return { serviceId, publicKey, privateKey };
+}
+
+function formatRegistrationDateParts(date: Date) {
+  return {
+    registration_date: date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }),
+    registration_time: date.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+    }),
+  };
 }
 
 async function sendPostmarkEmail(args: {
@@ -55,17 +104,10 @@ async function sendPostmarkEmail(args: {
   textBody: string;
   htmlBody?: string;
 }): Promise<EmailDeliveryResult> {
-  if (!emailEnabled()) {
-    console.log("[email] EMAIL_ENABLED is not true; delivery disabled");
-    return { delivered: false, reason: "Email delivery disabled" };
-  }
-
   const client = getPostmarkClient();
   const from = getFromAddress();
 
   if (!client || !from) {
-    const why = !process.env.POSTMARK_SERVER_API_TOKEN ? "POSTMARK_SERVER_API_TOKEN missing" : !process.env.POSTMARK_FROM_EMAIL ? "POSTMARK_FROM_EMAIL missing" : "Postmark config incomplete";
-    console.log("[email]", why);
     return { delivered: false, reason: "Missing Postmark configuration" };
   }
 
@@ -81,8 +123,65 @@ async function sendPostmarkEmail(args: {
 
     return { delivered: true };
   } catch (error) {
-    return { delivered: false, reason: (error as Error)?.message || "Unknown error" };
+    return { delivered: false, reason: formatEmailError(error) };
   }
+}
+
+async function sendEmailJsTemplate(
+  templateId: string | undefined,
+  templateParams: Record<string, string>,
+): Promise<EmailDeliveryResult> {
+  if (!templateId) {
+    return { delivered: false, reason: "Missing EmailJS template ID" };
+  }
+
+  const config = getEmailJsConfig();
+  if (!config) {
+    return { delivered: false, reason: "Missing EmailJS configuration" };
+  }
+
+  try {
+    await emailjs.send(config.serviceId, templateId, templateParams, {
+      publicKey: config.publicKey,
+      privateKey: config.privateKey,
+    });
+
+    return { delivered: true };
+  } catch (error) {
+    return { delivered: false, reason: formatEmailError(error) };
+  }
+}
+
+async function deliverEmail(args: DeliverEmailArgs): Promise<EmailDeliveryResult> {
+  if (!emailEnabled()) {
+    console.log("[email] EMAIL_ENABLED is not true; delivery disabled");
+    return { delivered: false, reason: "Email delivery disabled" };
+  }
+
+  const postmarkResult = await sendPostmarkEmail({
+    to: args.to,
+    subject: args.subject,
+    textBody: args.textBody,
+    htmlBody: args.htmlBody,
+  });
+
+  if (postmarkResult.delivered) {
+    return postmarkResult;
+  }
+
+  if (args.emailJs) {
+    const emailJsResult = await sendEmailJsTemplate(args.emailJs.templateId, args.emailJs.params);
+    if (emailJsResult.delivered) {
+      return emailJsResult;
+    }
+
+    return {
+      delivered: false,
+      reason: emailJsResult.reason || postmarkResult.reason || "Email delivery failed",
+    };
+  }
+
+  return postmarkResult;
 }
 
 export async function sendEssaySubmissionEmail(payload: EssayEmailPayload): Promise<EmailDeliveryResult> {
@@ -108,10 +207,23 @@ export async function sendEssaySubmissionEmail(payload: EssayEmailPayload): Prom
     payload.essayText,
   ].join("\n");
 
-  const result = await sendPostmarkEmail({
+  const result = await deliverEmail({
     to: reviewEmail,
     subject,
     textBody,
+    emailJs: {
+      templateId: process.env.EMAILJS_TEMPLATE_ID,
+      params: {
+        student_name: payload.studentName || "Unknown Student",
+        student_email: payload.studentEmail || "unknown@sfgmboston.com",
+        course_title: payload.courseTitle || "Unknown Course",
+        quiz_id: String(payload.quizId),
+        question_id: String(payload.questionId),
+        word_count: String(payload.wordCount),
+        submitted_at: payload.submittedAt.toLocaleString(),
+        essay_text: payload.essayText,
+      },
+    },
   });
 
   if (!result.delivered) {
@@ -175,10 +287,21 @@ export async function sendWelcomeEmail(payload: RegistrationEmailPayload): Promi
     "SFGM Boston Bible School",
   ].join("\n");
 
-  const result = await sendPostmarkEmail({
+  const registrationParts = formatRegistrationDateParts(payload.registrationDate);
+  const result = await deliverEmail({
     to: payload.email,
     subject,
     textBody,
+    emailJs: {
+      templateId: process.env.EMAILJS_WELCOME_TEMPLATE_ID,
+      params: {
+        first_name: payload.firstName,
+        last_name: payload.lastName,
+        username: payload.username,
+        email: payload.email,
+        ...registrationParts,
+      },
+    },
   });
 
   if (!result.delivered) {
@@ -209,10 +332,22 @@ export async function sendAdminRegistrationNotification(payload: AdminNotificati
     `Email Consent: ${payload.emailConsent ? "Yes" : "No"}`,
   ].join("\n");
 
-  const result = await sendPostmarkEmail({
+  const registrationParts = formatRegistrationDateParts(payload.registrationDate);
+  const result = await deliverEmail({
     to: adminEmail,
     subject,
     textBody,
+    emailJs: {
+      templateId: process.env.EMAILJS_ADMIN_TEMPLATE_ID,
+      params: {
+        first_name: payload.firstName,
+        last_name: payload.lastName,
+        email: payload.email,
+        username: payload.username,
+        email_consent: payload.emailConsent ? "Yes" : "No",
+        ...registrationParts,
+      },
+    },
   });
 
   if (!result.delivered) {
@@ -270,10 +405,18 @@ export async function sendBirthdayEmail(payload: BirthdayEmailPayload): Promise<
     "SFGM Boston Bible School",
   ].join("\n");
 
-  const result = await sendPostmarkEmail({
+  const result = await deliverEmail({
     to: payload.email,
     subject,
     textBody,
+    emailJs: {
+      templateId: process.env.EMAILJS_BIRTHDAY_TEMPLATE_ID,
+      params: {
+        first_name: payload.firstName,
+        last_name: payload.lastName,
+        email: payload.email,
+      },
+    },
   });
 
   if (!result.delivered) {
@@ -299,13 +442,11 @@ export async function sendTestEmail(toEmail: string): Promise<EmailDeliveryResul
   const to = (toEmail || "").trim();
   if (!to) return { delivered: false, reason: "Missing recipient" };
 
-  const result = await sendPostmarkEmail({
+  return deliverEmail({
     to,
     subject: "SFGM Test Email",
     textBody: "This is a test email from SFGM Boston Bible School.",
   });
-
-  return result;
 }
 
 interface EssayPortalNotificationPayload {
@@ -339,7 +480,7 @@ export async function sendEssayPortalNotification(
     return { delivered: false, reason: "Email delivery disabled" };
   }
 
-  return sendPostmarkEmail({ to: payload.toEmail, subject, textBody });
+  return deliverEmail({ to: payload.toEmail, subject, textBody });
 }
 
 interface InstructorMessageEmailPayload {
@@ -347,6 +488,78 @@ interface InstructorMessageEmailPayload {
   studentName: string;
   subject: string;
   body: string;
+}
+
+interface PasswordResetEmailPayload {
+  firstName: string;
+  email: string;
+  resetUrl: string;
+}
+
+function getPasswordResetEmailJsConfig(payload: PasswordResetEmailPayload) {
+  const dedicatedTemplateId = process.env.EMAILJS_PASSWORD_RESET_TEMPLATE_ID;
+  if (dedicatedTemplateId) {
+    return {
+      templateId: dedicatedTemplateId,
+      params: {
+        first_name: payload.firstName || "Student",
+        email: payload.email,
+        reset_url: payload.resetUrl,
+      },
+    };
+  }
+
+  // Reuse the welcome template when no dedicated password-reset template exists yet.
+  return {
+    templateId: process.env.EMAILJS_WELCOME_TEMPLATE_ID,
+    params: {
+      first_name: payload.firstName || "Student",
+      last_name: "",
+      username: "Use the link below to reset your password:",
+      email: payload.email,
+      registration_date: payload.resetUrl,
+      registration_time: "This link expires in 1 hour",
+    },
+  };
+}
+
+export async function sendPasswordResetEmail(
+  payload: PasswordResetEmailPayload,
+): Promise<EmailDeliveryResult> {
+  const subject = "Reset your SFGM Boston Bible School password";
+  const textBody = [
+    `Hello ${payload.firstName || "Student"},`,
+    "",
+    "We received a request to reset your password for SFGM Boston Bible School.",
+    "",
+    "Click the link below to choose a new password (link expires in 1 hour):",
+    payload.resetUrl,
+    "",
+    "If you did not request this, you can ignore this email. Your password will not change.",
+    "",
+    "SFGM Boston Bible School",
+  ].join("\n");
+
+  const htmlBody = [
+    `<p>Hello ${payload.firstName || "Student"},</p>`,
+    "<p>We received a request to reset your password for SFGM Boston Bible School.</p>",
+    `<p><a href="${payload.resetUrl}">Reset your password</a> (link expires in 1 hour)</p>`,
+    "<p>If you did not request this, you can ignore this email. Your password will not change.</p>",
+    "<p>SFGM Boston Bible School</p>",
+  ].join("");
+
+  if (!emailEnabled()) {
+    console.log("[email] Password reset (disabled):", payload.email, payload.resetUrl);
+    return { delivered: false, reason: "Email delivery disabled" };
+  }
+
+  return deliverEmail({
+    to: payload.email,
+    subject,
+    textBody,
+    htmlBody,
+    emailJs: getPasswordResetEmailJsConfig(payload),
+  });
 }
 
 export async function sendInstructorMessageEmail(
@@ -365,7 +578,7 @@ export async function sendInstructorMessageEmail(
     return { delivered: false, reason: "Email delivery disabled" };
   }
 
-  return sendPostmarkEmail({
+  return deliverEmail({
     to: payload.toEmail,
     subject: payload.subject,
     textBody,

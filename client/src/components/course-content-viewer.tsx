@@ -11,6 +11,11 @@ import { apiRequest, queryClient } from '@/lib/queryClient';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useDeduplicatedMutation } from '@/hooks/useDeduplicatedMutation';
 import { MAN_OF_GOD_READING_SCHEDULE } from '@/lib/man-of-god-config';
+import {
+  INTRODUCTION_TO_PROPHECY_COURSE_NAME,
+  INTRODUCTION_TO_PROPHECY_READING_SCHEDULE,
+  getIntroductionToProphecyReadingIds,
+} from '@/lib/introduction-to-prophecy-config';
 import { getCourseWeekReadingIds } from "@shared/course-reading-ids";
 import { DEFAULT_PASSING_SCORE, MAN_OF_GOD_WEEK1_PASSING_SCORE } from '@shared/course-constants';
 
@@ -273,6 +278,13 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
       q.title && q.title.includes('Man of God')
     );
   }
+
+  // Special handling for Introduction to Prophecy (courseId = 10)
+  if (courseId === 10) {
+    quizzes = allQuizzes.filter((q: any) =>
+      q.title && q.title.includes('Introduction to Prophecy')
+    );
+  }
   
   // Quiz filtering complete
 
@@ -358,6 +370,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
   ];
 
   const manOfGodReadingSchedule = MAN_OF_GOD_READING_SCHEDULE;
+  const prophecyReadingSchedule = INTRODUCTION_TO_PROPHECY_READING_SCHEDULE;
 
   // Load manual completions from API once
   React.useEffect(() => {
@@ -1066,6 +1079,43 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
         quizzes: { completed: completedQuizzesForManOfGod, total: totalQuizzesForCourse },
       };
     }
+
+    // Special handling for Introduction to Prophecy (courseId = 10)
+    if (courseId === 10) {
+      const totalReadings = 10;
+      const totalQuizzesForCourse = quizzes.length;
+      const totalVideosForCourse = publishedVideos.length;
+
+      const completedVideosForProphecy = contentProgress.filter((p: any) =>
+        p.courseId === courseId && p.contentType === 'video' && p.completed
+      ).length;
+
+      const validReadingIds = prophecyReadingSchedule.map((_, i) => 1001 + i);
+      const completedReadingWeeks = [];
+      for (let week = 1; week <= 10; week++) {
+        const weekReadingIds = getIntroductionToProphecyReadingIds(week);
+        const allWeekReadingsCompleted = weekReadingIds.every(id =>
+          contentProgress.some((p: any) =>
+            p.courseId === courseId &&
+            p.contentType === 'reading' &&
+            p.contentId === id &&
+            p.completed &&
+            validReadingIds.includes(p.contentId)
+          )
+        );
+        if (allWeekReadingsCompleted) {
+          completedReadingWeeks.push(week);
+        }
+      }
+
+      const completedQuizzesForProphecy = quizzes.filter((q: any) => q.attempts > 0).length;
+
+      return {
+        videos: { completed: completedVideosForProphecy, total: totalVideosForCourse },
+        readings: { completed: completedReadingWeeks.length, total: totalReadings },
+        quizzes: { completed: completedQuizzesForProphecy, total: totalQuizzesForCourse },
+      };
+    }
     
     // Special handling for G.R.O.W course (courseId = 4)
     if (courseId === 4) {
@@ -1198,6 +1248,11 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
       );
     } else if (courseId === 16) {
       const hardcodedReadingIds = getManOfGodReadingIds(weekNumber);
+      allReadingsCompleted = hardcodedReadingIds.length === 0 || hardcodedReadingIds.every(id =>
+        isContentCompleted('reading', id)
+      );
+    } else if (courseId === 10) {
+      const hardcodedReadingIds = getIntroductionToProphecyReadingIds(weekNumber);
       allReadingsCompleted = hardcodedReadingIds.length === 0 || hardcodedReadingIds.every(id =>
         isContentCompleted('reading', id)
       );
@@ -1363,6 +1418,12 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
       );
     } else if (courseId === 16) {
       const hardcodedReadingIds = getManOfGodReadingIds(weekNumber);
+      if (hardcodedReadingIds.length === 0) return false;
+      return hardcodedReadingIds.every(id =>
+        isContentCompleted('reading', id)
+      );
+    } else if (courseId === 10) {
+      const hardcodedReadingIds = getIntroductionToProphecyReadingIds(weekNumber);
       if (hardcodedReadingIds.length === 0) return false;
       return hardcodedReadingIds.every(id =>
         isContentCompleted('reading', id)
@@ -5051,6 +5112,61 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                 );
               })}
             </div>
+          ) : courseId === 10 ? (
+            <div className="space-y-4">
+              {prophecyReadingSchedule.map(({ week, title, route }) => {
+                const isAccessible = canAccessWeek(week);
+                const readingId = getIntroductionToProphecyReadingIds(week)[0];
+                const isCompleted = readingId ? isContentCompleted('reading', readingId) : false;
+
+                return (
+                  <Card
+                    key={week}
+                    className={`border-l-4 ${isAccessible ? 'border-amber-500' : 'border-gray-300'} ${!isAccessible ? 'opacity-60' : ''}`}
+                  >
+                    <CardContent className="text-center py-8">
+                      <h3 className="text-2xl font-bold text-gray-800 text-center mb-6">Required Reading Week {week}</h3>
+                      <div className="bg-amber-50 p-4 rounded-lg border border-amber-200 mb-4">
+                        <div className="flex items-center justify-between">
+                          <div className="text-left flex-1">
+                            <p className="text-amber-900 font-semibold text-xl mb-1">{INTRODUCTION_TO_PROPHECY_COURSE_NAME}</p>
+                            <p className="text-gray-700 text-lg">{title}</p>
+                            {!isAccessible && (
+                              <Badge variant="secondary" className="bg-gray-100 text-gray-600 text-xs mt-2">
+                                <i className="fas fa-lock mr-1"></i>
+                                Locked - Complete previous week first
+                              </Badge>
+                            )}
+                            {isAccessible && isCompleted && (
+                              <Badge variant="secondary" className="bg-green-100 text-green-800 text-xs mt-2">
+                                <i className="fas fa-check mr-1"></i>
+                                Completed
+                              </Badge>
+                            )}
+                          </div>
+                          {isAccessible ? (
+                            <Button
+                              onClick={createReadingProgressHandler(readingId, () => window.location.href = route)}
+                              className="bg-amber-600 hover:bg-amber-700 text-white"
+                            >
+                              E-book
+                            </Button>
+                          ) : (
+                            <Button
+                              disabled
+                              className="bg-gray-400 text-gray-200 cursor-not-allowed"
+                            >
+                              <i className="fas fa-lock mr-2"></i>
+                              Locked
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
           ) : courseId === 8 ? (
             <div className="space-y-4">
               {/* Week 1 Required Reading for Youth Ministry Course */}
@@ -5685,7 +5801,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
           {quizzes.length > 0 && (
             <div className="space-y-6">
               <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-4 md:mb-6">
-                  {courseId === 16 ? 'SFGM Man of God Course Quizzes' : courseId === 1 ? 'Acts in Action Week Quizzes' : 'Course Quizzes'}
+                  {courseId === 16 ? 'SFGM Man of God Course Quizzes' : courseId === 10 ? 'Introduction to Prophecy Quizzes' : courseId === 1 ? 'Acts in Action Week Quizzes' : 'Course Quizzes'}
                 </h3>
               
               {/* Dynamic Quiz Cards */}
@@ -5693,6 +5809,12 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                 // Final exams always go last
                 if (a.isFinalExam && !b.isFinalExam) return 1;
                 if (!a.isFinalExam && b.isFinalExam) return -1;
+                if (courseId === 10) {
+                  const aLesson = parseInt(a.title.match(/Lesson (\d+)/)?.[1] || '0', 10);
+                  const bLesson = parseInt(b.title.match(/Lesson (\d+)/)?.[1] || '0', 10);
+                  if (aLesson !== bLesson) return aLesson - bLesson;
+                  return a.id - b.id;
+                }
                 // Sort by week number in title, then by quiz ID
                 const aWeek = parseInt(a.title.match(/Week (\d+)/)?.[1] || '0');
                 const bWeek = parseInt(b.title.match(/Week (\d+)/)?.[1] || '0');
@@ -5700,8 +5822,19 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                 return a.id - b.id;
               }).map((quiz: any) => {
                 const isFinalExam = quiz.isFinalExam;
-                const quizNumber = quiz.title.match(/Week (\d+)/)?.[1];
-                const weekNumber = isFinalExam ? 11 : parseInt(quizNumber || '1');
+                const prophecyLessonNum =
+                  courseId === 10
+                    ? parseInt(quiz.title.match(/Lesson (\d+)/)?.[1] || '0', 10)
+                    : 0;
+                const quizNumber =
+                  courseId === 10 && prophecyLessonNum > 0
+                    ? String(prophecyLessonNum + 1)
+                    : quiz.title.match(/Week (\d+)/)?.[1];
+                const weekNumber = isFinalExam
+                  ? 11
+                  : courseId === 10 && prophecyLessonNum > 0
+                    ? prophecyLessonNum + 1
+                    : parseInt(quizNumber || '1');
                 const isAccessible = canAccessQuiz(weekNumber, isFinalExam);
                 const quizAttemptInfo = getQuizAttemptInfo(quiz.id);
                 const hasAttempts = quizAttemptInfo.count > 0;
@@ -5793,6 +5926,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                                   quizUrl = isFinalExam ? '/quiz/youth-ministry-final-exam' : `/quiz/youth-ministry-week-${quizNumber}`;
                                 } else if (courseId === 16) {
                                   quizUrl = isFinalExam ? '/quiz/man-of-god-final-exam' : `/quiz/man-of-god-week-${quizNumber}`;
+                                } else if (courseId === 10) {
+                                  quizUrl = `/quiz/introduction-to-prophecy-week-${quizNumber}`;
                                 } else {
                                   quizUrl = `/quiz/${quiz.id}`;
                                 }
@@ -5831,6 +5966,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                                   quizUrl = isFinalExam ? '/quiz/youth-ministry-final-exam' : `/quiz/youth-ministry-week-${quizNumber}`;
                                 } else if (courseId === 16) {
                                   quizUrl = isFinalExam ? '/quiz/man-of-god-final-exam' : `/quiz/man-of-god-week-${quizNumber}`;
+                                } else if (courseId === 10) {
+                                  quizUrl = `/quiz/introduction-to-prophecy-week-${quizNumber}`;
                                 } else {
                                   quizUrl = `/quiz/${quiz.id}`;
                                 }
