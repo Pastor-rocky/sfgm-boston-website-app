@@ -24,7 +24,7 @@ export default function InstructorPortalMessages() {
   const queryClient = useQueryClient();
   const [location] = useLocation();
   const [studentId, setStudentId] = useState("");
-  const [channel, setChannel] = useState<"portal" | "email">("portal");
+  const [channel, setChannel] = useState<"portal" | "email" | "sms">("portal");
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
 
@@ -66,7 +66,8 @@ export default function InstructorPortalMessages() {
       setSubject("");
       setBody("");
       toast({
-        title: channel === "email" ? "Email sent" : "Message saved",
+        title:
+          channel === "email" ? "Email sent" : channel === "sms" ? "Text message sent" : "Message saved",
         description: "Your message has been recorded in the portal.",
       });
     },
@@ -78,7 +79,7 @@ export default function InstructorPortalMessages() {
   return (
     <InstructorPortalShell
       title="Messages"
-      subtitle="Contact students from the portal. Email sends through SFGM; SMS coming soon."
+      subtitle="Contact students via portal, email, or SMS text (Twilio)."
     >
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
@@ -103,13 +104,14 @@ export default function InstructorPortalMessages() {
             </div>
             <div>
               <Label>Channel</Label>
-              <Select value={channel} onValueChange={(v) => setChannel(v as "portal" | "email")}>
+              <Select value={channel} onValueChange={(v) => setChannel(v as "portal" | "email" | "sms")}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="portal">Portal message (saved in chart)</SelectItem>
                   <SelectItem value="email">Email to student</SelectItem>
+                  <SelectItem value="sms">SMS text to student</SelectItem>
                 </SelectContent>
               </Select>
             </div>

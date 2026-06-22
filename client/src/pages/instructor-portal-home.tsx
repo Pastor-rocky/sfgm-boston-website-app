@@ -205,11 +205,28 @@ export default function InstructorPortalHome() {
         show: isDean,
       },
       {
-        href: "/instructor-application",
+        href: "/instructor-portal/dean-tools",
+        label: "Dean Tools",
+        description: "Zoom, Google Calendar, CSV export, integration status",
+        icon: Shield,
+        accent: "from-indigo-600 to-blue-700",
+        show: isDean,
+      },
+      {
+        href: "/instructor-portal/applications",
         label: "Instructor Applications",
         description: "Review teach-with-us applications from SFGM churches",
         icon: UserPlus,
         accent: "from-rose-500 to-pink-600",
+        show: isDean,
+      },
+      {
+        href: "/instructor-application",
+        label: "Apply to Teach",
+        description: "Public application form for prospective instructors",
+        icon: UserPlus,
+        accent: "from-rose-400 to-pink-500",
+        show: !isDean,
       },
     ];
     return items.filter((i) => i.show !== false);

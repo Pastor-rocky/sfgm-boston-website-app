@@ -11,6 +11,7 @@ import {
   BookOpen,
   UserPlus,
   Award,
+  Shield,
 } from "lucide-react";
 
 export default function InstructorPortalShell({
@@ -35,6 +36,12 @@ export default function InstructorPortalShell({
     { href: "/instructor-portal/students", label: studentsLabel, icon: Users },
     { href: "/instructor-portal/certificates", label: "Certificates", icon: Award },
     { href: "/instructor-portal/messages", label: "Messages", icon: MessageSquare },
+    ...(isDean
+      ? [
+          { href: "/instructor-portal/applications", label: "Applications", icon: UserPlus },
+          { href: "/instructor-portal/dean-tools", label: "Dean Tools", icon: Shield },
+        ]
+      : []),
   ];
 
   const displayName =

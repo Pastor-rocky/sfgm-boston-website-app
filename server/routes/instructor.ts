@@ -13,12 +13,22 @@ import {
   instructorMessages,
   certificates,
   courseCompletions,
+  instructorSessions,
+  instructorApplications,
 } from "../../shared/schema";
 import { DEFAULT_PASSING_SCORE } from "../../shared/course-constants";
 import { eq, desc, inArray, and, or, sql, count, asc } from "drizzle-orm";
 import { requireAuth } from "../middleware/requireAuth";
 import { validateBody } from "../middleware/validate";
 import { sendInstructorMessageEmail } from "../services/emailService";
+import { sendStudentSms, getSmsConfigStatus } from "../services/twilioService";
+import { createZoomMeeting, getZoomConfigStatus } from "../services/zoomService";
+import {
+  fetchPublicCalendarEvents,
+  getGoogleCalendarConfigStatus,
+  getGoogleCalendarEmbedUrl,
+} from "../services/googleCalendarService";
+import { storage } from "../storage";
 
 function requireInstructor(req: Request, res: Response, next: NextFunction) {
   const u = (req as any).user;
@@ -39,9 +49,22 @@ const reviewSchema = z.object({
 
 const messageSendSchema = z.object({
   studentId: z.string().min(1),
-  channel: z.enum(["portal", "email"]),
+  channel: z.enum(["portal", "email", "sms"]),
   subject: z.string().optional(),
   body: z.string().min(1),
+});
+
+const reviewApplicationSchema = z.object({
+  status: z.enum(["approved", "rejected"]),
+  adminNotes: z.string().optional(),
+});
+
+const zoomSessionSchema = z.object({
+  title: z.string().min(1),
+  description: z.string().optional(),
+  courseId: z.coerce.number().int().positive().optional(),
+  scheduledAt: z.string().optional(),
+  durationMinutes: z.coerce.number().int().min(15).max(480).optional(),
 });
 
 const issueCertificateSchema = z.object({
@@ -122,6 +145,22 @@ async function getAccessibleStudentIds(
     .where(inArray(enrollments.courseId, courseIds));
 
   return [...new Set(enrollmentRows.map((e) => e.studentId).filter(Boolean))] as string[];
+}
+
+async function assertStudentAccess(
+  instructorId: string | undefined,
+  user: any,
+  studentId: string,
+): Promise<boolean> {
+  const accessibleIds = await getAccessibleStudentIds(instructorId, user);
+  return accessibleIds.includes(studentId);
+}
+
+function requireDean(req: any, res: Response, next: NextFunction) {
+  if (!hasDeanAccess(req.user)) {
+    return res.status(403).json({ message: "Dean access required" });
+  }
+  next();
 }
 
 export function registerInstructorRoutes(app: Express) {
@@ -647,21 +686,49 @@ export function registerInstructorRoutes(app: Express) {
     }
   );
 
-  // Get grades for a specific student (instructor view)
+  // Get grades for a specific student (instructor view — scoped to accessible student + courses)
   router.get(
     "/api/instructor/students/:id/grades",
     requireAuth,
     requireInstructor,
-    async (req: Request, res: Response) => {
+    async (req: any, res: Response) => {
       try {
         const { id } = req.params;
-        const attempts = await db
-          .select()
-          .from(quizAttempts)
-          .where(eq(quizAttempts.studentId, id))
-          .orderBy(desc(quizAttempts.completedAt));
+        const instructorId = req.user?.id;
+        const user = req.user;
 
-        const quizIds = attempts.map((a) => a.quizId).filter(Boolean) as number[];
+        if (!(await assertStudentAccess(instructorId, user, id))) {
+          return res.status(403).json({ message: "You do not have access to this student" });
+        }
+
+        const instructorCourseIds = await getInstructorCourseIds(instructorId, user);
+        let quizIds: number[] = [];
+        if (instructorCourseIds.length > 0) {
+          const modules = await db
+            .select({ id: courseModules.id })
+            .from(courseModules)
+            .where(inArray(courseModules.courseId, instructorCourseIds));
+          const moduleIds = modules.map((m) => m.id);
+          if (moduleIds.length > 0) {
+            const courseQuizzes = await db
+              .select({ id: quizzes.id })
+              .from(quizzes)
+              .where(inArray(quizzes.moduleId, moduleIds));
+            quizIds = courseQuizzes.map((q) => q.id);
+          }
+        }
+
+        const attempts =
+          quizIds.length > 0
+            ? await db
+                .select()
+                .from(quizAttempts)
+                .where(
+                  and(eq(quizAttempts.studentId, id), inArray(quizAttempts.quizId, quizIds)),
+                )
+                .orderBy(desc(quizAttempts.completedAt))
+            : [];
+
         const quizDetails =
           quizIds.length > 0
             ? await db.select().from(quizzes).where(inArray(quizzes.id, quizIds))
@@ -685,7 +752,92 @@ export function registerInstructorRoutes(app: Express) {
         console.error("Instructor student grades:", e);
         res.status(500).json({ message: "Failed to fetch grades" });
       }
-    }
+    },
+  );
+
+  // Week-by-week content progress for a student (instructor's courses only)
+  router.get(
+    "/api/instructor/students/:id/progress",
+    requireAuth,
+    requireInstructor,
+    async (req: any, res: Response) => {
+      try {
+        const { id } = req.params;
+        const instructorId = req.user?.id;
+        const user = req.user;
+
+        if (!(await assertStudentAccess(instructorId, user, id))) {
+          return res.status(403).json({ message: "You do not have access to this student" });
+        }
+
+        const instructorCourseIds = await getInstructorCourseIds(instructorId, user);
+        const enrollmentList =
+          instructorCourseIds.length > 0
+            ? await db
+                .select()
+                .from(enrollments)
+                .where(
+                  and(
+                    eq(enrollments.studentId, id),
+                    inArray(enrollments.courseId, instructorCourseIds),
+                  ),
+                )
+            : [];
+
+        const courseIds = [...new Set(enrollmentList.map((e) => e.courseId).filter(Boolean))] as number[];
+        const courseList =
+          courseIds.length > 0
+            ? await db.select().from(courses).where(inArray(courses.id, courseIds))
+            : [];
+
+        const progressByCourse = await Promise.all(
+          courseIds.map(async (courseId) => {
+            const progress = await storage.getContentProgress(id, courseId);
+            const course = courseList.find((c) => c.id === courseId);
+            const enrollment = enrollmentList.find((e) => e.courseId === courseId);
+            const completed = progress.filter((p) => p.completed).length;
+            return {
+              courseId,
+              courseName: course?.name || "Course",
+              enrollmentStatus: enrollment?.status || "active",
+              totalItems: progress.length,
+              completedItems: completed,
+              percentComplete:
+                progress.length > 0 ? Math.round((completed / progress.length) * 100) : 0,
+              items: progress.map((p) => ({
+                contentType: p.contentType,
+                contentId: p.contentId,
+                completed: p.completed,
+                completedAt: p.completedAt,
+              })),
+            };
+          }),
+        );
+
+        const recentAttempts =
+          courseIds.length > 0
+            ? await db
+                .select()
+                .from(quizAttempts)
+                .where(eq(quizAttempts.studentId, id))
+                .orderBy(desc(quizAttempts.completedAt))
+                .limit(10)
+            : [];
+
+        res.json({
+          courses: progressByCourse,
+          recentActivity: recentAttempts.map((a) => ({
+            type: "quiz",
+            quizId: a.quizId,
+            score: a.score,
+            completedAt: a.completedAt,
+          })),
+        });
+      } catch (e) {
+        console.error("Instructor student progress:", e);
+        res.status(500).json({ message: "Failed to fetch progress" });
+      }
+    },
   );
 
   // List messages sent by this instructor
@@ -741,6 +893,7 @@ export function registerInstructorRoutes(app: Express) {
             body: m.body,
             sentAt: m.sentAt,
             emailDelivered: m.emailDelivered,
+            smsDelivered: m.smsDelivered,
           };
         });
 
@@ -785,6 +938,8 @@ export function registerInstructorRoutes(app: Express) {
         }
 
         let emailDelivered = false;
+        let smsDelivered = false;
+
         if (channel === "email" && student.email) {
           const result = await sendInstructorMessageEmail({
             toEmail: student.email,
@@ -796,6 +951,31 @@ export function registerInstructorRoutes(app: Express) {
           emailDelivered = result.delivered;
         }
 
+        if (channel === "sms") {
+          const [studentPhone] = await db
+            .select({ phone: users.phone })
+            .from(users)
+            .where(eq(users.id, studentId))
+            .limit(1);
+
+          if (!studentPhone?.phone) {
+            return res.status(400).json({ message: "Student does not have a phone number on file" });
+          }
+
+          const smsBody = subject ? `${subject}\n\n${body}` : body;
+          const smsResult = await sendStudentSms({
+            toPhone: studentPhone.phone,
+            body: smsBody,
+          });
+
+          if (!smsResult.delivered) {
+            return res.status(502).json({
+              message: smsResult.reason || "SMS delivery failed",
+            });
+          }
+          smsDelivered = true;
+        }
+
         const [message] = await db
           .insert(instructorMessages)
           .values({
@@ -805,6 +985,7 @@ export function registerInstructorRoutes(app: Express) {
             subject: subject ?? null,
             body,
             emailDelivered,
+            smsDelivered,
           })
           .returning();
 
@@ -1026,6 +1207,210 @@ export function registerInstructorRoutes(app: Express) {
       } catch (e) {
         console.error("Issue certificate:", e);
         res.status(500).json({ message: "Failed to issue certificate" });
+      }
+    },
+  );
+
+  router.get(
+    "/api/instructor/integrations/status",
+    requireAuth,
+    requireInstructor,
+    async (_req: any, res: Response) => {
+      res.json({
+        sms: getSmsConfigStatus(),
+        zoom: getZoomConfigStatus(),
+        googleCalendar: getGoogleCalendarConfigStatus(),
+      });
+    },
+  );
+
+  router.get(
+    "/api/instructor/calendar",
+    requireAuth,
+    requireInstructor,
+    async (_req: any, res: Response) => {
+      try {
+        const embedUrl = getGoogleCalendarEmbedUrl();
+        const events = await fetchPublicCalendarEvents(15);
+        res.json({ embedUrl, events });
+      } catch (e) {
+        console.error("Instructor calendar:", e);
+        res.status(500).json({ message: "Failed to load calendar" });
+      }
+    },
+  );
+
+  router.get(
+    "/api/instructor/sessions",
+    requireAuth,
+    requireInstructor,
+    async (req: any, res: Response) => {
+      try {
+        const instructorId = req.user?.id;
+        const dean = hasDeanAccess(req.user);
+        const rows = dean
+          ? await db.select().from(instructorSessions).orderBy(desc(instructorSessions.scheduledAt))
+          : instructorId
+            ? await db
+                .select()
+                .from(instructorSessions)
+                .where(eq(instructorSessions.instructorId, instructorId))
+                .orderBy(desc(instructorSessions.scheduledAt))
+            : [];
+        res.json(rows);
+      } catch (e) {
+        console.error("Instructor sessions:", e);
+        res.status(500).json({ message: "Failed to load sessions" });
+      }
+    },
+  );
+
+  router.post(
+    "/api/instructor/sessions/zoom",
+    requireAuth,
+    requireInstructor,
+    validateBody(zoomSessionSchema),
+    async (req: any, res: Response) => {
+      try {
+        const instructorId = req.user?.id;
+        const { title, description, courseId, scheduledAt, durationMinutes } = req.validatedBody;
+
+        const meeting = await createZoomMeeting({
+          topic: title,
+          agenda: description,
+          startTime: scheduledAt ? new Date(scheduledAt) : undefined,
+          durationMinutes: durationMinutes ?? 60,
+        });
+
+        const [session] = await db
+          .insert(instructorSessions)
+          .values({
+            instructorId: instructorId!,
+            courseId: courseId ?? null,
+            title,
+            description: description ?? null,
+            sessionType: "zoom",
+            joinUrl: meeting.joinUrl,
+            startUrl: meeting.startUrl,
+            meetingId: meeting.id,
+            scheduledAt: scheduledAt ? new Date(scheduledAt) : null,
+            durationMinutes: durationMinutes ?? 60,
+          })
+          .returning();
+
+        res.status(201).json({ session, meeting });
+      } catch (e) {
+        console.error("Create Zoom session:", e);
+        res.status(502).json({ message: (e as Error).message || "Failed to create Zoom meeting" });
+      }
+    },
+  );
+
+  router.get(
+    "/api/instructor/applications",
+    requireAuth,
+    requireInstructor,
+    requireDean,
+    async (req: any, res: Response) => {
+      try {
+        const status = typeof req.query.status === "string" ? req.query.status : undefined;
+        const applications = await storage.getInstructorApplications(status);
+        res.json(applications);
+      } catch (e) {
+        console.error("Instructor applications:", e);
+        res.status(500).json({ message: "Failed to load applications" });
+      }
+    },
+  );
+
+  router.patch(
+    "/api/instructor/applications/:id/review",
+    requireAuth,
+    requireInstructor,
+    requireDean,
+    validateBody(reviewApplicationSchema),
+    async (req: any, res: Response) => {
+      try {
+        const id = Number(req.params.id);
+        if (!Number.isFinite(id)) {
+          return res.status(400).json({ message: "Invalid application id" });
+        }
+
+        const { status, adminNotes } = req.validatedBody;
+        const updated = await storage.reviewInstructorApplication(
+          id,
+          status,
+          adminNotes,
+          req.user?.id,
+        );
+
+        if (status === "approved") {
+          const application = await storage.getInstructorApplication(id);
+          if (application?.applicantId) {
+            await storage.promoteToInstructor(application.applicantId);
+          }
+        }
+
+        res.json(updated);
+      } catch (e) {
+        console.error("Review instructor application:", e);
+        res.status(500).json({ message: "Failed to review application" });
+      }
+    },
+  );
+
+  router.get(
+    "/api/instructor/dean/export/students",
+    requireAuth,
+    requireInstructor,
+    requireDean,
+    async (req: any, res: Response) => {
+      try {
+        const instructorId = req.user?.id;
+        const studentIds = await getAccessibleStudentIds(instructorId, req.user);
+        if (studentIds.length === 0) {
+          res.setHeader("Content-Type", "text/csv");
+          return res.send("name,email,username,church,enrollments,gpa\n");
+        }
+
+        const students = await db
+          .select()
+          .from(users)
+          .where(inArray(users.id, studentIds));
+
+        const courseIds = await getInstructorCourseIds(instructorId, req.user);
+        const enrollmentList =
+          courseIds.length > 0
+            ? await db
+                .select()
+                .from(enrollments)
+                .where(inArray(enrollments.courseId, courseIds))
+            : [];
+
+        const lines = ["name,email,username,church,enrollments,gpa"];
+        for (const student of students) {
+          const name =
+            `${student.firstName || ""} ${student.lastName || ""}`.trim() || student.username || "";
+          const enrollCount = enrollmentList.filter((e) => e.studentId === student.id).length;
+          const escaped = (value: string) => `"${value.replace(/"/g, '""')}"`;
+          lines.push(
+            [
+              escaped(name),
+              escaped(student.email || ""),
+              escaped(student.username || ""),
+              escaped(student.sfgmChurch || ""),
+              String(enrollCount),
+              "",
+            ].join(","),
+          );
+        }
+
+        res.setHeader("Content-Type", "text/csv");
+        res.setHeader("Content-Disposition", 'attachment; filename="sfgm-students.csv"');
+        res.send(lines.join("\n"));
+      } catch (e) {
+        console.error("Dean export students:", e);
+        res.status(500).json({ message: "Failed to export students" });
       }
     },
   );

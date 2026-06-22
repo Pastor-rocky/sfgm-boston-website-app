@@ -7,6 +7,7 @@ import { db } from './db';
 import * as schema from '../shared/schema';
 import { eq, desc, sql } from 'drizzle-orm';
 import { registerAuthRoutes } from "./routes/auth";
+import { registerOAuthRoutes } from "./routes/oauth";
 import { registerQuizRoutes } from "./routes/quizzes";
 import { registerCourseRoutes } from "./routes/courses";
 import { registerMediaRoutes } from "./routes/media";
@@ -69,6 +70,7 @@ export function setupRoutes(app: Express): Server {
   app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
   registerAuthRoutes(app);
+  registerOAuthRoutes(app);
   registerQuizRoutes(app);
   registerCourseRoutes(app);
   registerMediaRoutes(app);

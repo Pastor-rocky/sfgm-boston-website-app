@@ -12,6 +12,7 @@ import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import sfgmLogoBlue from "@/assets/sfgm-logo-new-blue.png";
 import { canAccessInstructorPortal, resolvePostLoginRedirect } from "@/lib/auth-redirect";
+import SocialAuthButtons from "@/components/social-auth-buttons";
 
 
 interface LoginFormData {
@@ -48,7 +49,7 @@ export default function Login() {
         variant: "destructive",
       });
       // Clean URL
-      window.history.replaceState({}, "", "/login");
+      window.history.replaceState({}, "", isInstructorLogin ? "/instructor-login" : "/login");
     }
   }, [location, toast]);
 
@@ -199,14 +200,19 @@ export default function Login() {
             </CardHeader>
             
             <CardContent className="p-8">
-              <div className="relative mb-6">
-                <div className="absolute inset-0 flex items-center">
-                  <Separator className="w-full" />
-                </div>
-                <div className="relative flex justify-center text-xs">
-                  <span className="bg-white px-4 text-gray-500">or</span>
-                </div>
-              </div>
+              {!isInstructorLogin ? (
+                <>
+                  <SocialAuthButtons returnTo={returnTo} instructorFlow={false} />
+                  <div className="relative my-6">
+                    <div className="absolute inset-0 flex items-center">
+                      <Separator className="w-full" />
+                    </div>
+                    <div className="relative flex justify-center text-xs">
+                      <span className="bg-white px-4 text-gray-500">or sign in with email</span>
+                    </div>
+                  </div>
+                </>
+              ) : null}
 
               {/* Login Instructions */}
               <div className="mb-6">

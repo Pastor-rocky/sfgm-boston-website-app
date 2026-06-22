@@ -957,7 +957,23 @@ export const instructorMessages = pgTable("instructor_messages", {
   body: text("body").notNull(),
   sentAt: timestamp("sent_at").defaultNow().notNull(),
   emailDelivered: boolean("email_delivered").default(false),
+  smsDelivered: boolean("sms_delivered").default(false),
   readAt: timestamp("read_at"),
+});
+
+export const instructorSessions = pgTable("instructor_sessions", {
+  id: serial("id").primaryKey(),
+  instructorId: varchar("instructor_id").notNull().references(() => users.id),
+  courseId: integer("course_id").references(() => courses.id),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  sessionType: varchar("session_type", { length: 20 }).notNull().default("zoom"),
+  joinUrl: text("join_url"),
+  startUrl: text("start_url"),
+  meetingId: varchar("meeting_id", { length: 64 }),
+  scheduledAt: timestamp("scheduled_at"),
+  durationMinutes: integer("duration_minutes").default(60),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 // Essay submissions table for final exam essays

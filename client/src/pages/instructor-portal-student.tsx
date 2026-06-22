@@ -34,6 +34,18 @@ export default function InstructorPortalStudentChart() {
     enabled: !!studentId,
   });
 
+  const { data: progressData } = useQuery({
+    queryKey: ["/api/instructor/students", studentId, "progress"],
+    queryFn: async () => {
+      const r = await fetch(`/api/instructor/students/${studentId}/progress`, {
+        credentials: "include",
+      });
+      if (!r.ok) throw new Error("Failed to load progress");
+      return r.json();
+    },
+    enabled: !!studentId,
+  });
+
   const { data: essays = [] } = useQuery({
     queryKey: ["/api/instructor/essay-submissions"],
     queryFn: async () => {
@@ -47,6 +59,8 @@ export default function InstructorPortalStudentChart() {
   const student = students.find((s: { id: string }) => s.id === studentId);
   const studentEssays = essays.filter((e: { studentId: string }) => e.studentId === studentId);
   const grades = gradesData?.grades || [];
+  const progressCourses = progressData?.courses || [];
+  const recentActivity = progressData?.recentActivity || [];
 
   if (!student && students.length > 0) {
     return (
@@ -83,6 +97,7 @@ export default function InstructorPortalStudentChart() {
       <Tabs defaultValue="overview" className="space-y-6">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="progress">Progress</TabsTrigger>
           <TabsTrigger value="grades">Grades</TabsTrigger>
           <TabsTrigger value="essays">Essays</TabsTrigger>
           <TabsTrigger value="courses">Courses</TabsTrigger>
@@ -110,6 +125,68 @@ export default function InstructorPortalStudentChart() {
                 {student?.gpa != null ? `${student.gpa}%` : "—"}
               </CardContent>
             </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="progress">
+          <div className="space-y-4">
+            {progressCourses.length === 0 ? (
+              <Card>
+                <CardContent className="py-6 text-sm text-slate-600">
+                  No course progress recorded yet.
+                </CardContent>
+              </Card>
+            ) : (
+              progressCourses.map((course: any) => (
+                <Card key={course.courseId}>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base flex justify-between gap-2">
+                      <span>{course.courseName}</span>
+                      <Badge>{course.percentComplete}% complete</Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-sm space-y-2">
+                    <p className="text-slate-600">
+                      {course.completedItems} of {course.totalItems} items completed · Status:{" "}
+                      {course.enrollmentStatus}
+                    </p>
+                    {course.items.slice(0, 12).map((item: any, index: number) => (
+                      <div
+                        key={`${item.contentType}-${item.contentId}-${index}`}
+                        className="flex justify-between border-b pb-2 last:border-0"
+                      >
+                        <span>
+                          {item.contentType} #{item.contentId}
+                        </span>
+                        <Badge variant={item.completed ? "default" : "secondary"}>
+                          {item.completed ? "Done" : "Pending"}
+                        </Badge>
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+              ))
+            )}
+            {recentActivity.length > 0 ? (
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base">Recent activity</CardTitle>
+                </CardHeader>
+                <CardContent className="text-sm space-y-2">
+                  {recentActivity.map((item: any, index: number) => (
+                    <div key={`${item.quizId}-${index}`} className="flex justify-between">
+                      <span>Quiz #{item.quizId}</span>
+                      <span>
+                        {item.score != null ? `${(Number(item.score) * 100).toFixed(0)}%` : "—"} ·{" "}
+                        {item.completedAt
+                          ? new Date(item.completedAt).toLocaleDateString()
+                          : "—"}
+                      </span>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            ) : null}
           </div>
         </TabsContent>
 

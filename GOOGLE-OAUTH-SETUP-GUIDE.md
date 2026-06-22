@@ -1,18 +1,55 @@
-# 🔐 Google OAuth Setup Guide
+# Google Sign-In Setup (Free)
 
-## ✅ Implementation Complete!
+Google OAuth is **free** for normal sign-in volumes.
 
-Google OAuth authentication has been fully implemented. Students can now sign in with their Google accounts!
+## 1. Google Cloud Console
 
-## 📋 Quick Setup Steps
+1. Go to [console.cloud.google.com](https://console.cloud.google.com/)
+2. Create or select a project (e.g. **SFGM Boston**)
+3. **APIs & Services → OAuth consent screen**
+   - User type: **External** (or Internal if you use Google Workspace)
+   - App name: **SFGM Boston Bible School**
+   - Support email: your ministry email
+   - Authorized domains: `sfgmboston.com`
+4. **APIs & Services → Credentials → Create Credentials → OAuth client ID**
+   - Application type: **Web application**
+   - Name: `SFGM Boston Web`
 
-1. **Go to Google Cloud Console**: https://console.cloud.google.com/
-2. **Create OAuth 2.0 Credentials**
-3. **Add Authorized Redirect URI**: `https://sfgmboston.com/api/auth/google/callback`
-4. **Copy Client ID and Secret**
-5. **Add to Render Environment Variables**:
-   - `GOOGLE_CLIENT_ID`
-   - `GOOGLE_CLIENT_SECRET`
-   - `GOOGLE_CALLBACK_URL=https://sfgmboston.com/api/auth/google/callback`
+## 2. Authorized redirect URIs
 
-See the full guide in the file for detailed instructions!
+Add **both**:
+
+| Environment | Redirect URI |
+|-------------|----------------|
+| Local | `http://localhost:56000/api/auth/google/callback` |
+| Production | `https://sfgmboston.com/api/auth/google/callback` |
+
+## 3. Environment variables
+
+**Local `.env`:**
+```env
+GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your-client-secret
+GOOGLE_CALLBACK_URL=http://localhost:56000/api/auth/google/callback
+```
+
+**Render (production):**
+```env
+GOOGLE_CLIENT_ID=same-as-above
+GOOGLE_CLIENT_SECRET=same-as-above
+GOOGLE_CALLBACK_URL=https://sfgmboston.com/api/auth/google/callback
+APP_URL=https://sfgmboston.com
+```
+
+## 4. Test
+
+1. Restart dev server
+2. Visit `/login` or `/register`
+3. **Continue with Google** should appear when credentials are set
+4. After sign-in, you land on the student dashboard
+
+## Notes
+
+- New Google users get a student account automatically (email verified).
+- If the email already exists, Google signs into that account.
+- OAuth users have no password — they sign in with Google going forward.

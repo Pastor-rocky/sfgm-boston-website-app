@@ -83,6 +83,8 @@ export const studentRoutes: RouteDefinition[] = [
   createRoute("/instructor-portal/students/:id", () => import("@/pages/instructor-portal-student")),
   createRoute("/instructor-portal/messages", () => import("@/pages/instructor-portal-messages")),
   createRoute("/instructor-portal/certificates", () => import("@/pages/instructor-portal-certificates")),
+  createRoute("/instructor-portal/applications", () => import("@/pages/instructor-portal-applications")),
+  createRoute("/instructor-portal/dean-tools", () => import("@/pages/instructor-portal-dean-tools")),
 ];
 
 export const authRoutes: RouteDefinition[] = [
