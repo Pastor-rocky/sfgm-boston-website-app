@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { useQuery } from "@tanstack/react-query";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,6 +7,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import FamilyNightVideoPlayer from "@/components/family-night-video-player";
+import FamilyNightFinalExamCountdown, {
+  useFinalExamCountdown,
+} from "@/components/family-night-final-exam-countdown";
+import { FAMILY_NIGHT_FINAL_EXAM_OPENS_LABEL } from "@/lib/family-night-quizzes";
 import {
   ArrowLeft,
   Clock,
@@ -16,6 +21,8 @@ import {
   Crown,
   Lock,
   CheckCircle2,
+  VideoOff,
+  Medal,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -31,6 +38,82 @@ import {
   allTeachingsWatched,
 } from "@/lib/family-night-progress";
 
+type LeaderboardEntry = {
+  rank: number;
+  displayName: string;
+  scorePercent: number;
+  timeSpentMinutes: number;
+};
+
+function rankRowClass(rank: number): string {
+  if (rank === 1) {
+    return "bg-gradient-to-r from-amber-500/35 to-yellow-600/20 border-amber-300/50 shadow-[0_0_12px_rgba(251,191,36,0.25)]";
+  }
+  if (rank === 2) {
+    return "bg-gradient-to-r from-slate-400/25 to-slate-500/15 border-slate-300/40";
+  }
+  if (rank === 3) {
+    return "bg-gradient-to-r from-orange-700/30 to-amber-800/20 border-orange-400/35";
+  }
+  return "bg-white/5 border-white/10";
+}
+
+function LeaderboardList({
+  title,
+  entries,
+  emptyMessage,
+  accentClass = "text-amber-300",
+}: {
+  title: string;
+  entries: LeaderboardEntry[];
+  emptyMessage: string;
+  accentClass?: string;
+}) {
+  return (
+    <div className="mb-5 rounded-xl border border-white/10 bg-black/25 p-3">
+      <p
+        className={`text-[11px] font-bold uppercase tracking-widest mb-3 flex items-center gap-1.5 ${accentClass}`}
+      >
+        <Medal className="h-3.5 w-3.5 shrink-0" />
+        {title}
+      </p>
+      {entries.length === 0 ? (
+        <p className="text-xs text-purple-200/60 px-1">{emptyMessage}</p>
+      ) : (
+        <ol className="space-y-2">
+          {entries.slice(0, 5).map((entry) => (
+            <li
+              key={`${title}-${entry.rank}-${entry.displayName}`}
+              className={`flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-sm ${rankRowClass(entry.rank)}`}
+            >
+              <span className="truncate text-white font-medium">
+                <span
+                  className={`inline-flex min-w-[2rem] justify-center rounded-md px-1.5 py-0.5 text-xs font-bold mr-2 ${
+                    entry.rank === 1
+                      ? "bg-amber-400 text-amber-950"
+                      : entry.rank === 2
+                        ? "bg-slate-300 text-slate-900"
+                        : entry.rank === 3
+                          ? "bg-orange-400 text-orange-950"
+                          : "bg-purple-800/80 text-purple-100"
+                  }`}
+                >
+                  #{entry.rank}
+                </span>
+                {entry.displayName}
+              </span>
+              <span className="shrink-0 text-xs font-semibold text-amber-100/90 tabular-nums">
+                {Math.round(entry.scorePercent)}%
+                <span className="text-purple-200/70 font-normal"> · {entry.timeSpentMinutes}m</span>
+              </span>
+            </li>
+          ))}
+        </ol>
+      )}
+    </div>
+  );
+}
+
 export default function FamilyNight() {
   const { user, isAuthenticated } = useAuth();
   const { toast } = useToast();
@@ -39,6 +122,24 @@ export default function FamilyNight() {
 
   const cycle = CURRENT_FAMILY_NIGHT_CYCLE;
   const userId = (user as { id?: string } | null)?.id;
+
+  const { data: leaderboard } = useQuery<{
+    overall: LeaderboardEntry[];
+    men: LeaderboardEntry[];
+    women: LeaderboardEntry[];
+    champions: {
+      overall: LeaderboardEntry | null;
+      men: LeaderboardEntry | null;
+      women: LeaderboardEntry | null;
+    };
+    rankedBy: string;
+  }>({
+    queryKey: ["/api/family-night/leaderboard"],
+    enabled: isAuthenticated,
+    staleTime: 5_000,
+    refetchInterval: 10_000,
+    refetchOnMount: "always",
+  });
 
   const refreshProgress = useCallback(() => {
     bumpProgress((n) => n + 1);
@@ -52,7 +153,11 @@ export default function FamilyNight() {
   const isVideoWatched = (contentId: number) =>
     userId ? isFamilyNightVideoWatched(userId, contentId) : false;
 
+  const isQuizUnlocked = (week: FamilyNightVideo) =>
+    week.noVideo || isVideoWatched(week.contentId);
+
   const handleOpenVideo = (week: FamilyNightVideo) => {
+    if (week.noVideo) return;
     if (!week.videoUrl) {
       toast({
         title: "Coming soon",
@@ -95,8 +200,8 @@ export default function FamilyNight() {
   };
 
   const renderQuizButton = (week: FamilyNightVideo) => {
-    const watched = isVideoWatched(week.contentId);
-    const hasVideo = !!week.videoUrl;
+    const quizReady = isQuizUnlocked(week);
+    const hasVideo = !!week.videoUrl && !week.noVideo;
     const hasQuiz = !!week.quizPath;
 
     if (!isAuthenticated) {
@@ -109,7 +214,7 @@ export default function FamilyNight() {
       );
     }
 
-    if (!hasVideo) {
+    if (!week.noVideo && !hasVideo) {
       return (
         <Button size="sm" disabled className="shrink-0 bg-gray-600/40 text-gray-300">
           Video Soon
@@ -117,7 +222,7 @@ export default function FamilyNight() {
       );
     }
 
-    if (!watched) {
+    if (!quizReady) {
       return (
         <Button
           size="sm"
@@ -148,8 +253,14 @@ export default function FamilyNight() {
     );
   };
 
-  const finalUnlocked =
-    isAuthenticated && allTeachingsWatched(userId) && cycle.weeks.every((w) => w.videoUrl);
+  const finalExamCountdown = useFinalExamCountdown();
+
+  const finalWeeksReady =
+    isAuthenticated &&
+    allTeachingsWatched(userId) &&
+    cycle.weeks.every((w) => w.videoUrl || w.noVideo);
+
+  const finalUnlocked = finalWeeksReady && finalExamCountdown.isOpen;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900">
@@ -241,16 +352,18 @@ export default function FamilyNight() {
               <CardContent className="space-y-4">
                 {cycle.weeks.map((week) => {
                   const watched = isVideoWatched(week.contentId);
-                  const hasVideo = !!week.videoUrl;
+                  const hasVideo = !!week.videoUrl && !week.noVideo;
                   const isExpanded = expandedWeek === week.week;
 
                   return (
                     <div
                       key={week.week}
                       className={`p-4 rounded-lg border transition-all ${
-                        watched
-                          ? "bg-green-900/20 border-green-500/30"
-                          : "bg-white/5 border-white/10"
+                        week.noVideo
+                          ? "bg-indigo-900/20 border-indigo-400/30"
+                          : watched
+                            ? "bg-green-900/20 border-green-500/30"
+                            : "bg-white/5 border-white/10"
                       }`}
                     >
                       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
@@ -259,13 +372,18 @@ export default function FamilyNight() {
                             <span className="text-white font-semibold">
                               Week {week.week}: {week.title}
                             </span>
-                            {watched && (
+                            {watched && hasVideo && (
                               <Badge className="bg-green-600/80 text-white border-0">
                                 <CheckCircle2 className="h-3 w-3 mr-1" />
                                 Watched
                               </Badge>
                             )}
-                            {!hasVideo && (
+                            {week.noVideo && (
+                              <Badge variant="outline" className="border-indigo-400/50 text-indigo-200">
+                                Quiz only
+                              </Badge>
+                            )}
+                            {!hasVideo && !week.noVideo && (
                               <Badge variant="outline" className="border-amber-400/50 text-amber-200">
                                 Video coming soon
                               </Badge>
@@ -281,21 +399,33 @@ export default function FamilyNight() {
                             </p>
                           )}
                           <p className="text-sm text-purple-200/80">{week.description}</p>
+
+                          {week.noVideo && (
+                            <div className="mt-4 flex flex-col items-center justify-center rounded-lg border border-dashed border-indigo-400/40 bg-indigo-950/30 py-8 px-4 text-center">
+                              <VideoOff className="h-12 w-12 text-indigo-300/80 mb-3" />
+                              <p className="text-indigo-100 font-medium">Sorry — no video this week</p>
+                              <p className="text-sm text-indigo-200/70 mt-1 max-w-xs">
+                                There is no recording for this teaching. You can still take the quiz below.
+                              </p>
+                            </div>
+                          )}
                         </div>
                         <div className="flex flex-col gap-2 shrink-0 sm:min-w-[140px]">
-                          <Button
-                            size="sm"
-                            onClick={() => handleOpenVideo(week)}
-                            disabled={!hasVideo}
-                            className={
-                              watched
-                                ? "bg-green-700 hover:bg-green-600"
-                                : "bg-indigo-600 hover:bg-indigo-700"
-                            }
-                          >
-                            <Play className="h-4 w-4 mr-1" />
-                            {isExpanded ? "Hide Video" : watched ? "Rewatch" : "Watch Teaching"}
-                          </Button>
+                          {!week.noVideo && (
+                            <Button
+                              size="sm"
+                              onClick={() => handleOpenVideo(week)}
+                              disabled={!hasVideo}
+                              className={
+                                watched
+                                  ? "bg-green-700 hover:bg-green-600"
+                                  : "bg-indigo-600 hover:bg-indigo-700"
+                              }
+                            >
+                              <Play className="h-4 w-4 mr-1" />
+                              {isExpanded ? "Hide Video" : watched ? "Rewatch" : "Watch Teaching"}
+                            </Button>
+                          )}
                           {renderQuizButton(week)}
                         </div>
                       </div>
@@ -320,7 +450,7 @@ export default function FamilyNight() {
                         </div>
                       )}
 
-                      {!watched && hasVideo && isAuthenticated && !isExpanded && (
+                      {!week.noVideo && !watched && hasVideo && isAuthenticated && !isExpanded && (
                         <p className="text-xs text-purple-300/70 mt-3 flex items-center gap-1">
                           <Lock className="h-3 w-3" />
                           Watch the teaching before you can take the quiz
@@ -351,19 +481,44 @@ export default function FamilyNight() {
                         )}
                       </div>
                       <p className="text-sm text-amber-100">{cycle.finalExam.description}</p>
-                      {!finalUnlocked && (
+
+                      {!finalWeeksReady && (
                         <p className="text-xs text-amber-200/70 mt-2">
-                          Watch all three teachings to unlock the final exam.
+                          Complete all three weeks to unlock the monthly championship exam.
                         </p>
                       )}
+
+                      {finalWeeksReady && !finalExamCountdown.isOpen && (
+                        <div className="mt-3">
+                          <p className="text-xs text-amber-200/80 mb-2">
+                            Final exam opens {FAMILY_NIGHT_FINAL_EXAM_OPENS_LABEL}.
+                          </p>
+                          <FamilyNightFinalExamCountdown showOpensLabel={false} />
+                        </div>
+                      )}
                     </div>
-                    <Button
-                      size="sm"
-                      disabled={!finalUnlocked || !cycle.finalExam.quizPath}
-                      className="shrink-0 bg-amber-600 hover:bg-amber-700 disabled:opacity-50"
-                    >
-                      {cycle.finalExam.quizPath ? "Final Exam" : "Exam Soon"}
-                    </Button>
+                    {finalUnlocked && cycle.finalExam.quizPath ? (
+                      <Link href={cycle.finalExam.quizPath}>
+                        <Button
+                          size="sm"
+                          className="shrink-0 bg-amber-600 hover:bg-amber-700"
+                        >
+                          Take Final Exam
+                        </Button>
+                      </Link>
+                    ) : (
+                      <Button
+                        size="sm"
+                        disabled
+                        className="shrink-0 bg-amber-600 hover:bg-amber-700 disabled:opacity-50"
+                      >
+                        {!finalWeeksReady
+                          ? "Final Exam Locked"
+                          : !finalExamCountdown.isOpen
+                            ? "Opens Wed 9 PM"
+                            : "Exam Soon"}
+                      </Button>
+                    )}
                   </div>
                 </div>
               </CardContent>
@@ -371,28 +526,104 @@ export default function FamilyNight() {
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
-            <Card className="bg-gradient-to-br from-indigo-900/40 to-purple-900/40 border-yellow-500/20 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2">
-                  <Trophy className="h-5 w-5 text-yellow-400" />
+          <div className="space-y-6 lg:sticky lg:top-24 lg:z-20 self-start">
+            <Card className="relative z-20 overflow-hidden border-2 border-amber-400/45 bg-gradient-to-br from-[#1a1033] via-[#2d1a4a] to-[#1f0f33] shadow-[0_8px_32px_rgba(0,0,0,0.45),0_0_48px_rgba(251,191,36,0.12)] ring-1 ring-amber-200/20">
+              <div className="pointer-events-none absolute -top-16 -right-16 h-40 w-40 rounded-full bg-amber-400/20 blur-3xl" />
+              <div className="pointer-events-none absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-purple-500/20 blur-3xl" />
+              <CardHeader className="relative border-b border-amber-400/20 bg-gradient-to-r from-amber-500/10 to-transparent pb-4">
+                <CardTitle className="text-white flex items-center gap-2 text-xl">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-amber-300 to-amber-600 shadow-lg shadow-amber-900/40">
+                    <Trophy className="h-5 w-5 text-amber-950" />
+                  </span>
                   Leaderboard
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="text-center py-6">
-                  <Trophy className="h-10 w-10 text-yellow-400/60 mx-auto mb-3" />
-                  <p className="text-purple-100 text-sm mb-4">
-                    Rankings appear once weekly quizzes are live.
+              <CardContent className="relative pt-5">
+                <p className="text-amber-100/90 text-xs mb-4 leading-relaxed">
+                  Overall leader is open to everyone. Men&apos;s and Women&apos;s boards are for
+                  separate monthly prizes — highest score, then fastest time.
+                </p>
+
+                {!isAuthenticated ? (
+                  <p className="text-purple-100 text-sm text-center py-4">
+                    Log in to view rankings after taking the final exam.
                   </p>
-                  <div className="space-y-2 text-left text-xs text-purple-200">
-                    <p>• Overall champion</p>
-                    <p>• Men&apos;s highest</p>
-                    <p>• Women&apos;s highest</p>
+                ) : leaderboard?.overall?.length ? (
+                  <>
+                    {leaderboard.champions?.overall ? (
+                      <div className="mb-5 rounded-xl border-2 border-amber-300/50 bg-gradient-to-br from-amber-500/25 via-yellow-500/15 to-orange-600/10 p-4 shadow-[0_0_24px_rgba(251,191,36,0.2)]">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Crown className="h-5 w-5 text-amber-300" />
+                          <p className="text-xs font-bold uppercase tracking-widest text-amber-200">
+                            Overall leader
+                          </p>
+                        </div>
+                        <p className="text-xl font-bold text-white">
+                          {leaderboard.champions.overall.displayName}
+                        </p>
+                        <p className="text-sm font-semibold text-amber-100 mt-1">
+                          {Math.round(leaderboard.champions.overall.scorePercent)}% in{" "}
+                          {leaderboard.champions.overall.timeSpentMinutes} min
+                        </p>
+                      </div>
+                    ) : null}
+                    <LeaderboardList
+                      title="Overall"
+                      entries={leaderboard.overall}
+                      emptyMessage="No final exam attempts yet."
+                    />
+                    {leaderboard.champions?.men ? (
+                      <div className="mb-3 rounded-lg border border-sky-400/35 bg-sky-500/10 px-3 py-2">
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-sky-200 mb-1">
+                          Men&apos;s prize leader
+                        </p>
+                        <p className="text-sm font-semibold text-white">
+                          {leaderboard.champions.men.displayName}
+                        </p>
+                        <p className="text-xs text-sky-100/80">
+                          {Math.round(leaderboard.champions.men.scorePercent)}% ·{" "}
+                          {leaderboard.champions.men.timeSpentMinutes}m
+                        </p>
+                      </div>
+                    ) : null}
+                    <LeaderboardList
+                      title="Men's prize board"
+                      entries={leaderboard.men}
+                      emptyMessage="No men's entries yet."
+                      accentClass="text-sky-300"
+                    />
+                    {leaderboard.champions?.women ? (
+                      <div className="mb-3 rounded-lg border border-pink-400/35 bg-pink-500/10 px-3 py-2">
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-pink-200 mb-1">
+                          Women&apos;s prize leader
+                        </p>
+                        <p className="text-sm font-semibold text-white">
+                          {leaderboard.champions.women.displayName}
+                        </p>
+                        <p className="text-xs text-pink-100/80">
+                          {Math.round(leaderboard.champions.women.scorePercent)}% ·{" "}
+                          {leaderboard.champions.women.timeSpentMinutes}m
+                        </p>
+                      </div>
+                    ) : null}
+                    <LeaderboardList
+                      title="Women's prize board"
+                      entries={leaderboard.women}
+                      emptyMessage="No women's entries yet."
+                      accentClass="text-pink-300"
+                    />
+                  </>
+                ) : (
+                  <div className="text-center py-6 rounded-xl border border-dashed border-amber-400/30 bg-black/20">
+                    <Trophy className="h-10 w-10 text-amber-400/70 mx-auto mb-3" />
+                    <p className="text-purple-100 text-sm">
+                      Take the final exam to appear on the leaderboard.
+                    </p>
                   </div>
-                </div>
-                <div className="p-3 rounded-lg bg-yellow-600/20 border border-yellow-500/30">
-                  <p className="text-yellow-100 text-center text-xs font-medium">
+                )}
+
+                <div className="p-3 rounded-xl bg-gradient-to-r from-amber-600/30 to-yellow-500/20 border border-amber-400/40 mt-2 shadow-inner">
+                  <p className="text-amber-50 text-center text-xs font-semibold leading-relaxed">
                     {cycle.prizeDescription}
                   </p>
                 </div>

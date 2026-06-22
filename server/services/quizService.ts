@@ -5,6 +5,8 @@ import { eq, and, desc } from "drizzle-orm";
 import type { InsertQuizAttempt, QuizAttempt, QuizQuestion } from "../../shared/schema";
 import { isQuestionCorrect } from "../../shared/quiz-scoring";
 import { quizMonitoring } from "./quizMonitoring";
+import { FAMILY_NIGHT_FINAL_EXAM_QUIZ_ID } from "../../shared/family-night";
+import { invalidateFamilyNightLeaderboardCache } from "./familyNightLeaderboard";
 
 /**
  * Quiz Service - Handles quiz submission business logic
@@ -128,6 +130,10 @@ export class QuizService {
             score,
             retriesUsed: attemptNumber,
           });
+
+          if (actualQuizId === FAMILY_NIGHT_FINAL_EXAM_QUIZ_ID) {
+            invalidateFamilyNightLeaderboardCache();
+          }
 
           return newAttempt as QuizAttempt;
         });

@@ -11,6 +11,8 @@ export type FamilyNightVideo = {
   description: string;
   videoUrl: string;
   isInstagram: boolean;
+  /** No recording for this week — quiz only, no watch required */
+  noVideo?: boolean;
   /** Future quiz route slug, e.g. family-night-faith-week-1 */
   quizPath: string | null;
   contentId: number;
@@ -66,17 +68,19 @@ export const CURRENT_FAMILY_NIGHT_CYCLE: FamilyNightCycle = {
       title: "Teaching 3",
       subtitle: "Faith — Part 3",
       preacher: "TBD",
-      description: "Third teaching — posted after Week 2.",
+      description: "Quiz only — no video recording for this week.",
       videoUrl: "",
       isInstagram: false,
-      quizPath: null,
+      noVideo: true,
+      quizPath: "/quiz/243",
       contentId: 103,
     },
   ],
   finalExam: {
     title: "Faith Final Exam",
-    description: "Monthly championship exam — unlocks after all three teachings are watched.",
-    quizPath: null,
+    description:
+      "Monthly championship exam — opens Wednesday at 9:00 PM ET. Highest score wins; ties broken by fastest time.",
+    quizPath: "/quiz/244",
     contentId: 104,
   },
 };

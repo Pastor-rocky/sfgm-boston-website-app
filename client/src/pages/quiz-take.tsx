@@ -15,7 +15,9 @@ import { Badge } from '@/components/ui/badge';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Textarea } from "@/components/ui/textarea";
 import { FinalExamCompletion } from "@/components/final-exam-completion";
-import { isFamilyNightQuizParam, getFamilyNightReturnPath } from "@/lib/family-night-quizzes";
+import { isFamilyNightQuizParam, isFamilyNightFinalExamQuizParam, getFamilyNightReturnPath, FAMILY_NIGHT_FINAL_EXAM_OPENS_LABEL } from "@/lib/family-night-quizzes";
+import FamilyNightFinalExamCountdown from "@/components/family-night-final-exam-countdown";
+import { useFinalExamCountdown } from "@/components/family-night-final-exam-countdown";
 import { isVideoQuestion, isAnswerProvided, isResearchQuestion } from "@shared/quiz-scoring";
 import { DEFAULT_PASSING_SCORE } from "@shared/course-constants";
 
@@ -154,6 +156,8 @@ export default function QuizTake() {
   };
 
   const familyNightQuiz = isFamilyNightQuizParam(id);
+  const familyNightFinalExam = isFamilyNightFinalExamQuizParam(id);
+  const finalExamCountdown = useFinalExamCountdown();
 
   const navigateAfterQuiz = () => {
     if (familyNightQuiz) {
@@ -504,6 +508,36 @@ export default function QuizTake() {
               <p className="text-gray-600">Loading quiz...</p>
             </div>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (familyNightFinalExam && !isReviewMode && !finalExamCountdown.isOpen) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900">
+        <Navigation />
+        <div className="container mx-auto px-4 pt-24 pb-12">
+          <Card className="max-w-lg mx-auto bg-white/10 border-amber-400/30 backdrop-blur-sm">
+            <CardContent className="p-8 text-center">
+              <div className="w-16 h-16 bg-amber-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i className="fas fa-lock text-amber-300 text-2xl" />
+              </div>
+              <h2 className="text-2xl font-bold text-white mb-2">Final Exam Not Open Yet</h2>
+              <p className="text-purple-100 mb-6">
+                The monthly championship exam opens {FAMILY_NIGHT_FINAL_EXAM_OPENS_LABEL}.
+              </p>
+              <div className="flex justify-center mb-6">
+                <FamilyNightFinalExamCountdown showOpensLabel={false} />
+              </div>
+              <Button
+                onClick={() => setLocation(getFamilyNightReturnPath())}
+                className="bg-purple-600 hover:bg-purple-700"
+              >
+                Return to Family Night
+              </Button>
+            </CardContent>
+          </Card>
         </div>
       </div>
     );

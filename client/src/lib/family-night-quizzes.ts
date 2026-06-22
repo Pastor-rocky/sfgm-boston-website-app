@@ -1,16 +1,11 @@
-/** Family Night quiz slugs and numeric IDs (220+) */
-export const FAMILY_NIGHT_QUIZ_SLUGS: Record<string, number> = {
-  "family-night-faith-week-1": 220,
-  "family-night-faith-week-2": 232,
-};
-
-export function isFamilyNightQuizParam(param: string | undefined): boolean {
-  if (!param) return false;
-  if (param in FAMILY_NIGHT_QUIZ_SLUGS) return true;
-  const n = Number(param);
-  return !Number.isNaN(n) && Object.values(FAMILY_NIGHT_QUIZ_SLUGS).includes(n);
-}
-
-export function getFamilyNightReturnPath(): string {
-  return "/family-night";
-}
+export {
+  FAMILY_NIGHT_FINAL_EXAM_QUIZ_ID,
+  FAMILY_NIGHT_FINAL_EXAM_OPENS_AT_ISO,
+  FAMILY_NIGHT_FINAL_EXAM_OPENS_LABEL,
+  FAMILY_NIGHT_QUIZ_SLUGS,
+  formatFinalExamCountdown,
+  getFinalExamCountdownParts,
+  isFamilyNightFinalExamQuizParam,
+  isFamilyNightQuizParam,
+  getFamilyNightReturnPath,
+} from "@shared/family-night";

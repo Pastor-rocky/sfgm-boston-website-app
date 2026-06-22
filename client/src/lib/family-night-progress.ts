@@ -44,6 +44,6 @@ export function getFamilyNightWatchedIds(userId: string | undefined): number[] {
 export function allTeachingsWatched(userId: string | undefined): boolean {
   if (!userId) return false;
   return CURRENT_FAMILY_NIGHT_CYCLE.weeks.every((w) =>
-    !w.videoUrl ? true : isFamilyNightVideoWatched(userId, w.contentId),
+    w.noVideo || !w.videoUrl ? true : isFamilyNightVideoWatched(userId, w.contentId),
   );
 }

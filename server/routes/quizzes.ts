@@ -8,6 +8,7 @@ import { requireAuth } from "../middleware/requireAuth";
 import { validateBody } from "../middleware/validate";
 import { sendErrorResponse } from "../utils/errorHandler";
 import { apiRateLimit } from "../middleware/rateLimit";
+import { getFinalExamScheduleBlock } from "../../shared/family-night";
 
 const QUIZ_SLUG_MAP: Record<string, number> = {
   "acts-week-1": 13,
@@ -81,6 +82,8 @@ const QUIZ_SLUG_MAP: Record<string, number> = {
   "youth-ministry-final-exam": 212,
   "family-night-faith-week-1": 220,
   "family-night-faith-week-2": 232,
+  "family-night-faith-week-3": 243,
+  "family-night-faith-final-exam": 244,
   "man-of-god-week-1": 221,
   "man-of-god-week-2": 222,
   "man-of-god-week-3": 223,
@@ -264,6 +267,11 @@ export function registerQuizRoutes(app: Express) {
         return res.status(404).json({ message: "Quiz not found" });
       }
 
+      const scheduleBlock = getFinalExamScheduleBlock(quizId);
+      if (scheduleBlock) {
+        return res.status(403).json(scheduleBlock);
+      }
+
       const quiz = await storage.getQuiz(quizId);
       if (!quiz) {
         return res.status(404).json({ message: "Quiz not found" });
@@ -283,6 +291,11 @@ export function registerQuizRoutes(app: Express) {
         const quizId = resolveQuizId(req.params.quizId);
         if (!quizId) {
           return res.status(404).json({ message: "Quiz not found" });
+        }
+
+        const scheduleBlock = getFinalExamScheduleBlock(quizId);
+        if (scheduleBlock) {
+          return res.status(403).json(scheduleBlock);
         }
 
         const { answers, timeSpent, completedAt } = req.validatedBody;
@@ -305,6 +318,12 @@ export function registerQuizRoutes(app: Express) {
     try {
       const { quizId: requestedQuizId, answers, completedAt, timeSpent } = req.validatedBody;
       const quizId = requestedQuizId || 13;
+
+      const scheduleBlock = getFinalExamScheduleBlock(quizId);
+      if (scheduleBlock) {
+        return res.status(403).json(scheduleBlock);
+      }
+
       const result = await quizService.submitAttempt({
         studentId: (req as any).user!.id,
         quizId,
