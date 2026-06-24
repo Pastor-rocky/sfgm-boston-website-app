@@ -22,11 +22,15 @@ import {
   Lock,
   CheckCircle2,
   VideoOff,
-  Medal,
+  Monitor,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import {
+  LeaderboardPanels,
+  type LeaderboardEntry,
+} from "@/components/family-night-leaderboard-panels";
 import {
   CURRENT_FAMILY_NIGHT_CYCLE,
   FAMILY_NIGHT_COURSE_ID,
@@ -37,82 +41,6 @@ import {
   markFamilyNightVideoWatched,
   allTeachingsWatched,
 } from "@/lib/family-night-progress";
-
-type LeaderboardEntry = {
-  rank: number;
-  displayName: string;
-  scorePercent: number;
-  timeSpentMinutes: number;
-};
-
-function rankRowClass(rank: number): string {
-  if (rank === 1) {
-    return "bg-gradient-to-r from-amber-500/35 to-yellow-600/20 border-amber-300/50 shadow-[0_0_12px_rgba(251,191,36,0.25)]";
-  }
-  if (rank === 2) {
-    return "bg-gradient-to-r from-slate-400/25 to-slate-500/15 border-slate-300/40";
-  }
-  if (rank === 3) {
-    return "bg-gradient-to-r from-orange-700/30 to-amber-800/20 border-orange-400/35";
-  }
-  return "bg-white/5 border-white/10";
-}
-
-function LeaderboardList({
-  title,
-  entries,
-  emptyMessage,
-  accentClass = "text-amber-300",
-}: {
-  title: string;
-  entries: LeaderboardEntry[];
-  emptyMessage: string;
-  accentClass?: string;
-}) {
-  return (
-    <div className="mb-5 rounded-xl border border-white/10 bg-black/25 p-3">
-      <p
-        className={`text-[11px] font-bold uppercase tracking-widest mb-3 flex items-center gap-1.5 ${accentClass}`}
-      >
-        <Medal className="h-3.5 w-3.5 shrink-0" />
-        {title}
-      </p>
-      {entries.length === 0 ? (
-        <p className="text-xs text-purple-200/60 px-1">{emptyMessage}</p>
-      ) : (
-        <ol className="space-y-2">
-          {entries.slice(0, 5).map((entry) => (
-            <li
-              key={`${title}-${entry.rank}-${entry.displayName}`}
-              className={`flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-sm ${rankRowClass(entry.rank)}`}
-            >
-              <span className="truncate text-white font-medium">
-                <span
-                  className={`inline-flex min-w-[2rem] justify-center rounded-md px-1.5 py-0.5 text-xs font-bold mr-2 ${
-                    entry.rank === 1
-                      ? "bg-amber-400 text-amber-950"
-                      : entry.rank === 2
-                        ? "bg-slate-300 text-slate-900"
-                        : entry.rank === 3
-                          ? "bg-orange-400 text-orange-950"
-                          : "bg-purple-800/80 text-purple-100"
-                  }`}
-                >
-                  #{entry.rank}
-                </span>
-                {entry.displayName}
-              </span>
-              <span className="shrink-0 text-xs font-semibold text-amber-100/90 tabular-nums">
-                {Math.round(entry.scorePercent)}%
-                <span className="text-purple-200/70 font-normal"> · {entry.timeSpentMinutes}m</span>
-              </span>
-            </li>
-          ))}
-        </ol>
-      )}
-    </div>
-  );
-}
 
 export default function FamilyNight() {
   const { user, isAuthenticated } = useAuth();
@@ -544,75 +472,37 @@ export default function FamilyNight() {
                   separate monthly prizes — highest score, then fastest time.
                 </p>
 
+                <Link href="/family-night/leaderboard?host=1">
+                  <Button
+                    size="sm"
+                    className="w-full mb-2 bg-amber-600 hover:bg-amber-700 text-white font-semibold"
+                  >
+                    <Monitor className="h-4 w-4 mr-2" />
+                    Open live board for screen
+                  </Button>
+                </Link>
+                <Link href="/live">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="w-full mb-4 border-red-400/40 text-red-100 hover:bg-red-500/10"
+                  >
+                    <i className="fab fa-youtube mr-2" />
+                    Watch live on website
+                  </Button>
+                </Link>
+
                 {!isAuthenticated ? (
                   <p className="text-purple-100 text-sm text-center py-4">
                     Log in to view rankings after taking the final exam.
                   </p>
                 ) : leaderboard?.overall?.length ? (
-                  <>
-                    {leaderboard.champions?.overall ? (
-                      <div className="mb-5 rounded-xl border-2 border-amber-300/50 bg-gradient-to-br from-amber-500/25 via-yellow-500/15 to-orange-600/10 p-4 shadow-[0_0_24px_rgba(251,191,36,0.2)]">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Crown className="h-5 w-5 text-amber-300" />
-                          <p className="text-xs font-bold uppercase tracking-widest text-amber-200">
-                            Overall leader
-                          </p>
-                        </div>
-                        <p className="text-xl font-bold text-white">
-                          {leaderboard.champions.overall.displayName}
-                        </p>
-                        <p className="text-sm font-semibold text-amber-100 mt-1">
-                          {Math.round(leaderboard.champions.overall.scorePercent)}% in{" "}
-                          {leaderboard.champions.overall.timeSpentMinutes} min
-                        </p>
-                      </div>
-                    ) : null}
-                    <LeaderboardList
-                      title="Overall"
-                      entries={leaderboard.overall}
-                      emptyMessage="No final exam attempts yet."
-                    />
-                    {leaderboard.champions?.men ? (
-                      <div className="mb-3 rounded-lg border border-sky-400/35 bg-sky-500/10 px-3 py-2">
-                        <p className="text-[10px] font-bold uppercase tracking-widest text-sky-200 mb-1">
-                          Men&apos;s prize leader
-                        </p>
-                        <p className="text-sm font-semibold text-white">
-                          {leaderboard.champions.men.displayName}
-                        </p>
-                        <p className="text-xs text-sky-100/80">
-                          {Math.round(leaderboard.champions.men.scorePercent)}% ·{" "}
-                          {leaderboard.champions.men.timeSpentMinutes}m
-                        </p>
-                      </div>
-                    ) : null}
-                    <LeaderboardList
-                      title="Men's prize board"
-                      entries={leaderboard.men}
-                      emptyMessage="No men's entries yet."
-                      accentClass="text-sky-300"
-                    />
-                    {leaderboard.champions?.women ? (
-                      <div className="mb-3 rounded-lg border border-pink-400/35 bg-pink-500/10 px-3 py-2">
-                        <p className="text-[10px] font-bold uppercase tracking-widest text-pink-200 mb-1">
-                          Women&apos;s prize leader
-                        </p>
-                        <p className="text-sm font-semibold text-white">
-                          {leaderboard.champions.women.displayName}
-                        </p>
-                        <p className="text-xs text-pink-100/80">
-                          {Math.round(leaderboard.champions.women.scorePercent)}% ·{" "}
-                          {leaderboard.champions.women.timeSpentMinutes}m
-                        </p>
-                      </div>
-                    ) : null}
-                    <LeaderboardList
-                      title="Women's prize board"
-                      entries={leaderboard.women}
-                      emptyMessage="No women's entries yet."
-                      accentClass="text-pink-300"
-                    />
-                  </>
+                  <LeaderboardPanels
+                    champions={leaderboard.champions}
+                    overall={leaderboard.overall}
+                    men={leaderboard.men}
+                    women={leaderboard.women}
+                  />
                 ) : (
                   <div className="text-center py-6 rounded-xl border border-dashed border-amber-400/30 bg-black/20">
                     <Trophy className="h-10 w-10 text-amber-400/70 mx-auto mb-3" />

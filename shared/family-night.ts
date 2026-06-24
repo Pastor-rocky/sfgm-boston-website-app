@@ -1,6 +1,24 @@
 /** Family Night Faith cycle — June 2026 */
 export const FAMILY_NIGHT_FINAL_EXAM_QUIZ_ID = 244;
 
+export const FAMILY_NIGHT_CYCLE = {
+  id: "2026-06-faith",
+  theme: "Faith",
+  monthLabel: "June 2026",
+  finalExamTitle: "Faith Final Exam",
+  questionCount: 10,
+} as const;
+
+export type FamilyNightLiveViewMode = "split" | "question" | "leaderboard";
+
+export type FamilyNightLiveState = {
+  cycleId: string;
+  /** 0-based index into final exam questions; null = no question highlighted */
+  activeQuestionIndex: number | null;
+  viewMode: FamilyNightLiveViewMode;
+  updatedAt: string;
+};
+
 /** Wednesday Family Night — 9:00 PM US Eastern */
 export const FAMILY_NIGHT_FINAL_EXAM_OPENS_AT_ISO = "2026-06-03T21:00:00-04:00";
 export const FAMILY_NIGHT_FINAL_EXAM_OPENS_LABEL = "Wednesday, June 3 at 9:00 PM ET";

@@ -1,281 +1,270 @@
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import sfgmLogo from "@/assets/sfgm-logo-1.png";
+import { useEffect, useMemo, useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
-import { useToast } from "@/hooks/use-toast";
+import Navigation from "@/components/navigation";
+import Footer from "@/components/footer";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+import {
+  ExternalLink,
+  Monitor,
+  Radio,
+  Trophy,
+  Youtube,
+} from "lucide-react";
+import type { LiveBroadcastConfig } from "@shared/live-broadcast";
+
+function useQueryVideoOverride() {
+  return useMemo(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("video") || params.get("v");
+  }, []);
+}
 
 export default function LiveService() {
-  const [streamStatus, setStreamStatus] = useState({
-    youtube: false,
-    facebook: false,
-    instagram: false
-  });
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const { toast } = useToast();
-
   const { user } = useAuth();
-  const isAdmin = user?.role === 'admin' || user?.role === 'instructor' || user?.isDean;
+  const { toast } = useToast();
+  const queryVideo = useQueryVideoOverride();
+  const [videoInput, setVideoInput] = useState("");
+  const [titleInput, setTitleInput] = useState("");
 
-  // Check if it's Sunday around service time (7:30 PM)
+  const role = ((user as { role?: string } | null)?.role || "").toLowerCase();
+  const isInstructor = ["instructor", "admin", "dean"].includes(role);
+
+  const { data: broadcast, isLoading } = useQuery<LiveBroadcastConfig>({
+    queryKey: ["/api/live-broadcast"],
+    staleTime: 5_000,
+    refetchInterval: (query) => {
+      const data = query.state.data;
+      return data?.autoDetectEnabled ? 20_000 : 60_000;
+    },
+    refetchOnMount: "always",
+  });
+
+  const effectiveVideoId = queryVideo || broadcast?.videoId || null;
+  const embedUrl = effectiveVideoId
+    ? `https://www.youtube.com/embed/${effectiveVideoId}?autoplay=1&rel=0&modestbranding=1`
+    : broadcast?.embedUrl ?? null;
+  const watchUrl = effectiveVideoId
+    ? `https://www.youtube.com/watch?v=${effectiveVideoId}`
+    : broadcast?.watchUrl ?? broadcast?.channelUrl;
+
   useEffect(() => {
-    const checkServiceTime = () => {
-      const now = new Date();
-      const dayOfWeek = now.getDay(); // 0 = Sunday
-      const hour = now.getHours();
-      
-      // Sunday between 7:00 PM and 9:30 PM (buffer around 7:30 PM service)
-      const isServiceTime = dayOfWeek === 0 && hour >= 19 && hour <= 21;
-      
-      setStreamStatus({
-        youtube: isServiceTime,
-        facebook: isServiceTime,
-        instagram: isServiceTime
+    if (broadcast?.videoId && !videoInput) {
+      setVideoInput(broadcast.videoId);
+    }
+    if (broadcast?.title && !titleInput) {
+      setTitleInput(broadcast.title);
+    }
+  }, [broadcast?.title, broadcast?.videoId, titleInput, videoInput]);
+
+  const setVideo = useMutation({
+    mutationFn: async (payload: { videoUrl: string; title?: string }) => {
+      const res = await apiRequest("POST", "/api/live-broadcast/video", payload);
+      return res.json() as Promise<LiveBroadcastConfig>;
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(["/api/live-broadcast"], data);
+      toast({
+        title: "Live stream updated",
+        description: data.videoId
+          ? "The website player is now pointed at your YouTube stream."
+          : "Stream cleared.",
       });
-    };
+    },
+    onError: () => {
+      toast({
+        title: "Could not update stream",
+        description: "Log in as instructor and try again.",
+        variant: "destructive",
+      });
+    },
+  });
 
-    checkServiceTime();
-    
-    // Check every minute
-    const interval = setInterval(checkServiceTime, 60000);
-    
-    return () => clearInterval(interval);
-  }, []);
+  const clearVideo = useMutation({
+    mutationFn: async () => {
+      const res = await apiRequest("POST", "/api/live-broadcast/clear", {});
+      return res.json() as Promise<LiveBroadcastConfig>;
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(["/api/live-broadcast"], data);
+      setVideoInput("");
+      toast({ title: "Stream override cleared" });
+    },
+  });
 
-  // Update current time every second for real-time countdown
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-    
-    return () => clearInterval(timer);
-  }, []);
-
-  // Get countdown to next Sunday service
-  const getNextSundayCountdown = () => {
-    const now = currentTime;
-    const nextSunday = new Date();
-    
-    // Find next Sunday at 7:30 PM
-    const daysUntilSunday = (7 - now.getDay()) % 7;
-    if (daysUntilSunday === 0 && (now.getHours() < 19 || (now.getHours() === 19 && now.getMinutes() < 30))) {
-      // It's Sunday but before 7:30 PM
-      nextSunday.setHours(19, 30, 0, 0);
-    } else {
-      // Set to next Sunday
-      nextSunday.setDate(now.getDate() + (daysUntilSunday === 0 ? 7 : daysUntilSunday));
-      nextSunday.setHours(19, 30, 0, 0);
-    }
-
-    const timeDiff = nextSunday.getTime() - now.getTime();
-    if (timeDiff <= 0) return "Starting soon!";
-
-    const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-
-    if (days > 0) {
-      return `${days}d ${hours}h ${minutes}m`;
-    } else if (hours > 0) {
-      return `${hours}h ${minutes}m`;
-    } else {
-      return `${minutes}m`;
-    }
-  };
-
-  const getStatusColor = (isActive: boolean) => {
-    return isActive ? "bg-green-500" : "bg-red-500";
-  };
-
-  const getStatusText = (isActive: boolean) => {
-    return isActive ? "LIVE" : "OFFLINE";
+  const handleSetStream = () => {
+    if (!videoInput.trim()) return;
+    setVideo.mutate({
+      videoUrl: videoInput.trim(),
+      title: titleInput.trim() || undefined,
+    });
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 py-8">
-      <div className="max-w-4xl mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center mb-4">
-            <img 
-              src={sfgmLogo} 
-              alt="SFGM Logo" 
-              className="w-20 h-20 mr-4"
-            />
-            <div>
-              <h1 className="text-3xl font-bold text-gray-800 mb-1">Live Service Streaming</h1>
-              <p className="text-gray-600">SFGM Boston Sunday Worship</p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900">
+      <Navigation />
+
+      <main className="container mx-auto px-4 py-8 max-w-5xl">
+        <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
+          <div>
+            <div className="flex flex-wrap items-center gap-2 mb-2">
+              <Badge className="bg-red-600 hover:bg-red-600">
+                <Youtube className="h-3.5 w-3.5 mr-1" />
+                Live Broadcast
+              </Badge>
+              <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-emerald-300">
+                <Radio className="h-3.5 w-3.5 animate-pulse" />
+                {broadcast?.isLive ? "Live now" : broadcast?.autoDetectEnabled ? "Auto-watching YouTube" : "Awaiting stream"}
+              </span>
             </div>
+            <h1 className="text-3xl md:text-4xl font-bold text-white">
+              {broadcast?.title || "SFGM Boston Live"}
+            </h1>
+            <p className="text-purple-200/90 mt-2 max-w-2xl">
+              {broadcast?.statusMessage ||
+                "Watch our live stream here — powered by YouTube."}
+            </p>
+            {broadcast?.autoDetectEnabled ? (
+              <p className="text-xs text-purple-300/70 mt-2">
+                Auto-detect is on — when you go live on YouTube, this page updates by itself.
+              </p>
+            ) : null}
           </div>
-          
-          {/* Admin Edit Link */}
-          {isAdmin && (
-            <div className="mt-4 flex space-x-3">
-              <Link href="/admin-panel">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
-                >
-                  <i className="fas fa-edit mr-2"></i>
-                  Edit Live Service Page
+
+          <div className="flex flex-wrap gap-2">
+            <Link href="/family-night/leaderboard?display=1">
+              <Button variant="outline" className="border-amber-400/40 text-amber-100">
+                <Trophy className="h-4 w-4 mr-2" />
+                Leaderboard TV
+              </Button>
+            </Link>
+            {watchUrl ? (
+              <a href={watchUrl} target="_blank" rel="noopener noreferrer">
+                <Button className="bg-red-600 hover:bg-red-700">
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  Open on YouTube
                 </Button>
-              </Link>
-              <Link href="/streaming-dashboard">
-                <Button
-                  size="sm"
-                  className="bg-red-600 hover:bg-red-700 text-white"
-                >
-                  <i className="fas fa-broadcast-tower mr-2"></i>
-                  Streaming Control
+              </a>
+            ) : null}
+          </div>
+        </div>
+
+        <div className="rounded-2xl overflow-hidden border-2 border-white/15 bg-black shadow-2xl aspect-video">
+          {isLoading ? (
+            <div className="h-full min-h-[280px] flex items-center justify-center text-purple-200">
+              Loading player…
+            </div>
+          ) : embedUrl ? (
+            <iframe
+              key={embedUrl}
+              title="SFGM Boston Live on YouTube"
+              src={embedUrl}
+              className="w-full h-full min-h-[280px] md:min-h-[420px]"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              referrerPolicy="strict-origin-when-cross-origin"
+            />
+          ) : (
+            <div className="h-full min-h-[280px] md:min-h-[420px] flex flex-col items-center justify-center text-center px-6">
+              <Youtube className="h-16 w-16 text-red-500 mb-4" />
+              <p className="text-xl font-semibold text-white mb-2">
+                {broadcast?.autoDetectEnabled ? "Waiting for YouTube to go live" : "Stream not connected yet"}
+              </p>
+              <p className="text-purple-200/80 max-w-md mb-6">
+                {broadcast?.statusMessage ||
+                  "Set up YouTube auto-detect once on Render — then just go live on YouTube as usual."}
+              </p>
+              <a href={broadcast?.channelUrl || "https://www.youtube.com/@sfgmbostonma"} target="_blank" rel="noopener noreferrer">
+                <Button className="bg-red-600 hover:bg-red-700">
+                  <Youtube className="h-4 w-4 mr-2" />
+                  Go to SFGM YouTube
                 </Button>
-              </Link>
+              </a>
             </div>
           )}
         </div>
 
-        {/* Service Information & Countdown */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <div className="text-center mb-6">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">Sunday Worship Service</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-              <div className="flex items-center justify-center space-x-2">
-                <i className="fas fa-calendar text-blue-600"></i>
-                <span className="text-gray-700 font-medium">Every Sunday</span>
-              </div>
-              <div className="flex items-center justify-center space-x-2">
-                <i className="fas fa-clock text-blue-600"></i>
-                <span className="text-gray-700 font-medium">7:30 PM</span>
-              </div>
-              <div className="flex items-center justify-center space-x-2">
-                <i className="fas fa-music text-blue-600"></i>
-                <span className="text-gray-700 font-medium">90 minutes</span>
-              </div>
-              <div className="flex items-center justify-center space-x-2">
-                <i className="fas fa-users text-blue-600"></i>
-                <span className="text-gray-700 font-medium">All Welcome</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Countdown & Status */}
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6">
-            <div className="text-center">
-              <div className="flex items-center justify-center space-x-3 mb-4">
-                <div className={`w-4 h-4 rounded-full ${getStatusColor(streamStatus.youtube || streamStatus.facebook || streamStatus.instagram)}`}></div>
-                <span className="text-xl font-bold text-gray-800">
-                  {streamStatus.youtube || streamStatus.facebook || streamStatus.instagram ? "STREAMING NOW" : "NEXT SERVICE"}
-                </span>
-              </div>
-              <div className="text-3xl font-bold text-blue-600 mb-2">
-                {streamStatus.youtube || streamStatus.facebook || streamStatus.instagram ? "LIVE" : getNextSundayCountdown()}
-              </div>
-              <p className="text-gray-600">
-                {streamStatus.youtube || streamStatus.facebook || streamStatus.instagram 
-                  ? "Join us for live worship and ministry" 
-                  : "Until next Sunday worship service"}
-              </p>
-            </div>
-          </div>
-        </div>
-
-
-
-        {/* Go Live Controls */}
-        {isAdmin && (
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">Go Live Controls</h2>
-            
-            <div className="space-y-4">
-              {/* Top Row - SFGM Blog and SFGM Zoom */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* SFGM Blog Live */}
-                <div className="bg-white rounded-lg shadow-md p-4">
-                  <div className="text-center mb-4">
-                    <div className="w-16 h-16 bg-indigo-600 rounded-lg flex items-center justify-center mx-auto mb-3">
-                      <i className="fas fa-blog text-white text-2xl"></i>
-                    </div>
-                    <h3 className="text-lg font-semibold text-gray-800">SFGM Blog</h3>
-                    <p className="text-sm text-gray-600">Multi-camera blog control</p>
-                  </div>
-                  <Button 
-                    onClick={() => {
-                      window.open('/sfgm-blog', '_blank');
-                      toast({
-                        title: "SFGM Blog Live",
-                        description: "Blog streaming page opened - click scene buttons to control OBS",
-                      });
-                    }}
-                    className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2"
-                  >
-                    Go Live
-                  </Button>
-                </div>
-
-                {/* SFGM Zoom Live */}
-                <div className="bg-white rounded-lg shadow-md p-4">
-                  <div className="text-center mb-4">
-                    <div className="w-16 h-16 bg-blue-600 rounded-lg flex items-center justify-center mx-auto mb-3">
-                      <i className="fas fa-video text-white text-2xl"></i>
-                    </div>
-                    <h3 className="text-lg font-semibold text-gray-800">SFGM Zoom</h3>
-                    <p className="text-sm text-gray-600">Virtual meeting controls</p>
-                  </div>
-                  <Button 
-                    onClick={() => {
-                      window.open('/sfgm-blog', '_blank');
-                      toast({
-                        title: "Zoom Meeting Live",
-                        description: "Zoom controls opened - use virtual camera scenes for meetings",
-                      });
-                    }}
-                    className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2"
-                  >
-                    Go Live
-                  </Button>
-                </div>
-              </div>
-
-              {/* Bottom Row - OBS YouTube (Full Width) */}
-              <div className="bg-white rounded-lg shadow-md p-4">
-                <div className="text-center mb-4">
-                  <div className="w-16 h-16 bg-red-600 rounded-lg flex items-center justify-center mx-auto mb-3">
-                    <i className="fab fa-youtube text-white text-2xl"></i>
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-800">OBS YouTube</h3>
-                  <p className="text-sm text-gray-600">Scene control & streaming</p>
-                </div>
-                <Button 
-                  onClick={() => {
-                    toast({
-                      title: "OBS Remote Control",
-                      description: "OBS remote control functionality has been removed. Use OBS Studio directly for streaming controls.",
-                      variant: "destructive",
-                    });
-                  }}
-                  className="w-full bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2"
-                  disabled
-                >
-                  OBS Control (Removed)
+        <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+            <h2 className="text-white font-semibold mb-2 flex items-center gap-2">
+              <Monitor className="h-4 w-4 text-purple-300" />
+              Family Night tonight?
+            </h2>
+            <p className="text-sm text-purple-200/80 mb-3">
+              Run the quiz game show leaderboard on a second screen while this page plays YouTube.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <Link href="/family-night/leaderboard?host=1">
+                <Button size="sm" className="bg-amber-600 hover:bg-amber-700">
+                  Host controls
                 </Button>
-              </div>
+              </Link>
+              <Link href="/family-night">
+                <Button size="sm" variant="outline" className="border-purple-400/40 text-purple-100">
+                  Family Night home
+                </Button>
+              </Link>
             </div>
           </div>
-        )}
 
-        {/* Contact */}
-        <div className="text-center mt-6">
-          <p className="text-sm text-gray-600">Questions about live streaming?</p>
-          <p className="text-sm">
-            <a href="tel:617-512-7451" className="text-blue-600 hover:underline">
-              617-512-7451
-            </a> | 
-            <a href="mailto:pastorrocky1978@gmail.com" className="text-blue-600 hover:underline ml-1">
-              pastorrocky1978@gmail.com
-            </a>
-          </p>
+          <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+            <h2 className="text-white font-semibold mb-2">Quick tip</h2>
+            <p className="text-sm text-purple-200/80">
+              One-time Render setup: add <code className="text-amber-200">YOUTUBE_API_KEY</code> and{" "}
+              <code className="text-amber-200">YOUTUBE_CHANNEL_HANDLE=sfgmbostonma</code>. After that,
+              start streaming on YouTube — this page picks it up automatically.
+            </p>
+          </div>
         </div>
-      </div>
+
+        {isInstructor ? (
+          <details className="mt-6 rounded-2xl border border-white/15 bg-black/20 p-5">
+            <summary className="cursor-pointer text-sm font-semibold text-purple-200">
+              Manual override (optional — only if auto-detect fails)
+            </summary>
+            <div className="mt-4 pt-4 border-t border-white/10">
+              <p className="text-sm text-purple-200/80 mb-4">
+                Paste a YouTube URL only if you need to force a specific stream.
+              </p>
+            <div className="grid gap-3 md:grid-cols-[1fr_1fr_auto_auto]">
+              <Input
+                value={videoInput}
+                onChange={(e) => setVideoInput(e.target.value)}
+                placeholder="https://youtube.com/watch?v=… or video ID"
+                className="bg-black/30 border-white/20 text-white"
+              />
+              <Input
+                value={titleInput}
+                onChange={(e) => setTitleInput(e.target.value)}
+                placeholder="Stream title (optional)"
+                className="bg-black/30 border-white/20 text-white"
+              />
+              <Button
+                className="bg-amber-600 hover:bg-amber-700"
+                disabled={!videoInput.trim() || setVideo.isPending}
+                onClick={handleSetStream}
+              >
+                Set stream
+              </Button>
+              <Button
+                variant="outline"
+                className="border-white/20 text-purple-100"
+                disabled={clearVideo.isPending}
+                onClick={() => clearVideo.mutate()}
+              >
+                Clear
+              </Button>
+            </div>
+          </details>
+        ) : null}
+      </main>
+
+      <Footer />
     </div>
   );
 }

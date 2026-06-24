@@ -79,6 +79,9 @@ const port = Number(process.env.PORT) || 55555;
       host: "0.0.0.0", // Bind to all interfaces for Render deployment
     }, () => {
       log(`serving on port ${port}`);
+      void import("./services/youtubeLiveDetect").then(({ startYouTubeLivePoller }) => {
+        startYouTubeLivePoller();
+      });
     });
   } catch (error) {
     console.error("Server initialization failed:", error);
