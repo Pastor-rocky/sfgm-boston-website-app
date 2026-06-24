@@ -22,6 +22,7 @@ import { registerInstructorRoutes } from "./routes/instructor";
 import { registerStudentRoutes } from "./routes/student";
 import { registerFamilyNightRoutes } from "./routes/familyNight";
 import { registerLiveBroadcastRoutes } from "./routes/liveBroadcast";
+import { registerObsRoutes } from "./routes/obs";
 import { extractAuthToken } from "./utils/auth";
 import express from "express";
 import { apiRateLimit } from "./middleware/rateLimit";
@@ -87,6 +88,7 @@ export function setupRoutes(app: Express): Server {
   registerStudentRoutes(app);
   registerFamilyNightRoutes(app);
   registerLiveBroadcastRoutes(app);
+  registerObsRoutes(app);
 
   // Health check endpoints for monitoring
   app.get('/api/health', async (_req, res) => {

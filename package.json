@@ -18,6 +18,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
     "test:local": "PORT=56000 npm run dev",
     "start:server": "PORT=56000 npm run dev",
+    "obs:agent": "node --env-file=.env node_modules/.bin/tsx scripts/obs-church-agent.ts",
     "test:check": "npm run check && echo '✅ TypeScript check passed'",
     "open:browser": "./scripts/open-local-browser.sh",
     "check:server": "./scripts/ensure-server-ready.sh",

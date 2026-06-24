@@ -260,6 +260,7 @@ export default function LiveService() {
                 Clear
               </Button>
             </div>
+            </div>
           </details>
         ) : null}
       </main>

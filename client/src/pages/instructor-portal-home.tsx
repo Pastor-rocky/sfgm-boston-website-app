@@ -21,6 +21,7 @@ import {
   ChevronRight,
   Clock,
   Church,
+  Camera,
   Layers,
 } from "lucide-react";
 
@@ -181,6 +182,13 @@ export default function InstructorPortalHome() {
         description: `Contact any of your ${s.studentsWithEnrollments} enrolled student${s.studentsWithEnrollments === 1 ? "" : "s"}`,
         icon: MessageSquare,
         accent: "from-violet-500 to-purple-600",
+      },
+      {
+        href: "/instructor-portal/obs-controller",
+        label: "OBS Controller",
+        description: "Switch camera scenes from your iPad during live stream",
+        icon: Camera,
+        accent: "from-red-600 to-rose-700",
       },
       {
         href: "/deacon-certificate-generator",

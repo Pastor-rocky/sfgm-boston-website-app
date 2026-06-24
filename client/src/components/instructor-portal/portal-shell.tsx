@@ -12,6 +12,7 @@ import {
   UserPlus,
   Award,
   Shield,
+  Camera,
 } from "lucide-react";
 
 export default function InstructorPortalShell({
@@ -36,6 +37,7 @@ export default function InstructorPortalShell({
     { href: "/instructor-portal/students", label: studentsLabel, icon: Users },
     { href: "/instructor-portal/certificates", label: "Certificates", icon: Award },
     { href: "/instructor-portal/messages", label: "Messages", icon: MessageSquare },
+    { href: "/instructor-portal/obs-controller", label: "OBS Controller", icon: Camera },
     ...(isDean
       ? [
           { href: "/instructor-portal/applications", label: "Applications", icon: UserPlus },
