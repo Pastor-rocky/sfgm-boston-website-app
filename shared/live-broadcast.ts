@@ -54,12 +54,30 @@ export function parseYouTubeVideoId(input: string | null | undefined): string | 
 export function buildYouTubeEmbedUrl(
   videoId: string | null,
   channelId: string | null,
+  options?: {
+    playsinline?: boolean;
+    enableJsApi?: boolean;
+    origin?: string;
+  },
 ): string | null {
+  const params = new URLSearchParams({
+    autoplay: "1",
+    rel: "0",
+    modestbranding: "1",
+    playsinline: options?.playsinline === false ? "0" : "1",
+  });
+  if (options?.enableJsApi) {
+    params.set("enablejsapi", "1");
+    if (options.origin) params.set("origin", options.origin);
+  }
+
+  const qs = params.toString();
+
   if (videoId) {
-    return `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
+    return `https://www.youtube.com/embed/${videoId}?${qs}`;
   }
   if (channelId) {
-    return `https://www.youtube.com/embed/live_stream?channel=${channelId}&autoplay=1&rel=0&modestbranding=1`;
+    return `https://www.youtube.com/embed/live_stream?channel=${channelId}&${qs}`;
   }
   return null;
 }

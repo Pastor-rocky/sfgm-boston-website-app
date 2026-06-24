@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Link } from "wouter";
 import {
@@ -24,6 +24,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { FAMILY_NIGHT_FINAL_EXAM_OPENS_LABEL } from "@/lib/family-night-quizzes";
 import { CURRENT_FAMILY_NIGHT_CYCLE } from "@/lib/family-night-config";
+import { cn } from "@/lib/utils";
 import type { FamilyNightLiveViewMode } from "@shared/family-night";
 
 type DisplayQuestion = {
@@ -40,6 +41,47 @@ type LiveState = {
   viewMode: FamilyNightLiveViewMode;
   updatedAt: string;
 };
+
+function getFullscreenElement(): Element | null {
+  const doc = document as Document & {
+    webkitFullscreenElement?: Element | null;
+  };
+  return doc.fullscreenElement ?? doc.webkitFullscreenElement ?? null;
+}
+
+async function requestElementFullscreen(element: HTMLElement): Promise<boolean> {
+  const el = element as HTMLElement & {
+    webkitRequestFullscreen?: () => Promise<void> | void;
+  };
+  try {
+    if (el.requestFullscreen) {
+      await el.requestFullscreen();
+      return true;
+    }
+    if (el.webkitRequestFullscreen) {
+      await el.webkitRequestFullscreen();
+      return true;
+    }
+  } catch {
+    return false;
+  }
+  return false;
+}
+
+async function exitNativeFullscreen(): Promise<void> {
+  const doc = document as Document & {
+    webkitExitFullscreen?: () => Promise<void> | void;
+  };
+  try {
+    if (doc.fullscreenElement && doc.exitFullscreen) {
+      await doc.exitFullscreen();
+    } else if (doc.webkitFullscreenElement && doc.webkitExitFullscreen) {
+      await doc.webkitExitFullscreen();
+    }
+  } catch {
+    // Ignore — CSS presentation mode may still be active
+  }
+}
 
 function usePageFlags() {
   const params = useMemo(() => new URLSearchParams(window.location.search), []);
@@ -211,7 +253,10 @@ export default function FamilyNightLeaderboardLive() {
   const { isDisplayMode, isHostMode } = usePageFlags();
   const isHostPage = isHostMode && !isDisplayMode;
   const cycle = CURRENT_FAMILY_NIGHT_CYCLE;
-  const [isFullscreen, setIsFullscreen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [isNativeFullscreen, setIsNativeFullscreen] = useState(false);
+  const [isPresentationMode, setIsPresentationMode] = useState(false);
+  const isFullscreen = isNativeFullscreen || isPresentationMode;
 
   const role = ((user as { role?: string } | null)?.role || "").toLowerCase();
   const isInstructor = ["instructor", "admin", "dean"].includes(role);
@@ -308,42 +353,59 @@ export default function FamilyNightLeaderboardLive() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [canControl, goNext, goPrev, questions.length, setQuestionIndex]);
 
-  useEffect(() => {
-    const syncFullscreen = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
-    document.addEventListener("fullscreenchange", syncFullscreen);
-    return () => {
-      document.removeEventListener("fullscreenchange", syncFullscreen);
-      if (document.fullscreenElement) {
-        void document.exitFullscreen().catch(() => undefined);
-      }
-    };
-  }, []);
-
   const exitFullscreen = useCallback(async () => {
-    if (document.fullscreenElement) {
-      await document.exitFullscreen();
-    }
-    setIsFullscreen(false);
+    setIsPresentationMode(false);
+    await exitNativeFullscreen();
   }, []);
 
   const enterFullscreen = useCallback(async () => {
-    try {
-      await document.documentElement.requestFullscreen();
-      setIsFullscreen(true);
-    } catch {
-      setIsFullscreen(false);
+    const root = rootRef.current;
+    if (!root) return;
+
+    const entered = await requestElementFullscreen(root);
+    if (entered) {
+      setIsPresentationMode(false);
+      setIsNativeFullscreen(true);
+      return;
     }
+
+    setIsPresentationMode(true);
   }, []);
 
   const toggleFullscreen = useCallback(async () => {
-    if (document.fullscreenElement) {
+    if (isFullscreen) {
       await exitFullscreen();
     } else {
       await enterFullscreen();
     }
-  }, [enterFullscreen, exitFullscreen]);
+  }, [enterFullscreen, exitFullscreen, isFullscreen]);
+
+  useEffect(() => {
+    const syncFullscreen = () => {
+      setIsNativeFullscreen(!!getFullscreenElement());
+      if (!getFullscreenElement()) {
+        setIsPresentationMode(false);
+      }
+    };
+    document.addEventListener("fullscreenchange", syncFullscreen);
+    document.addEventListener("webkitfullscreenchange", syncFullscreen);
+    return () => {
+      document.removeEventListener("fullscreenchange", syncFullscreen);
+      document.removeEventListener("webkitfullscreenchange", syncFullscreen);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isPresentationMode) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        void exitFullscreen();
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [exitFullscreen, isPresentationMode]);
 
   const secondsSinceUpdate = leaderboardUpdatedAt
     ? Math.max(0, Math.floor((Date.now() - leaderboardUpdatedAt) / 1000))
@@ -368,9 +430,11 @@ export default function FamilyNightLeaderboardLive() {
 
   return (
     <div
-      className={`min-h-screen bg-gradient-to-br from-[#12081f] via-[#1f0f33] to-[#0d0618] text-white ${
-        isDisplayMode ? "" : ""
-      }`}
+      ref={rootRef}
+      className={cn(
+        "min-h-screen bg-gradient-to-br from-[#12081f] via-[#1f0f33] to-[#0d0618] text-white",
+        isPresentationMode && "fixed inset-0 z-[9998] overflow-auto",
+      )}
     >
       {isFullscreen ? (
         <div className="fixed top-4 right-4 z-[9999] flex items-center gap-2">
@@ -383,6 +447,17 @@ export default function FamilyNightLeaderboardLive() {
             Exit Fullscreen
           </Button>
           <span className="hidden sm:inline text-xs text-purple-200/80">or press Esc</span>
+        </div>
+      ) : isDisplayMode ? (
+        <div className="fixed top-4 right-4 z-[9999]">
+          <Button
+            size="sm"
+            className="bg-amber-600 hover:bg-amber-700 text-white font-semibold shadow-lg"
+            onClick={() => void enterFullscreen()}
+          >
+            <Maximize2 className="h-4 w-4 mr-1.5" />
+            Fullscreen
+          </Button>
         </div>
       ) : null}
       {!isDisplayMode ? (

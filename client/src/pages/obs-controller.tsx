@@ -1,11 +1,13 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import InstructorPortalShell from "@/components/instructor-portal/portal-shell";
+import LiveYouTubeEmbed from "@/components/live-youtube-embed";
 import { useInstructorAccess } from "@/hooks/useInstructorAccess";
 import { apiRequest } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Camera, Radio, Wifi, WifiOff } from "lucide-react";
+import { Camera, ExternalLink, Radio, Wifi, WifiOff, Youtube } from "lucide-react";
+import type { LiveBroadcastConfig } from "@shared/live-broadcast";
 
 type ObsStatus = {
   configured: boolean;
@@ -26,6 +28,19 @@ export default function ObsControllerPage() {
     refetchInterval: 1500,
     refetchOnMount: "always",
   });
+
+  const { data: broadcast } = useQuery<LiveBroadcastConfig>({
+    queryKey: ["/api/live-broadcast"],
+    staleTime: 5_000,
+    refetchInterval: (query) => {
+      const data = query.state.data;
+      if (data?.isLive) return 30_000;
+      return data?.autoDetectEnabled ? 10_000 : 30_000;
+    },
+    refetchOnMount: "always",
+  });
+
+  const watchUrl = broadcast?.watchUrl ?? broadcast?.channelUrl;
 
   const switchScene = useMutation({
     mutationFn: async (sceneName: string) => {
@@ -64,9 +79,47 @@ export default function ObsControllerPage() {
   return (
     <InstructorPortalShell
       title="OBS Controller"
-      description="Control church camera scenes from your iPad on the same Wi‑Fi."
+      subtitle="Switch camera scenes while watching the YouTube feed (what the audience sees)."
     >
       <div className="space-y-6 max-w-3xl mx-auto">
+        <div className="rounded-xl overflow-hidden border bg-black aspect-video shadow-lg">
+          <LiveYouTubeEmbed
+            videoId={broadcast?.videoId ?? null}
+            channelId={broadcast?.channelId}
+            className="w-full h-full min-h-[200px]"
+            keepAtLiveEdge={Boolean(broadcast?.videoId)}
+            placeholder={
+              <div className="h-full min-h-[200px] flex flex-col items-center justify-center px-4">
+                <Youtube className="h-10 w-10 text-red-500 mb-2" />
+                <p className="font-medium text-white">
+                  {broadcast?.autoDetectEnabled ? "Waiting for YouTube to go live" : "No stream yet"}
+                </p>
+                <p className="text-xs text-slate-400 mt-1 text-center max-w-xs">
+                  {broadcast?.statusMessage || "Start streaming on YouTube — this preview updates automatically."}
+                </p>
+              </div>
+            }
+          />
+        </div>
+
+        <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
+          <p>
+            YouTube preview is delayed vs. sanctuary (~10–30s). Enable Low latency in YouTube Studio for a
+            shorter gap; tap Live on the player if you drift behind.
+          </p>
+          {watchUrl ? (
+            <a
+              href={watchUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-red-600 hover:underline shrink-0"
+            >
+              <ExternalLink className="h-3.5 w-3.5" />
+              Open YouTube
+            </a>
+          ) : null}
+        </div>
+
         <div className="flex flex-wrap items-center gap-2">
           {connected ? (
             <Badge className="bg-emerald-600 hover:bg-emerald-600">

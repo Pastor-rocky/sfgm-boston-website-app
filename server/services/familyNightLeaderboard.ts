@@ -1,6 +1,6 @@
 import { db } from "../db";
 import { quizAttempts, users } from "../../shared/schema";
-import { and, eq, isNotNull } from "drizzle-orm";
+import { and, eq, isNotNull, or, sql } from "drizzle-orm";
 import { FAMILY_NIGHT_FINAL_EXAM_QUIZ_ID } from "../../shared/family-night";
 import { classifyLeaderboardPrizeBoard } from "../../shared/family-night-gender";
 
@@ -16,6 +16,9 @@ export type LeaderboardEntry = {
 };
 
 const LIVE_CACHE_MS = 8_000;
+
+/** QA mock attempts tagged in answers.mockTag — never show on live boards */
+const MOCK_ATTEMPT_TAG_PREFIX = "family-night-mock";
 let liveCache: { expiresAt: number; payload: Awaited<ReturnType<typeof computeFamilyNightLeaderboard>> } | null =
   null;
 
@@ -86,6 +89,10 @@ async function computeFamilyNightLeaderboard() {
       and(
         eq(quizAttempts.quizId, FAMILY_NIGHT_FINAL_EXAM_QUIZ_ID),
         isNotNull(quizAttempts.completedAt),
+        or(
+          sql`${quizAttempts.answers}->>'mockTag' IS NULL`,
+          sql`${quizAttempts.answers}->>'mockTag' NOT LIKE ${`${MOCK_ATTEMPT_TAG_PREFIX}%`}`,
+        ),
       ),
     );
 
