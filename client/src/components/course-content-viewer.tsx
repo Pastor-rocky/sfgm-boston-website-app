@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,6 +18,24 @@ import {
 } from '@/lib/introduction-to-prophecy-config';
 import { getCourseWeekReadingIds } from "@shared/course-reading-ids";
 import { DEFAULT_PASSING_SCORE, MAN_OF_GOD_WEEK1_PASSING_SCORE } from '@shared/course-constants';
+import CourseGuidedStepBar, { resolveGuidedPrimaryLabel, type GuidedQuizInfo } from '@/components/course-guided-step-bar';
+import {
+  courseHasBibleStep,
+  courseHasVideos,
+  getGuidedInitialStep,
+  getGuidedMaxWeeks,
+  getWeekBibleReadingId,
+  getWeekEbookReadingId,
+  guidedOverallProgressPercent,
+  stepShortLabel,
+  usesGuidedFlow,
+  type GuidedStep,
+} from '@/lib/course-guided-flow';
+import {
+  LEVEL_UP_COURSE_WEEK_SUMMARIES,
+  MAXWELL_BOOK_TITLE,
+  MAXWELL_OFFLINE_NOTE,
+} from '@/lib/level-up-week-readings';
 
 
 interface ContentProgressItem {
@@ -100,6 +118,15 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
   const [, setLocation] = useLocation();
   // For courses without videos (Course 2, Course 4), start with readings tab
   const [activeTab, setActiveTab] = useState((courseId === 2 || courseId === 4) ? 'readings' : 'videos');
+  const useGuidedFlow = usesGuidedFlow(courseId);
+  const [guidedWeek, setGuidedWeek] = useState(1);
+  const [guidedStep, setGuidedStep] = useState<GuidedStep>(getGuidedInitialStep(courseId));
+  const [reviewWeek, setReviewWeek] = useState<number | null>(() => {
+    const rw = new URLSearchParams(window.location.search).get('reviewWeek');
+    if (!rw) return null;
+    const week = parseInt(rw, 10);
+    return Number.isFinite(week) && week >= 1 ? week : null;
+  });
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [currentVideo, setCurrentVideo] = useState<CourseVideo | null>(null);
 
@@ -1174,16 +1201,29 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
     return 1; // Default to Week 1 if no pattern found
   };
 
+  const isPublishedCourseVideo = (v: CourseVideo) => {
+    if (!v.isPublished) return false;
+    if (v.title.toLowerCase().includes('test')) return false;
+    if (v.videoUrl?.includes('kK_nCld8Jow')) return false;
+    return true;
+  };
+
+  /** Week number for a course video — title first, then orderIndex (0 → Week 1). */
+  const resolveVideoWeekNumber = (video: CourseVideo): number => {
+    if (/Week \d+/i.test(video.title)) {
+      return extractWeekNumber(video.title);
+    }
+    return video.orderIndex + 1;
+  };
+
+  const getVideosForWeek = (weekNumber: number) =>
+    videos.filter(
+      (v: CourseVideo) => isPublishedCourseVideo(v) && resolveVideoWeekNumber(v) === weekNumber,
+    );
+
   // Check if a week's content (videos + readings) is completed (simpler - doesn't check quiz)
   const isWeekContentCompleted = (weekNumber: number) => {
-    // Get all videos and readings for the specific week
-    const weekVideos = videos.filter((v: CourseVideo) => {
-      const videoWeek = extractWeekNumber(v.title);
-      // Only include videos that have a proper week number in their title
-      // This excludes test videos or videos without week numbers
-      const hasWeekNumber = /Week \d+/i.test(v.title);
-      return videoWeek === weekNumber && v.isPublished && hasWeekNumber;
-    });
+    const weekVideos = getVideosForWeek(weekNumber);
     
     const weekReadings = readings.filter((r: CourseReading) => {
       const readingWeek = extractWeekNumber(r.title);
@@ -1288,13 +1328,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
     if (!hasVideos) return true;
     
     // For courses with videos, check if ALL videos for this week are completed
-    const weekVideos = videos.filter((v: CourseVideo) => {
-      const videoWeek = extractWeekNumber(v.title);
-      // Only include videos that have a proper week number in their title
-      // This excludes test videos or videos without week numbers
-      const hasWeekNumber = /Week \d+/i.test(v.title);
-      return videoWeek === weekNumber && v.isPublished && hasWeekNumber;
-    });
+    const weekVideos = getVideosForWeek(weekNumber);
       
     // If no videos exist for this week, readings are accessible
     if (weekVideos.length === 0) return true;
@@ -1327,6 +1361,42 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
   // Helper function to get Course 2 reading IDs by week number (like Course 1)
   const getCourse1ReadingIds = (weekNumber: number): number[] =>
     getCourseWeekReadingIds(1, weekNumber);
+
+  const getCourse1EbookId = (weekNumber: number): number | undefined =>
+    getCourse1ReadingIds(weekNumber)[0];
+
+  const getCourse1BibleId = (weekNumber: number): number | undefined =>
+    getCourse1ReadingIds(weekNumber)[1];
+
+  const isWeekEbookComplete = (weekNumber: number): boolean => {
+    const ebookId = getWeekEbookReadingId(courseId, weekNumber);
+    return ebookId != null && isContentCompleted('reading', ebookId);
+  };
+
+  const isWeekBibleComplete = (weekNumber: number): boolean => {
+    const bibleId = getWeekBibleReadingId(courseId, weekNumber);
+    if (bibleId == null) return true;
+    return isContentCompleted('reading', bibleId);
+  };
+
+  const showGuidedEbookSection = (weekNumber: number): boolean => {
+    if (!useGuidedFlow) return true;
+    if (reviewWeek === weekNumber) return true;
+    if (guidedWeek !== weekNumber) return false;
+    return guidedStep === 'readings';
+  };
+
+  const showGuidedBibleSection = (weekNumber: number): boolean => {
+    if (!useGuidedFlow) return true;
+    if (reviewWeek === weekNumber) return true;
+    if (guidedWeek !== weekNumber) return false;
+    return guidedStep === 'bible';
+  };
+
+  /** @deprecated use showGuidedEbookSection */
+  const showActsEbookSection = showGuidedEbookSection;
+  /** @deprecated use showGuidedBibleSection */
+  const showActsBibleSection = showGuidedBibleSection;
 
   const getCourse2ReadingIds = (weekNumber: number): number[] =>
     getCourseWeekReadingIds(2, weekNumber);
@@ -1551,11 +1621,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
 
   // Check if a week is fully completed (all videos + readings + quiz with passing score)
   const isWeekFullyCompleted = (weekNumber: number) => {
-    // Get all content for the specific week
-    const weekVideos = videos.filter((v: CourseVideo) => {
-      const videoWeek = extractWeekNumber(v.title);
-      return videoWeek === weekNumber && v.isPublished;
-    });
+    const weekVideos = getVideosForWeek(weekNumber);
     
     const weekReadings = readings.filter((r: CourseReading) => {
       const readingWeek = extractWeekNumber(r.title);
@@ -1587,14 +1653,13 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
       );
     }
     
-    // Check if quiz is completed with passing score
+    // Check if quiz is completed with passing score (scores stored as 0–1 or 0–100)
     let quizCompleted = true; // Default true if no quiz exists
     if (weekQuizzes.length > 0) {
       quizCompleted = weekQuizzes.some((quiz: any) => {
-        const attempts = quiz.attempts || 0;
-        const bestScore = quiz.bestScore || 0;
+        const attemptInfo = getQuizAttemptInfo(quiz.id);
         const passingScore = quiz.passingScore || DEFAULT_PASSING_SCORE;
-        return attempts > 0 && bestScore >= passingScore;
+        return attemptInfo.count > 0 && (attemptInfo.bestScorePercent ?? 0) >= passingScore;
       });
     }
     
@@ -1603,6 +1668,166 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
   };
 
   const stats = getCompletionStats();
+
+  const showGuidedWeek = (weekNumber: number) =>
+    !useGuidedFlow || guidedWeek === weekNumber || reviewWeek === weekNumber;
+
+  const isWeekVideoComplete = (weekNumber: number) => {
+    const weekVideos = getVideosForWeek(weekNumber);
+    if (weekVideos.length === 0) return true;
+    return weekVideos.every((v) => isContentCompleted('video', v.id));
+  };
+
+  const getQuizUrlForWeek = (quizNumber: string, isFinalExam: boolean) => {
+    if (courseId === 1) return isFinalExam ? '/quiz/acts-final-exam' : `/quiz/acts-week-${quizNumber}`;
+    if (courseId === 2) return isFinalExam ? '/quiz/firestarter-final-exam' : `/quiz/firestarter-week-${quizNumber}`;
+    if (courseId === 3) return isFinalExam ? '/quiz/dbaj-final-exam' : `/quiz/dbaj-week-${quizNumber}`;
+    if (courseId === 4) return isFinalExam ? '/quiz/grow-final-exam' : `/quiz/grow-week-${quizNumber}`;
+    if (courseId === 5) return isFinalExam ? '/quiz/studying-for-service-final-exam' : `/quiz/studying-for-service-week-${quizNumber}`;
+    if (courseId === 6) return isFinalExam ? '/quiz/deacon-course-final-exam' : `/quiz/deacon-course-week-${quizNumber}`;
+    if (courseId === 7) return isFinalExam ? '/quiz/level-up-leadership-final-exam' : `/quiz/level-up-leadership-week-${quizNumber}`;
+    if (courseId === 8) return isFinalExam ? '/quiz/youth-ministry-final-exam' : `/quiz/youth-ministry-week-${quizNumber}`;
+    if (courseId === 16) return isFinalExam ? '/quiz/man-of-god-final-exam' : `/quiz/man-of-god-week-${quizNumber}`;
+    if (courseId === 10) return `/quiz/introduction-to-prophecy-week-${quizNumber}`;
+    return null;
+  };
+
+  const guidedWeekQuizInfo = useMemo((): GuidedQuizInfo | null => {
+    if (!useGuidedFlow || guidedStep !== 'quiz') return null;
+    const quiz = quizzes.find((q: any) => {
+      if (q.isFinalExam) return false;
+      const week = parseInt(q.title.match(/Week (\d+)/)?.[1] || '0', 10);
+      return week === guidedWeek;
+    });
+    if (!quiz) return null;
+    const quizUrl = getQuizUrlForWeek(String(guidedWeek), false);
+    if (!quizUrl) return null;
+    const quizAttemptInfo = getQuizAttemptInfo(quiz.id);
+    return {
+      title: quiz.title,
+      detail: `${quiz.questions || 10} questions • ${quiz.timeLimit || 15} minutes • ${quiz.passingScore || DEFAULT_PASSING_SCORE}% passing score`,
+      quizUrl,
+      isAccessible: canAccessQuiz(guidedWeek, false),
+      hasAttempts: quizAttemptInfo.count > 0,
+      latestPassed: quizAttemptInfo.latestPassed,
+    };
+  }, [useGuidedFlow, guidedStep, guidedWeek, quizzes, quizAttempts]);
+
+  const resolveGuidedStep = (week: number): GuidedStep => {
+    const hasVideos = videos.some((v) => v.isPublished && v.videoUrl);
+    const cfgHasVideos = courseHasVideos(courseId);
+    if (cfgHasVideos && hasVideos && !isWeekVideoComplete(week)) return 'video';
+    if (courseHasBibleStep(courseId)) {
+      if (!isWeekEbookComplete(week)) return 'readings';
+      if (!isWeekBibleComplete(week)) return 'bible';
+      return 'quiz';
+    }
+    if (!areAllWeekReadingsCompleted(week)) return 'readings';
+    return 'quiz';
+  };
+
+  useEffect(() => {
+    if (!useGuidedFlow || reviewWeek !== null) return;
+    const maxWeek = getGuidedMaxWeeks(courseId);
+    for (let w = 1; w <= maxWeek; w++) {
+      if (!canAccessWeek(w)) {
+        if (w > 1 && isWeekFullyCompleted(w - 1)) {
+          const step = resolveGuidedStep(w);
+          setGuidedWeek(w);
+          setGuidedStep(step);
+          setActiveTab(step === 'video' ? 'videos' : step === 'quiz' ? 'quizzes' : 'readings');
+        }
+        return;
+      }
+      if (!isWeekFullyCompleted(w)) {
+        const step = resolveGuidedStep(w);
+        setGuidedWeek(w);
+        setGuidedStep(step);
+        setActiveTab(step === 'video' ? 'videos' : step === 'quiz' ? 'quizzes' : 'readings');
+        return;
+      }
+    }
+    setGuidedWeek(maxWeek);
+    setGuidedStep('quiz');
+    setActiveTab('quizzes');
+  }, [useGuidedFlow, reviewWeek, contentProgress, videos, readings, quizzes, quizAttempts, courseId]);
+
+  useEffect(() => {
+    if (!useGuidedFlow || reviewWeek === null) return;
+    setActiveTab('readings');
+    const url = new URL(window.location.href);
+    if (url.searchParams.get('reviewWeek') !== String(reviewWeek)) {
+      url.searchParams.set('reviewWeek', String(reviewWeek));
+      window.history.replaceState({}, '', `${url.pathname}${url.search}`);
+    }
+    requestAnimationFrame(() => {
+      document.getElementById('guided-course-content')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }, [useGuidedFlow, reviewWeek]);
+
+  useEffect(() => {
+    if (!useGuidedFlow || reviewWeek === null || guidedWeek <= 1) return;
+    if (reviewWeek >= guidedWeek) {
+      setReviewWeek(null);
+      const url = new URL(window.location.href);
+      url.searchParams.delete('reviewWeek');
+      window.history.replaceState({}, '', `${url.pathname}${url.search}`);
+    }
+  }, [useGuidedFlow, reviewWeek, guidedWeek]);
+
+  const handleGuidedStepChange = (step: GuidedStep) => {
+    setGuidedStep(step);
+    setActiveTab(step === 'video' ? 'videos' : step === 'quiz' ? 'quizzes' : 'readings');
+  };
+
+  const handleGuidedPrimaryAction = () => {
+    if (guidedStep === 'video') {
+      handleGuidedStepChange('readings');
+      return;
+    }
+    if (guidedStep === 'readings') {
+      handleGuidedStepChange(courseHasBibleStep(courseId) ? 'bible' : 'quiz');
+      return;
+    }
+    if (guidedStep === 'bible') {
+      handleGuidedStepChange('quiz');
+      return;
+    }
+  };
+
+  const GuidedEbookHandoff = ({ week, ebookId }: { week: number; ebookId: number }) => {
+    if (!useGuidedFlow || reviewWeek !== null || !courseHasBibleStep(courseId)) return null;
+    if (guidedWeek !== week || guidedStep !== 'readings') return null;
+    if (!isContentCompleted('reading', ebookId)) return null;
+    return (
+      <div className="mt-4 pt-4 border-t border-blue-200">
+        <Button
+          className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold"
+          onClick={() => handleGuidedStepChange('bible')}
+        >
+          <i className="fas fa-arrow-right mr-2"></i>
+          Go to required Bible reading
+        </Button>
+      </div>
+    );
+  };
+
+  const handleExitReview = () => {
+    setReviewWeek(null);
+    const url = new URL(window.location.href);
+    url.searchParams.delete('reviewWeek');
+    window.history.replaceState({}, '', `${url.pathname}${url.search}`);
+    setActiveTab(
+      guidedStep === 'video' ? 'videos' : guidedStep === 'quiz' ? 'quizzes' : 'readings',
+    );
+  };
+
+  const ActsEbookHandoff = GuidedEbookHandoff;
+
+  const GuidedWeekOnly = ({ week, children }: { week: number; children: React.ReactNode }) => {
+    if (!showGuidedWeek(week)) return null;
+    return <>{children}</>;
+  };
 
   if (videosLoading || readingsLoading || allQuizzesLoading) {
     return (
@@ -1623,12 +1848,37 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
             Course Progress
           </CardTitle>
           <CardDescription>
-            {courseId === 16
-              ? "Complete each week's videos and e-book reading before taking the quiz. The final exam unlocks after all 10 weeks."
-              : "Week-based progression: complete each week's quiz to unlock the next week"}
+            {useGuidedFlow
+              ? courseId === 7
+                ? "One week at a time — watch Bishop Anthony's teaching, read the leadership chapter, then take the quiz."
+                : "One week at a time — video, e-book, Bible reading, then quiz."
+              : courseId === 16
+                ? "Complete each week's videos and e-book reading before taking the quiz. The final exam unlocks after all 10 weeks."
+                : "Week-based progression: complete each week's quiz to unlock the next week"}
           </CardDescription>
         </CardHeader>
         <CardContent>
+      {useGuidedFlow ? (
+        <div className="space-y-3">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <div className="text-2xl font-bold text-blue-600">
+              Week {guidedWeek} of {getGuidedMaxWeeks(courseId)}
+            </div>
+            <div className="text-sm text-gray-600">
+              Current step: {stepShortLabel(guidedStep)}
+            </div>
+          </div>
+          <Progress
+            value={guidedOverallProgressPercent(guidedWeek, guidedStep, getGuidedMaxWeeks(courseId), courseId)}
+            className="h-2"
+          />
+          <p className="text-sm text-gray-500">
+            {courseId === 7
+              ? "Complete each week in order — video, reading assignment, then quiz — to unlock the next leadership level."
+              : "Complete each week in order — video, e-book, Bible reading, then quiz — to unlock the next week."}
+          </p>
+        </div>
+      ) : (
       <div className={`grid grid-cols-1 ${(courseId === 4 || courseId === 6 || courseId === 8) ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-4`}>
         {courseId !== 4 && courseId !== 6 && courseId !== 8 && (
           <div className="text-center">
@@ -1663,13 +1913,69 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
               />
             </div>
           </div>
+      )}
         </CardContent>
       </Card>
 
+      {useGuidedFlow && reviewWeek !== null && (
+        <Card className="border-amber-200 bg-amber-50">
+          <CardContent className="flex flex-wrap items-center justify-between gap-3 py-3">
+            <span className="text-sm font-medium text-amber-900">
+              <i className="fas fa-book-open mr-2"></i>
+              Reviewing Week {reviewWeek}
+            </span>
+            <Button size="sm" variant="outline" onClick={handleExitReview}>
+              Back to Week {guidedWeek}
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
+      {useGuidedFlow && reviewWeek === null && (
+        <div className="rounded-xl border border-blue-200 overflow-hidden shadow-sm">
+        <CourseGuidedStepBar
+          courseId={courseId}
+          week={guidedWeek}
+          step={guidedStep}
+          theme={courseId === 7 ? "purple" : "blue"}
+          standalone={guidedStep === 'quiz'}
+          onPrimaryAction={
+            guidedStep !== 'quiz'
+              ? handleGuidedPrimaryAction
+              : undefined
+          }
+          primaryDisabled={
+            guidedStep === 'video'
+              ? !isWeekVideoComplete(guidedWeek)
+              : guidedStep === 'readings'
+                ? courseHasBibleStep(courseId)
+                  ? !isWeekEbookComplete(guidedWeek)
+                  : !areAllWeekReadingsCompleted(guidedWeek)
+                : guidedStep === 'bible'
+                  ? !isWeekBibleComplete(guidedWeek)
+                  : false
+          }
+          primaryLabel={
+            guidedStep !== 'quiz'
+              ? resolveGuidedPrimaryLabel(guidedStep, guidedWeek, courseId)
+              : undefined
+          }
+          quizInfo={guidedWeekQuizInfo}
+        />
+        </div>
+      )}
 
-      {/* Content Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
+      {/* Content — guided flow shows one step at a time inside the week card shell */}
+      {!(useGuidedFlow && reviewWeek === null && guidedStep === 'quiz') && (
+      <div
+        id="guided-course-content"
+        className={useGuidedFlow && reviewWeek === null ? `rounded-b-xl border border-t-0 ${courseId === 7 ? 'border-purple-200' : 'border-blue-200'} bg-white p-4 md:p-6 -mt-px shadow-sm` : ''}
+      >
+      <Tabs value={activeTab} onValueChange={(value) => {
+        if (useGuidedFlow && reviewWeek === null) return;
+        setActiveTab(value);
+      }}>
+      {!useGuidedFlow && (
       <TabsList className={`grid w-full ${(courseId === 4 || courseId === 6 || courseId === 8) ? 'grid-cols-2' : 'grid-cols-3'}`}>
         {courseId !== 4 && courseId !== 6 && courseId !== 8 && (
           <TabsTrigger value="videos" className="flex items-center gap-2">
@@ -1686,13 +1992,15 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
           Quizzes ({stats.quizzes.completed}/{stats.quizzes.total})
         </TabsTrigger>
       </TabsList>
+      )}
 
-        {courseId !== 0 && courseId !== 4 && courseId !== 6 && courseId !== 8 && (
+        {courseId !== 0 && courseId !== 4 && courseId !== 6 && courseId !== 8 && (!useGuidedFlow || reviewWeek !== null || guidedStep === 'video') && (
           <TabsContent value="videos" className="space-y-4">
             {courseId === 3 ? (
               // Special video schedule for Don't Be a Jonah course
               <div className="space-y-4">
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(weekNumber => {
+                  if (useGuidedFlow && reviewWeek === null && guidedWeek !== weekNumber) return null;
                   const hasVideo = [1, 3, 5, 7, 9].includes(weekNumber);
                   const video = videos.find(v => {
                     const videoWeek = extractWeekNumber(v.title);
@@ -1793,8 +2101,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   );
                 })}
               </div>
-            ) : courseId === 7 ? (
-              // Level Up Leadership Course Videos
+            ) : courseId === 7 && !useGuidedFlow ? (
+              // Level Up Leadership Course Videos (legacy tab view)
               <div className="space-y-4">
                 {videos.length === 0 ? (
                   <Card>
@@ -1852,6 +2160,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                                     if (video?.videoUrl) {
                                       setCurrentVideo(video);
                                       setVideoModalOpen(true);
+                                      if (!useGuidedFlow) {
                                       progressMutation
                                         .mutateAsync({
                                           courseId,
@@ -1871,6 +2180,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                                             variant: 'destructive',
                                           });
                                         });
+                                      }
                                     } else {
                                       toast({
                                         title: 'Video Not Available',
@@ -1933,10 +2243,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                     )
                     .sort((a: CourseVideo, b: CourseVideo) => a.orderIndex - b.orderIndex)
                     .map((video: CourseVideo) => {
-                      let weekNumber = extractWeekNumber(video.title);
-                      if (weekNumber === 1 && !video.title.toLowerCase().includes('week')) {
-                        weekNumber = video.orderIndex + 1;
-                      }
+                      const weekNumber = resolveVideoWeekNumber(video);
+                      if (!showGuidedWeek(weekNumber)) return null;
                       const isAccessible = canAccessWeek(weekNumber);
                       
                       // Transform display for Course 1 (Acts in Action)
@@ -2034,13 +2342,17 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
           </TabsContent>
         )}
 
+        {(!useGuidedFlow || reviewWeek !== null || guidedStep === 'readings' || guidedStep === 'bible') && (
         <TabsContent value="readings" className="space-y-4">
           {courseId === 3 ? (
             <div className="space-y-4">
               {/* Week 1 Required Reading for Don't Be a Jonah */}
+              <GuidedWeekOnly week={1}>
               <Card>
                 <CardContent className="text-center py-4 md:py-8">
                   <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 1</h3>
+                  {showGuidedEbookSection(1) && (
+
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2063,6 +2375,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </div>
                     </div>
                   </div>
+
+                  )}
+
+                  <GuidedEbookHandoff week={1} ebookId={getWeekEbookReadingId(courseId, 1) ?? 0} />
+
+                  {showGuidedBibleSection(1) && (
+
+
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2084,13 +2404,20 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+
+
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 2 Required Reading for Don't Be a Jonah */}
+              <GuidedWeekOnly week={2}>
               <Card>
                 <CardContent className="text-center py-4 md:py-8">
                   <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 2</h3>
+                  {showGuidedEbookSection(2) && (
+
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2113,6 +2440,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </div>
                     </div>
                   </div>
+
+                  )}
+
+                  <GuidedEbookHandoff week={2} ebookId={getWeekEbookReadingId(courseId, 2) ?? 0} />
+
+                  {showGuidedBibleSection(2) && (
+
+
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2134,13 +2469,20 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+
+
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 3 Required Reading for Don't Be a Jonah */}
+              <GuidedWeekOnly week={3}>
               <Card>
                 <CardContent className="text-center py-4 md:py-8">
                   <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 3</h3>
+                  {showGuidedEbookSection(3) && (
+
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2163,6 +2505,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </div>
                     </div>
                   </div>
+
+                  )}
+
+                  <GuidedEbookHandoff week={3} ebookId={getWeekEbookReadingId(courseId, 3) ?? 0} />
+
+                  {showGuidedBibleSection(3) && (
+
+
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2184,13 +2534,20 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+
+
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 4 Required Reading for Don't Be a Jonah */}
+              <GuidedWeekOnly week={4}>
               <Card>
                 <CardContent className="text-center py-4 md:py-8">
                   <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 4</h3>
+                  {showGuidedEbookSection(4) && (
+
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2213,6 +2570,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </div>
                     </div>
                   </div>
+
+                  )}
+
+                  <GuidedEbookHandoff week={4} ebookId={getWeekEbookReadingId(courseId, 4) ?? 0} />
+
+                  {showGuidedBibleSection(4) && (
+
+
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2234,13 +2599,20 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+
+
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 5 Required Reading for Don't Be a Jonah */}
+              <GuidedWeekOnly week={5}>
               <Card>
                 <CardContent className="text-center py-4 md:py-8">
                   <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 5</h3>
+                  {showGuidedEbookSection(5) && (
+
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2263,6 +2635,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </div>
                     </div>
                   </div>
+
+                  )}
+
+                  <GuidedEbookHandoff week={5} ebookId={getWeekEbookReadingId(courseId, 5) ?? 0} />
+
+                  {showGuidedBibleSection(5) && (
+
+
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2284,13 +2664,20 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+
+
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 6 Required Reading for Don't Be a Jonah */}
+              <GuidedWeekOnly week={6}>
               <Card>
                 <CardContent className="text-center py-4 md:py-8">
                   <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 6</h3>
+                  {showGuidedEbookSection(6) && (
+
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2313,6 +2700,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </div>
                     </div>
                   </div>
+
+                  )}
+
+                  <GuidedEbookHandoff week={6} ebookId={getWeekEbookReadingId(courseId, 6) ?? 0} />
+
+                  {showGuidedBibleSection(6) && (
+
+
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2334,13 +2729,20 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+
+
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 7 Required Reading for Don't Be a Jonah */}
+              <GuidedWeekOnly week={7}>
               <Card>
                 <CardContent className="text-center py-4 md:py-8">
                   <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 7</h3>
+                  {showGuidedEbookSection(7) && (
+
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2363,6 +2765,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </div>
                     </div>
                   </div>
+
+                  )}
+
+                  <GuidedEbookHandoff week={7} ebookId={getWeekEbookReadingId(courseId, 7) ?? 0} />
+
+                  {showGuidedBibleSection(7) && (
+
+
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2384,13 +2794,20 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+
+
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 8 Required Reading for Don't Be a Jonah */}
+              <GuidedWeekOnly week={8}>
               <Card>
                 <CardContent className="text-center py-4 md:py-8">
                   <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 8</h3>
+                  {showGuidedEbookSection(8) && (
+
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2413,6 +2830,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </div>
                     </div>
                   </div>
+
+                  )}
+
+                  <GuidedEbookHandoff week={8} ebookId={getWeekEbookReadingId(courseId, 8) ?? 0} />
+
+                  {showGuidedBibleSection(8) && (
+
+
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2434,13 +2859,20 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+
+
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 9 Required Reading for Don't Be a Jonah */}
+              <GuidedWeekOnly week={9}>
               <Card>
                 <CardContent className="text-center py-4 md:py-8">
                   <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 9</h3>
+                  {showGuidedEbookSection(9) && (
+
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2463,6 +2895,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </div>
                     </div>
                   </div>
+
+                  )}
+
+                  <GuidedEbookHandoff week={9} ebookId={getWeekEbookReadingId(courseId, 9) ?? 0} />
+
+                  {showGuidedBibleSection(9) && (
+
+
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2484,13 +2924,20 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+
+
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 10 Required Reading for Don't Be a Jonah */}
+              <GuidedWeekOnly week={10}>
               <Card>
                 <CardContent className="text-center py-4 md:py-8">
                   <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 10</h3>
+                  {showGuidedEbookSection(10) && (
+
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2513,6 +2960,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </div>
                     </div>
                   </div>
+
+                  )}
+
+                  <GuidedEbookHandoff week={10} ebookId={getWeekEbookReadingId(courseId, 10) ?? 0} />
+
+                  {showGuidedBibleSection(10) && (
+
+
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2534,13 +2989,20 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+
+
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 11 Required Reading for Don't Be a Jonah */}
+              <GuidedWeekOnly week={11}>
               <Card>
                 <CardContent className="text-center py-4 md:py-8">
                   <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 11</h3>
+                  {showGuidedEbookSection(11) && (
+
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2563,6 +3025,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </div>
                     </div>
                   </div>
+
+                  )}
+
+                  <GuidedEbookHandoff week={11} ebookId={getWeekEbookReadingId(courseId, 11) ?? 0} />
+
+                  {showGuidedBibleSection(11) && (
+
+
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between">
                       <div>
@@ -2584,12 +3054,17 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+
+
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
             </div>
           ) : courseId === 1 ? (
             <div className="space-y-4">
               {/* Week 1 Required Reading Card */}
+              <GuidedWeekOnly week={1}>
               <Card className={`${!canAccessReadings(1) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -2603,6 +3078,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </h3>
                   
                   {/* Acts in Action Section - Introduction & Chapter 1 (Combined) */}
+                  {showActsEbookSection(1) && (
                   <div className="bg-blue-50 p-3 md:p-4 rounded-lg border border-blue-200 mb-3 md:mb-4">
                     <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
@@ -2622,9 +3098,12 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                         {!canAccessReadings(1) ? '🔒 Locked' : isContentCompleted('reading', 1) ? 'Complete' : 'E-book'}
                       </Button>
                     </div>
+                    <ActsEbookHandoff week={1} ebookId={1} />
                   </div>
+                  )}
                   
                   {/* Bible Reading Section */}
+                  {showActsBibleSection(1) && (
                   <div className="bg-green-50 p-3 md:p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
@@ -2646,10 +3125,13 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 2 Required Reading Card */}
+              <GuidedWeekOnly week={2}>
               <Card className={`${!canAccessReadings(2) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -2663,6 +3145,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </h3>
                   
                   {/* Acts in Action Section - Chapter 2 */}
+                  {showActsEbookSection(2) && (
                   <div className="bg-blue-50 p-3 md:p-4 rounded-lg border border-blue-200 mb-3 md:mb-4">
                     <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
@@ -2682,9 +3165,12 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                         {!canAccessReadings(2) ? '🔒 Locked' : isContentCompleted('reading', 4) ? 'Complete' : 'E-book'}
                       </Button>
                     </div>
+                    <ActsEbookHandoff week={2} ebookId={4} />
                   </div>
+                  )}
                   
                   {/* Bible Reading Section */}
+                  {showActsBibleSection(2) && (
                   <div className="bg-green-50 p-3 md:p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
@@ -2706,10 +3192,13 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 3 Required Reading Card */}
+              <GuidedWeekOnly week={3}>
               <Card className={`${!canAccessReadings(3) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -2723,6 +3212,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </h3>
                   
                   {/* Acts in Action Section - Chapter 3 */}
+                  {showActsEbookSection(3) && (
                   <div className="bg-blue-50 p-3 md:p-4 rounded-lg border border-blue-200 mb-3 md:mb-4">
                     <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
@@ -2742,9 +3232,12 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                         {!canAccessReadings(3) ? '🔒 Locked' : isContentCompleted('reading', 6) ? 'Complete' : 'E-book'}
                       </Button>
                     </div>
+                    <ActsEbookHandoff week={3} ebookId={6} />
                   </div>
+                  )}
                   
                   {/* Bible Reading Section */}
+                  {showActsBibleSection(3) && (
                   <div className="bg-green-50 p-3 md:p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
@@ -2766,10 +3259,13 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 4 Required Reading Card */}
+              <GuidedWeekOnly week={4}>
               <Card className={`${!canAccessReadings(4) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -2783,6 +3279,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </h3>
                   
                   {/* Acts in Action Section - Chapter 4 */}
+                  {showActsEbookSection(4) && (
                   <div className="bg-blue-50 p-3 md:p-4 rounded-lg border border-blue-200 mb-3 md:mb-4">
                     <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
@@ -2802,9 +3299,12 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                         {!canAccessReadings(4) ? '🔒 Locked' : isContentCompleted('reading', 8) ? 'Complete' : 'E-book'}
                       </Button>
                     </div>
+                    <ActsEbookHandoff week={4} ebookId={8} />
                   </div>
+                  )}
                   
                   {/* Bible Reading Section */}
+                  {showActsBibleSection(4) && (
                   <div className="bg-green-50 p-3 md:p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
@@ -2826,10 +3326,13 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 5 Required Reading Card */}
+              <GuidedWeekOnly week={5}>
               <Card className={`${!canAccessReadings(5) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -2843,6 +3346,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </h3>
                   
                   {/* Acts in Action Section - Chapter 5 */}
+                  {showActsEbookSection(5) && (
                   <div className="bg-blue-50 p-3 md:p-4 rounded-lg border border-blue-200 mb-3 md:mb-4">
                     <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
@@ -2862,9 +3366,12 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                         {!canAccessReadings(5) ? '🔒 Locked' : isContentCompleted('reading', 10) ? 'Complete' : 'E-book'}
                       </Button>
                     </div>
+                    <ActsEbookHandoff week={5} ebookId={10} />
                   </div>
+                  )}
                   
                   {/* Bible Reading Section */}
+                  {showActsBibleSection(5) && (
                   <div className="bg-green-50 p-3 md:p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
@@ -2886,10 +3393,13 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 6 Required Reading Card */}
+              <GuidedWeekOnly week={6}>
               <Card className={`${!canAccessReadings(6) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -2903,6 +3413,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </h3>
                   
                   {/* Acts in Action Section - Chapter 6 */}
+                  {showActsEbookSection(6) && (
                   <div className="bg-blue-50 p-3 md:p-4 rounded-lg border border-blue-200 mb-3 md:mb-4">
                     <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
@@ -2922,9 +3433,12 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                         {!canAccessReadings(6) ? '🔒 Locked' : isContentCompleted('reading', 12) ? 'Complete' : 'E-book'}
                       </Button>
                     </div>
+                    <ActsEbookHandoff week={6} ebookId={12} />
                   </div>
+                  )}
                   
                   {/* Bible Reading Section */}
+                  {showActsBibleSection(6) && (
                   <div className="bg-green-50 p-3 md:p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
@@ -2946,10 +3460,13 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 7 Required Reading Card */}
+              <GuidedWeekOnly week={7}>
               <Card className={`${!canAccessReadings(7) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -2963,6 +3480,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </h3>
                   
                   {/* Acts in Action Section - Chapter 7 */}
+                  {showActsEbookSection(7) && (
                   <div className="bg-blue-50 p-3 md:p-4 rounded-lg border border-blue-200 mb-3 md:mb-4">
                     <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
@@ -2982,9 +3500,12 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                         {!canAccessReadings(7) ? '🔒 Locked' : isContentCompleted('reading', 14) ? 'Complete' : 'E-book'}
                       </Button>
                     </div>
+                    <ActsEbookHandoff week={7} ebookId={14} />
                   </div>
+                  )}
                   
                   {/* Bible Reading Section */}
+                  {showActsBibleSection(7) && (
                   <div className="bg-green-50 p-3 md:p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
@@ -3006,10 +3527,13 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 8 Required Reading Card */}
+              <GuidedWeekOnly week={8}>
               <Card className={`${!canAccessReadings(8) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -3023,6 +3547,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </h3>
                   
                   {/* Acts in Action Section - Chapter 8 */}
+                  {showActsEbookSection(8) && (
                   <div className="bg-blue-50 p-3 md:p-4 rounded-lg border border-blue-200 mb-3 md:mb-4">
                     <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
@@ -3042,9 +3567,12 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                         {!canAccessReadings(8) ? '🔒 Locked' : isContentCompleted('reading', 16) ? 'Complete' : 'E-book'}
                       </Button>
                     </div>
+                    <ActsEbookHandoff week={8} ebookId={16} />
                   </div>
+                  )}
                   
                   {/* Bible Reading Section */}
+                  {showActsBibleSection(8) && (
                   <div className="bg-green-50 p-3 md:p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
@@ -3066,10 +3594,13 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 9 Required Reading Card */}
+              <GuidedWeekOnly week={9}>
               <Card className={`${!canAccessReadings(9) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -3083,6 +3614,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </h3>
                   
                   {/* Acts in Action Section - Chapter 9 */}
+                  {showActsEbookSection(9) && (
                   <div className="bg-blue-50 p-3 md:p-4 rounded-lg border border-blue-200 mb-3 md:mb-4">
                     <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
@@ -3102,9 +3634,12 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                         {!canAccessReadings(9) ? '🔒 Locked' : isContentCompleted('reading', 18) ? 'Complete' : 'E-book'}
                       </Button>
                     </div>
+                    <ActsEbookHandoff week={9} ebookId={18} />
                   </div>
+                  )}
                   
                   {/* Bible Reading Section */}
+                  {showActsBibleSection(9) && (
                   <div className="bg-green-50 p-3 md:p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
@@ -3126,10 +3661,13 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 10 Required Reading Card */}
+              <GuidedWeekOnly week={10}>
               <Card className={`${!canAccessReadings(10) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -3143,6 +3681,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </h3>
                   
                   {/* Acts in Action Section - Chapter 10 */}
+                  {showActsEbookSection(10) && (
                   <div className="bg-blue-50 p-3 md:p-4 rounded-lg border border-blue-200 mb-3 md:mb-4">
                     <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
@@ -3162,9 +3701,12 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                         {!canAccessReadings(10) ? '🔒 Locked' : isContentCompleted('reading', 20) ? 'Complete' : 'E-book'}
                       </Button>
                     </div>
+                    <ActsEbookHandoff week={10} ebookId={20} />
                   </div>
+                  )}
                   
                   {/* Bible Reading Section */}
+                  {showActsBibleSection(10) && (
                   <div className="bg-green-50 p-3 md:p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between flex-col md:flex-row gap-2 md:gap-0">
                       <div>
@@ -3186,15 +3728,20 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
             </div>
           ) : courseId === 2 ? (
             <div className="space-y-4">
               {/* Week 1 Required Reading for Firestarter */}
+              <GuidedWeekOnly week={1}>
               <Card>
                 <CardContent className="text-center py-4 md:py-8">
                   <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 1</h3>
+                      {showGuidedEbookSection(1) && (
+
                       <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -3217,6 +3764,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </div>
                     </div>
                         </div>
+
+                      )}
+
+                      <GuidedEbookHandoff week={1} ebookId={getWeekEbookReadingId(courseId, 1) ?? 0} />
+
+                      {showGuidedBibleSection(1) && (
+
+
                       <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                         <div className="flex items-center justify-between">
                           <div>
@@ -3238,13 +3793,20 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                           </Button>
                         </div>
                       </div>
+
+
+                      )}
                     </CardContent>
                   </Card>
+              </GuidedWeekOnly>
 
               {/* Week 2 Required Reading for Firestarter */}
+              <GuidedWeekOnly week={2}>
               <Card>
                 <CardContent className="text-center py-4 md:py-8">
                   <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 2</h3>
+                      {showGuidedEbookSection(2) && (
+
                       <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -3267,6 +3829,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </div>
                     </div>
                         </div>
+
+                      )}
+
+                      <GuidedEbookHandoff week={2} ebookId={getWeekEbookReadingId(courseId, 2) ?? 0} />
+
+                      {showGuidedBibleSection(2) && (
+
+
                       <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                         <div className="flex items-center justify-between">
                           <div>
@@ -3288,13 +3858,20 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                           </Button>
                         </div>
                       </div>
+
+
+                      )}
                     </CardContent>
                   </Card>
+              </GuidedWeekOnly>
 
               {/* Week 3 Required Reading for Firestarter */}
+              <GuidedWeekOnly week={3}>
               <Card>
                 <CardContent className="text-center py-4 md:py-8">
                   <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 3</h3>
+                      {showGuidedEbookSection(3) && (
+
                       <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -3327,6 +3904,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </div>
                     </div>
                         </div>
+
+                      )}
+
+                      <GuidedEbookHandoff week={3} ebookId={getWeekEbookReadingId(courseId, 3) ?? 0} />
+
+                      {showGuidedBibleSection(3) && (
+
+
                       <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                         <div className="flex items-center justify-between">
                           <div>
@@ -3358,13 +3943,20 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       })()}
                         </div>
                       </div>
+
+
+                      )}
                     </CardContent>
                   </Card>
+              </GuidedWeekOnly>
 
               {/* Week 4 Required Reading for Firestarter */}
+              <GuidedWeekOnly week={4}>
               <Card>
                 <CardContent className="text-center py-4 md:py-8">
                   <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 4</h3>
+                      {showGuidedEbookSection(4) && (
+
                       <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -3397,6 +3989,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </div>
                     </div>
                         </div>
+
+                      )}
+
+                      <GuidedEbookHandoff week={4} ebookId={getWeekEbookReadingId(courseId, 4) ?? 0} />
+
+                      {showGuidedBibleSection(4) && (
+
+
                       <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                         <div className="flex items-center justify-between">
                           <div>
@@ -3428,13 +4028,20 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       })()}
                         </div>
                       </div>
+
+
+                      )}
                     </CardContent>
                   </Card>
+              </GuidedWeekOnly>
 
               {/* Week 5 Required Reading for Firestarter */}
+              <GuidedWeekOnly week={5}>
               <Card>
                 <CardContent className="text-center py-4 md:py-8">
                   <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 5</h3>
+                      {showGuidedEbookSection(5) && (
+
                       <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -3467,6 +4074,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </div>
                     </div>
                         </div>
+
+                      )}
+
+                      <GuidedEbookHandoff week={5} ebookId={getWeekEbookReadingId(courseId, 5) ?? 0} />
+
+                      {showGuidedBibleSection(5) && (
+
+
                       <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                         <div className="flex items-center justify-between">
                           <div>
@@ -3498,13 +4113,20 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       })()}
                         </div>
                       </div>
+
+
+                      )}
                     </CardContent>
                   </Card>
+              </GuidedWeekOnly>
 
               {/* Week 6 Required Reading for Firestarter */}
+              <GuidedWeekOnly week={6}>
               <Card>
                 <CardContent className="text-center py-4 md:py-8">
                   <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 6</h3>
+                      {showGuidedEbookSection(6) && (
+
                       <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -3537,6 +4159,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </div>
                     </div>
                         </div>
+
+                      )}
+
+                      <GuidedEbookHandoff week={6} ebookId={getWeekEbookReadingId(courseId, 6) ?? 0} />
+
+                      {showGuidedBibleSection(6) && (
+
+
                       <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                         <div className="flex items-center justify-between">
                           <div>
@@ -3568,13 +4198,20 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       })()}
                         </div>
                       </div>
+
+
+                      )}
                     </CardContent>
                   </Card>
+              </GuidedWeekOnly>
 
               {/* Week 7 Required Reading for Firestarter */}
+              <GuidedWeekOnly week={7}>
               <Card>
                 <CardContent className="text-center py-4 md:py-8">
                   <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 7</h3>
+                      {showGuidedEbookSection(7) && (
+
                       <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -3607,6 +4244,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </div>
                     </div>
                         </div>
+
+                      )}
+
+                      <GuidedEbookHandoff week={7} ebookId={getWeekEbookReadingId(courseId, 7) ?? 0} />
+
+                      {showGuidedBibleSection(7) && (
+
+
                       <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                         <div className="flex items-center justify-between">
                           <div>
@@ -3638,13 +4283,20 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       })()}
                         </div>
                       </div>
+
+
+                      )}
                     </CardContent>
                   </Card>
+              </GuidedWeekOnly>
 
               {/* Week 8 Required Reading for Firestarter */}
+              <GuidedWeekOnly week={8}>
               <Card>
                 <CardContent className="text-center py-4 md:py-8">
                   <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 8</h3>
+                      {showGuidedEbookSection(8) && (
+
                       <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -3677,6 +4329,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </div>
                     </div>
                         </div>
+
+                      )}
+
+                      <GuidedEbookHandoff week={8} ebookId={getWeekEbookReadingId(courseId, 8) ?? 0} />
+
+                      {showGuidedBibleSection(8) && (
+
+
                       <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                         <div className="flex items-center justify-between">
                           <div>
@@ -3708,13 +4368,20 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       })()}
                         </div>
                       </div>
+
+
+                      )}
                     </CardContent>
                   </Card>
+              </GuidedWeekOnly>
 
               {/* Week 9 Required Reading for Firestarter */}
+              <GuidedWeekOnly week={9}>
               <Card>
                 <CardContent className="text-center py-4 md:py-8">
                   <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 9</h3>
+                      {showGuidedEbookSection(9) && (
+
                       <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -3747,6 +4414,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </div>
                     </div>
                         </div>
+
+                      )}
+
+                      <GuidedEbookHandoff week={9} ebookId={getWeekEbookReadingId(courseId, 9) ?? 0} />
+
+                      {showGuidedBibleSection(9) && (
+
+
                       <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                         <div className="flex items-center justify-between">
                           <div>
@@ -3778,13 +4453,20 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       })()}
                         </div>
                       </div>
+
+
+                      )}
                     </CardContent>
                   </Card>
+              </GuidedWeekOnly>
 
               {/* Week 10 Required Reading for Firestarter */}
+              <GuidedWeekOnly week={10}>
               <Card>
                 <CardContent className="text-center py-4 md:py-8">
                   <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-3 md:mb-6">Required Reading Week 10</h3>
+                      {showGuidedEbookSection(10) && (
+
                       <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -3817,6 +4499,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </div>
                     </div>
                         </div>
+
+                      )}
+
+                      <GuidedEbookHandoff week={10} ebookId={getWeekEbookReadingId(courseId, 10) ?? 0} />
+
+                      {showGuidedBibleSection(10) && (
+
+
                       <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                         <div className="flex items-center justify-between">
                           <div>
@@ -3848,12 +4538,17 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       })()}
                         </div>
                       </div>
+
+
+                      )}
                     </CardContent>
                   </Card>
+              </GuidedWeekOnly>
             </div>
           ) : courseId === 5 ? (
             <div className="space-y-4">
               {/* Week 1 Required Reading for Studying for Service */}
+              <GuidedWeekOnly week={1}>
               <Card className={`${!canAccessReadings(1) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -3865,6 +4560,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Badge>
                     )}
                   </h3>
+                  {showGuidedEbookSection(1) && (
+
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -3885,6 +4582,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+
+                  )}
+
+                  <GuidedEbookHandoff week={1} ebookId={getWeekEbookReadingId(courseId, 1) ?? 0} />
+
+                  {showGuidedBibleSection(1) && (
+
+
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between">
                       <div>
@@ -3906,10 +4611,15 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+
+
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 2 Required Reading for Studying for Service */}
+              <GuidedWeekOnly week={2}>
               <Card className={`${!canAccessReadings(2) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -3921,6 +4631,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Badge>
                     )}
                   </h3>
+                  {showGuidedEbookSection(2) && (
+
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -3941,6 +4653,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                         </Button>
                     </div>
                   </div>
+
+                  )}
+
+                  <GuidedEbookHandoff week={2} ebookId={getWeekEbookReadingId(courseId, 2) ?? 0} />
+
+                  {showGuidedBibleSection(2) && (
+
+
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between">
                       <div>
@@ -3962,10 +4682,15 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+
+
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 3 Required Reading for Studying for Service */}
+              <GuidedWeekOnly week={3}>
               <Card className={`${!canAccessReadings(3) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -3977,6 +4702,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Badge>
                     )}
                   </h3>
+                  {showGuidedEbookSection(3) && (
+
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -3997,6 +4724,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                         </Button>
                     </div>
                   </div>
+
+                  )}
+
+                  <GuidedEbookHandoff week={3} ebookId={getWeekEbookReadingId(courseId, 3) ?? 0} />
+
+                  {showGuidedBibleSection(3) && (
+
+
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between">
                       <div>
@@ -4018,10 +4753,15 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+
+
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 4 Required Reading for Studying for Service */}
+              <GuidedWeekOnly week={4}>
               <Card className={`${!canAccessReadings(4) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -4033,6 +4773,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Badge>
                     )}
                   </h3>
+                  {showGuidedEbookSection(4) && (
+
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -4053,6 +4795,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                         </Button>
                     </div>
                   </div>
+
+                  )}
+
+                  <GuidedEbookHandoff week={4} ebookId={getWeekEbookReadingId(courseId, 4) ?? 0} />
+
+                  {showGuidedBibleSection(4) && (
+
+
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between">
                       <div>
@@ -4074,10 +4824,15 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+
+
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 5 Required Reading for Studying for Service */}
+              <GuidedWeekOnly week={5}>
               <Card className={`${!canAccessReadings(5) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -4089,6 +4844,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Badge>
                     )}
                   </h3>
+                  {showGuidedEbookSection(5) && (
+
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -4109,6 +4866,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                         </Button>
                     </div>
                   </div>
+
+                  )}
+
+                  <GuidedEbookHandoff week={5} ebookId={getWeekEbookReadingId(courseId, 5) ?? 0} />
+
+                  {showGuidedBibleSection(5) && (
+
+
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between">
                       <div>
@@ -4130,10 +4895,15 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+
+
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 6 Required Reading for Studying for Service */}
+              <GuidedWeekOnly week={6}>
               <Card className={`${!canAccessReadings(6) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -4145,6 +4915,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Badge>
                     )}
                   </h3>
+                  {showGuidedEbookSection(6) && (
+
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -4165,6 +4937,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                         </Button>
                     </div>
                   </div>
+
+                  )}
+
+                  <GuidedEbookHandoff week={6} ebookId={getWeekEbookReadingId(courseId, 6) ?? 0} />
+
+                  {showGuidedBibleSection(6) && (
+
+
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between">
                       <div>
@@ -4186,10 +4966,15 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+
+
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 7 Required Reading for Studying for Service */}
+              <GuidedWeekOnly week={7}>
               <Card className={`${!canAccessReadings(7) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -4201,6 +4986,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Badge>
                     )}
                   </h3>
+                  {showGuidedEbookSection(7) && (
+
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -4221,6 +5008,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                         </Button>
                     </div>
                   </div>
+
+                  )}
+
+                  <GuidedEbookHandoff week={7} ebookId={getWeekEbookReadingId(courseId, 7) ?? 0} />
+
+                  {showGuidedBibleSection(7) && (
+
+
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between">
                       <div>
@@ -4242,10 +5037,15 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+
+
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 8 Required Reading for Studying for Service */}
+              <GuidedWeekOnly week={8}>
               <Card className={`${!canAccessReadings(8) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -4257,6 +5057,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Badge>
                     )}
                   </h3>
+                  {showGuidedEbookSection(8) && (
+
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -4277,6 +5079,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                         </Button>
                     </div>
                   </div>
+
+                  )}
+
+                  <GuidedEbookHandoff week={8} ebookId={getWeekEbookReadingId(courseId, 8) ?? 0} />
+
+                  {showGuidedBibleSection(8) && (
+
+
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between">
                       <div>
@@ -4298,10 +5108,15 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+
+
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 9 Required Reading for Studying for Service */}
+              <GuidedWeekOnly week={9}>
               <Card className={`${!canAccessReadings(9) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -4313,6 +5128,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Badge>
                     )}
                   </h3>
+                  {showGuidedEbookSection(9) && (
+
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -4333,6 +5150,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                         </Button>
                     </div>
                   </div>
+
+                  )}
+
+                  <GuidedEbookHandoff week={9} ebookId={getWeekEbookReadingId(courseId, 9) ?? 0} />
+
+                  {showGuidedBibleSection(9) && (
+
+
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between">
                       <div>
@@ -4354,10 +5179,15 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+
+
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 10 Required Reading for Studying for Service */}
+              <GuidedWeekOnly week={10}>
               <Card className={`${!canAccessReadings(10) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -4369,6 +5199,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Badge>
                     )}
                   </h3>
+                  {showGuidedEbookSection(10) && (
+
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -4389,6 +5221,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                         </Button>
                     </div>
                   </div>
+
+                  )}
+
+                  <GuidedEbookHandoff week={10} ebookId={getWeekEbookReadingId(courseId, 10) ?? 0} />
+
+                  {showGuidedBibleSection(10) && (
+
+
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between">
                       <div>
@@ -4410,10 +5250,15 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+
+
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 11 Required Reading for Studying for Service */}
+              <GuidedWeekOnly week={11}>
               <Card className={`${!canAccessReadings(11) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -4425,6 +5270,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Badge>
                     )}
                   </h3>
+                  {showGuidedEbookSection(11) && (
+
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -4445,6 +5292,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                         </Button>
                     </div>
                   </div>
+
+                  )}
+
+                  <GuidedEbookHandoff week={11} ebookId={getWeekEbookReadingId(courseId, 11) ?? 0} />
+
+                  {showGuidedBibleSection(11) && (
+
+
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between">
                       <div>
@@ -4466,10 +5321,15 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+
+
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 12 Required Reading for Studying for Service */}
+              <GuidedWeekOnly week={12}>
               <Card className={`${!canAccessReadings(12) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -4481,6 +5341,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Badge>
                     )}
                   </h3>
+                  {showGuidedEbookSection(12) && (
+
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -4501,6 +5363,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                         </Button>
                     </div>
                   </div>
+
+                  )}
+
+                  <GuidedEbookHandoff week={12} ebookId={getWeekEbookReadingId(courseId, 12) ?? 0} />
+
+                  {showGuidedBibleSection(12) && (
+
+
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between">
                       <div>
@@ -4522,12 +5392,17 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </Button>
                     </div>
                   </div>
+
+
+                  )}
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
             </div>
           ) : courseId === 4 ? (
             <div className="space-y-4">
               {/* Week 1 Required Reading for G.R.O.W */}
+              <GuidedWeekOnly week={1}>
               <Card className={`${!canAccessReadings(1) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -4561,8 +5436,10 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </div>
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 2 Required Reading for G.R.O.W */}
+              <GuidedWeekOnly week={2}>
               <Card className={`${!canAccessReadings(2) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -4596,8 +5473,10 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </div>
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 3 Required Reading for G.R.O.W */}
+              <GuidedWeekOnly week={3}>
               <Card className={`${!canAccessReadings(3) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -4631,8 +5510,10 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </div>
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 4 Required Reading for G.R.O.W */}
+              <GuidedWeekOnly week={4}>
               <Card className={`${!canAccessReadings(4) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -4666,10 +5547,12 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </div>
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
             </div>
           ) : courseId === 6 ? (
             <div className="space-y-4">
               {/* Week 1 Required Reading for Deacon Course */}
+              <GuidedWeekOnly week={1}>
               <Card className={`${!canAccessReadings(1) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                       <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -4703,8 +5586,10 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </div>
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 2 Required Reading for Deacon Course */}
+              <GuidedWeekOnly week={2}>
               <Card className={`${!canAccessReadings(2) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -4738,8 +5623,10 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </div>
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 3 Required Reading for Deacon Course */}
+              <GuidedWeekOnly week={3}>
               <Card className={`${!canAccessReadings(3) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -4773,8 +5660,10 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </div>
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
               {/* Week 4 Required Reading for Deacon Course */}
+              <GuidedWeekOnly week={4}>
               <Card className={`${!canAccessReadings(4) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -4808,8 +5697,10 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                       </div>
                     </CardContent>
                   </Card>
+              </GuidedWeekOnly>
 
               {/* Week 5 Required Reading for Deacon Course */}
+              <GuidedWeekOnly week={5}>
               <Card className={`${!canAccessReadings(5) ? 'opacity-60' : ''}`}>
                 <CardContent className="text-center py-8">
                   <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
@@ -4843,223 +5734,57 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   </div>
                 </CardContent>
               </Card>
+              </GuidedWeekOnly>
 
             </div>
           ) : courseId === 7 ? (
             <div className="space-y-4">
-              {/* Week 1 Required Reading for Level Up Leadership */}
-              <Card className={`${!canAccessReadings(1) ? 'opacity-60' : ''}`}>
-                <CardContent className="text-center py-8">
-                  <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
-                    Required Reading Week 1
-                    {!canAccessReadings(1) && (
-                      <Badge variant="secondary" className="bg-gray-100 text-gray-600 text-xs">
-                        <i className="fas fa-lock mr-1"></i>
-                        Locked
-                      </Badge>
-                    )}
-                  </h3>
-                  <div className="bg-purple-50 p-4 rounded-lg border border-purple-200 mb-4">
-                    <div className="flex items-center justify-between">
-                      <div className="text-left flex-1">
-                        <h4 className="text-lg font-semibold text-purple-900 mb-1">Required Reading</h4>
-                        <p className="text-gray-700 text-lg">⬆️ Level Up Leadership — Position Leadership (Pages 1-81)</p>
+              {LEVEL_UP_COURSE_WEEK_SUMMARIES.map(({ week, readingId, path, label, pages }) => (
+                <GuidedWeekOnly key={week} week={week}>
+                  <Card className={`${!canAccessReadings(week) ? 'opacity-60' : ''}`}>
+                    <CardContent className="text-center py-8">
+                      <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
+                        Required Reading Week {week}
+                        {!canAccessReadings(week) && (
+                          <Badge variant="secondary" className="bg-gray-100 text-gray-600 text-xs">
+                            <i className="fas fa-lock mr-1"></i>
+                            Locked
+                          </Badge>
+                        )}
+                      </h3>
+                      <div className="bg-purple-50 p-4 rounded-lg border border-purple-200 mb-4">
+                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                          <div className="text-left flex-1 min-w-0">
+                            <p className="text-purple-900 font-semibold text-base mb-1">{MAXWELL_BOOK_TITLE}</p>
+                            <p className="text-gray-600 text-sm mb-2">{MAXWELL_OFFLINE_NOTE}</p>
+                            <p className="text-gray-700 text-lg">
+                              {label}
+                              {pages ? <> · Pages {pages}</> : null}
+                            </p>
+                          </div>
+                          <Button
+                            disabled={!canAccessReadings(week)}
+                            onClick={createReadingProgressHandler(readingId, () => { window.location.href = path; })}
+                            className={`shrink-0 ${!canAccessReadings(week)
+                              ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
+                              : isContentCompleted('reading', readingId)
+                                ? 'bg-green-600 hover:bg-green-700 text-white'
+                                : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white'
+                            }`}
+                          >
+                            {!canAccessReadings(week) ? '🔒 Locked' : isContentCompleted('reading', readingId) ? 'Complete' : 'View Reading'}
+                          </Button>
+                        </div>
                       </div>
-                      <Button
-                        disabled={!canAccessReadings(1)}
-                        onClick={createReadingProgressHandler(601, () => window.location.href = '/level-up-leadership-week1')}
-                        className={`${!canAccessReadings(1)
-                          ? 'bg-gray-400 text-gray-600 cursor-not-allowed' 
-                          : isContentCompleted('reading', 601)
-                            ? 'bg-green-600 hover:bg-green-700 text-white'
-                            : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white'
-                        }`}
-                      >
-                        {!canAccessReadings(1) ? '🔒 Locked' : isContentCompleted('reading', 601) ? 'Complete' : 'E-book'}
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Week 2 Required Reading for Level Up Leadership */}
-              <Card className={`${!canAccessReadings(2) ? 'opacity-60' : ''}`}>
-                <CardContent className="text-center py-8">
-                  <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
-                    Required Reading Week 2
-                    {!canAccessReadings(2) && (
-                      <Badge variant="secondary" className="bg-gray-100 text-gray-600 text-xs">
-                        <i className="fas fa-lock mr-1"></i>
-                        Locked
-                      </Badge>
-                    )}
-                  </h3>
-                  <div className="bg-purple-50 p-4 rounded-lg border border-purple-200 mb-4">
-                    <div className="flex items-center justify-between">
-                      <div className="text-left flex-1">
-                        <h4 className="text-lg font-semibold text-purple-900 mb-1">Required Reading</h4>
-                        <p className="text-gray-700 text-lg">⬆️ Level Up Leadership — Permission Leadership (Pages 85-129)</p>
-                      </div>
-                      <Button
-                        disabled={!canAccessReadings(2)}
-                        onClick={createReadingProgressHandler(602, () => window.location.href = '/level-up-leadership-week2')}
-                        className={`${!canAccessReadings(2)
-                          ? 'bg-gray-400 text-gray-600 cursor-not-allowed' 
-                          : isContentCompleted('reading', 602)
-                            ? 'bg-green-600 hover:bg-green-700 text-white'
-                            : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white'
-                        }`}
-                      >
-                        {!canAccessReadings(2) ? '🔒 Locked' : isContentCompleted('reading', 602) ? 'Complete' : 'E-book'}
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Week 3 Required Reading for Level Up Leadership */}
-              <Card className={`${!canAccessReadings(3) ? 'opacity-60' : ''}`}>
-                <CardContent className="text-center py-8">
-                  <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
-                    Required Reading Week 3
-                    {!canAccessReadings(3) && (
-                      <Badge variant="secondary" className="bg-gray-100 text-gray-600 text-xs">
-                        <i className="fas fa-lock mr-1"></i>
-                        Locked
-                      </Badge>
-                    )}
-                  </h3>
-                  <div className="bg-purple-50 p-4 rounded-lg border border-purple-200 mb-4">
-                    <div className="flex items-center justify-between">
-                      <div className="text-left flex-1">
-                        <h4 className="text-lg font-semibold text-purple-900 mb-1">Required Reading</h4>
-                        <p className="text-gray-700 text-lg">⬆️ Level Up Leadership — Production Leadership (Pages 133-178)</p>
-                      </div>
-                      <Button
-                        disabled={!canAccessReadings(3)}
-                        onClick={createReadingProgressHandler(603, () => window.location.href = '/level-up-leadership-week3')}
-                        className={`${!canAccessReadings(3)
-                          ? 'bg-gray-400 text-gray-600 cursor-not-allowed' 
-                          : isContentCompleted('reading', 603)
-                            ? 'bg-green-600 hover:bg-green-700 text-white'
-                            : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white'
-                        }`}
-                      >
-                        {!canAccessReadings(3) ? '🔒 Locked' : isContentCompleted('reading', 603) ? 'Complete' : 'E-book'}
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Week 4 Required Reading for Level Up Leadership */}
-              <Card className={`${!canAccessReadings(4) ? 'opacity-60' : ''}`}>
-                <CardContent className="text-center py-8">
-                  <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
-                    Required Reading Week 4
-                    {!canAccessReadings(4) && (
-                      <Badge variant="secondary" className="bg-gray-100 text-gray-600 text-xs">
-                        <i className="fas fa-lock mr-1"></i>
-                        Locked
-                      </Badge>
-                    )}
-                  </h3>
-                  <div className="bg-purple-50 p-4 rounded-lg border border-purple-200 mb-4">
-                    <div className="flex items-center justify-between">
-                      <div className="text-left flex-1">
-                        <h4 className="text-lg font-semibold text-purple-900 mb-1">Required Reading</h4>
-                        <p className="text-gray-700 text-lg">⬆️ Level Up Leadership — People Development Leadership (Pages 181-228)</p>
-                      </div>
-                      <Button
-                        disabled={!canAccessReadings(4)}
-                        onClick={createReadingProgressHandler(604, () => window.location.href = '/level-up-leadership-week4')}
-                        className={`${!canAccessReadings(4)
-                          ? 'bg-gray-400 text-gray-600 cursor-not-allowed' 
-                          : isContentCompleted('reading', 604)
-                            ? 'bg-green-600 hover:bg-green-700 text-white'
-                            : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white'
-                        }`}
-                      >
-                        {!canAccessReadings(4) ? '🔒 Locked' : isContentCompleted('reading', 604) ? 'Complete' : 'E-book'}
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Week 5 Required Reading for Level Up Leadership */}
-              <Card className={`${!canAccessReadings(5) ? 'opacity-60' : ''}`}>
-                <CardContent className="text-center py-8">
-                  <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
-                    Required Reading Week 5
-                    {!canAccessReadings(5) && (
-                      <Badge variant="secondary" className="bg-gray-100 text-gray-600 text-xs">
-                        <i className="fas fa-lock mr-1"></i>
-                        Locked
-                      </Badge>
-                    )}
-                  </h3>
-                  <div className="bg-purple-50 p-4 rounded-lg border border-purple-200 mb-4">
-                    <div className="flex items-center justify-between">
-                      <div className="text-left flex-1">
-                        <h4 className="text-lg font-semibold text-purple-900 mb-1">Required Reading</h4>
-                        <p className="text-gray-700 text-lg">⬆️ Level Up Leadership — Pinnacle Leadership (Pages 229-286)</p>
-                      </div>
-                      <Button
-                        disabled={!canAccessReadings(5)}
-                        onClick={createReadingProgressHandler(605, () => window.location.href = '/level-up-leadership-week5')}
-                        className={`${!canAccessReadings(5)
-                          ? 'bg-gray-400 text-gray-600 cursor-not-allowed' 
-                          : isContentCompleted('reading', 605)
-                            ? 'bg-green-600 hover:bg-green-700 text-white'
-                            : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white'
-                        }`}
-                      >
-                        {!canAccessReadings(5) ? '🔒 Locked' : isContentCompleted('reading', 605) ? 'Complete' : 'E-book'}
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Week 6 Required Reading for Level Up Leadership */}
-              <Card className={`${!canAccessReadings(6) ? 'opacity-60' : ''}`}>
-                <CardContent className="text-center py-8">
-                  <h3 className="text-2xl font-bold text-gray-800 text-center mb-6 flex items-center justify-center gap-2">
-                    Required Reading Week 6
-                    {!canAccessReadings(6) && (
-                      <Badge variant="secondary" className="bg-gray-100 text-gray-600 text-xs">
-                        <i className="fas fa-lock mr-1"></i>
-                        Locked
-                      </Badge>
-                    )}
-                  </h3>
-                  <div className="bg-purple-50 p-4 rounded-lg border border-purple-200 mb-4">
-                    <div className="flex items-center justify-between">
-                      <div className="text-left flex-1">
-                        <h4 className="text-lg font-semibold text-purple-900 mb-1">Required Reading</h4>
-                        <p className="text-gray-700 text-lg">⬆️ Level Up Leadership — Integration & Application</p>
-                      </div>
-                      <Button
-                        disabled={!canAccessReadings(6)}
-                        onClick={createReadingProgressHandler(606, () => window.location.href = '/level-up-leadership-week6')}
-                        className={`${!canAccessReadings(6)
-                          ? 'bg-gray-400 text-gray-600 cursor-not-allowed' 
-                          : isContentCompleted('reading', 606)
-                            ? 'bg-green-600 hover:bg-green-700 text-white'
-                            : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white'
-                        }`}
-                      >
-                        {!canAccessReadings(6) ? '🔒 Locked' : isContentCompleted('reading', 606) ? 'Complete' : 'E-book'}
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                    </CardContent>
+                  </Card>
+                </GuidedWeekOnly>
+              ))}
             </div>
           ) : courseId === 16 ? (
             <div className="space-y-4">
               {manOfGodReadingSchedule.map(({ week, title, route }) => {
+                if (!showGuidedWeek(week)) return null;
                 const isAccessible = canAccessWeek(week);
                 const readingId = getManOfGodReadingIds(week)[0];
                 const isCompleted = readingId ? isContentCompleted('reading', readingId) : false;
@@ -5115,6 +5840,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
           ) : courseId === 10 ? (
             <div className="space-y-4">
               {prophecyReadingSchedule.map(({ week, title, route }) => {
+                if (!showGuidedWeek(week)) return null;
                 const isAccessible = canAccessWeek(week);
                 const readingId = getIntroductionToProphecyReadingIds(week)[0];
                 const isCompleted = readingId ? isContentCompleted('reading', readingId) : false;
@@ -5171,6 +5897,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
             <div className="space-y-4">
               {/* Week 1 Required Reading for Youth Ministry Course */}
               {youthReadingSchedule.map(({ week, title, route }) => {
+                if (!showGuidedWeek(week)) return null;
                 const isAccessible = canAccessWeek(week);
                 const readingId = getCourse8ReadingIds(week)[0];
                 const isCompleted = readingId ? isContentCompleted('reading', readingId) : false;
@@ -5795,14 +6522,18 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
               })
           )}
         </TabsContent>
+        )}
 
+        {(!useGuidedFlow || reviewWeek !== null) && (
         <TabsContent value="quizzes" className="space-y-4">
           {/* Dynamic Quiz Display */}
           {quizzes.length > 0 && (
             <div className="space-y-6">
+              {!useGuidedFlow && (
               <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center mb-4 md:mb-6">
                   {courseId === 16 ? 'SFGM Man of God Course Quizzes' : courseId === 10 ? 'Introduction to Prophecy Quizzes' : courseId === 1 ? 'Acts in Action Week Quizzes' : 'Course Quizzes'}
                 </h3>
+              )}
               
               {/* Dynamic Quiz Cards */}
               {quizzes.sort((a: any, b: any) => {
@@ -5835,6 +6566,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   : courseId === 10 && prophecyLessonNum > 0
                     ? prophecyLessonNum + 1
                     : parseInt(quizNumber || '1');
+                if (useGuidedFlow && reviewWeek === null && !isFinalExam && weekNumber !== guidedWeek) return null;
                 const isAccessible = canAccessQuiz(weekNumber, isFinalExam);
                 const quizAttemptInfo = getQuizAttemptInfo(quiz.id);
                 const hasAttempts = quizAttemptInfo.count > 0;
@@ -5922,6 +6654,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                                   quizUrl = isFinalExam ? '/quiz/grow-final-exam' : `/quiz/grow-week-${quizNumber}`;
                                 } else if (courseId === 6) {
                                   quizUrl = isFinalExam ? '/quiz/deacon-course-final-exam' : `/quiz/deacon-course-week-${quizNumber}`;
+                                } else if (courseId === 7) {
+                                  quizUrl = isFinalExam ? '/quiz/level-up-leadership-final-exam' : `/quiz/level-up-leadership-week-${quizNumber}`;
                                 } else if (courseId === 8) {
                                   quizUrl = isFinalExam ? '/quiz/youth-ministry-final-exam' : `/quiz/youth-ministry-week-${quizNumber}`;
                                 } else if (courseId === 16) {
@@ -5962,6 +6696,8 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                                   quizUrl = isFinalExam ? '/quiz/grow-final-exam' : `/quiz/grow-week-${quizNumber}`;
                                 } else if (courseId === 6) {
                                   quizUrl = isFinalExam ? '/quiz/deacon-course-final-exam' : `/quiz/deacon-course-week-${quizNumber}`;
+                                } else if (courseId === 7) {
+                                  quizUrl = isFinalExam ? '/quiz/level-up-leadership-final-exam' : `/quiz/level-up-leadership-week-${quizNumber}`;
                                 } else if (courseId === 8) {
                                   quizUrl = isFinalExam ? '/quiz/youth-ministry-final-exam' : `/quiz/youth-ministry-week-${quizNumber}`;
                                 } else if (courseId === 16) {
@@ -6009,7 +6745,10 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
           )}
 
         </TabsContent>
+        )}
       </Tabs>
+      </div>
+      )}
 
       {/* Video Modal */}
       <Dialog open={videoModalOpen} onOpenChange={setVideoModalOpen}>
@@ -6042,11 +6781,41 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 />
               </div>
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center flex-wrap gap-3">
                 <div className="text-sm text-gray-600">
                   <i className="fas fa-clock mr-1"></i>
                   {currentVideo.duration || 'Duration not available'}
                 </div>
+                <div className="flex flex-wrap gap-2">
+                {useGuidedFlow && currentVideo && (
+                  <Button
+                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                    onClick={async () => {
+                      try {
+                        await progressMutation.mutateAsync({
+                          courseId,
+                          contentType: 'video',
+                          contentId: currentVideo.id,
+                          completed: true,
+                        });
+                        setVideoModalOpen(false);
+                        handleGuidedStepChange('readings');
+                        toast({
+                          title: 'Video complete',
+                          description: `Continue with Week ${guidedWeek} readings.`,
+                        });
+                      } catch {
+                        toast({
+                          title: 'Error',
+                          description: 'Could not save video progress.',
+                          variant: 'destructive',
+                        });
+                      }
+                    }}
+                  >
+                    Continue to Week {guidedWeek} readings
+                  </Button>
+                )}
                 <Button
                   onClick={() => {
                     if (currentVideo.videoUrl) {
@@ -6059,6 +6828,7 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                   <i className="fab fa-youtube mr-2"></i>
                   Open on YouTube
                 </Button>
+                </div>
               </div>
             </div>
           )}

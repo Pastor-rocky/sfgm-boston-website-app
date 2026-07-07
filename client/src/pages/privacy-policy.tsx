@@ -13,7 +13,7 @@ export default function PrivacyPolicy() {
                 SFGM Boston - Soldiers for God Ministry
               </CardDescription>
               <p className="text-sm text-blue-100 mt-2">
-                Effective Date: January 1, 2025
+                Effective Date: July 7, 2026
               </p>
             </CardHeader>
             
@@ -50,7 +50,7 @@ export default function PrivacyPolicy() {
                   <ul className="list-disc list-inside ml-4 space-y-1">
                     <li>Provide access to our Bible School courses and materials</li>
                     <li>Track your learning progress and issue certificates</li>
-                    <li>Send welcome messages and course notifications</li>
+                    <li>Send welcome messages and course notifications (email and SMS)</li>
                     <li>Communicate about ministry events and updates</li>
                     <li>Provide customer support and technical assistance</li>
                     <li>Improve our platform and educational content</li>
@@ -109,7 +109,7 @@ export default function PrivacyPolicy() {
                   <ul className="list-disc list-inside ml-4 space-y-1">
                     <li>Access and update your personal information</li>
                     <li>Request deletion of your account and data</li>
-                    <li>Opt out of non-essential communications</li>
+                    <li>Opt out of non-essential communications (including SMS — reply STOP to any message)</li>
                     <li>Request a copy of your data</li>
                   </ul>
                 </div>
@@ -148,7 +148,7 @@ export default function PrivacyPolicy() {
                   </p>
                   <ul className="list-disc list-inside ml-4 space-y-1">
                     <li>Email notifications (Mailgun)</li>
-                    <li>SMS notifications (TextBelt)</li>
+                    <li>SMS notifications (Twilio) — course-related messages only; we do not sell or share mobile numbers for third-party marketing</li>
                     <li>AI-powered Bible study tools (DeepSeek)</li>
                     <li>Authentication services (SFGM Boston OAuth)</li>
                   </ul>
@@ -162,7 +162,48 @@ export default function PrivacyPolicy() {
 
               <section>
                 <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
-                  8. Children's Privacy
+                  8. SMS Text Messaging
+                </h2>
+                <div className="space-y-3 text-gray-700 dark:text-gray-300">
+                  <p>
+                    <strong>Program name:</strong> SFGM Boston Bible School
+                  </p>
+                  <p>
+                    If you provide a mobile phone number when registering for Bible School, you may receive
+                    non-marketing, course-related text messages from SFGM Boston, including instructor messages,
+                    course reminders, and school announcements. Message frequency varies. Message and data rates
+                    may apply.
+                  </p>
+                  <p>
+                    <strong>Opt-in:</strong> You consent by voluntarily providing your mobile number on our
+                    registration form at{" "}
+                    <a href="https://sfgmboston.com" className="text-blue-600 hover:text-blue-800">
+                      sfgmboston.com
+                    </a>
+                    . Providing a phone number is optional; you may still use most platform features without SMS.
+                  </p>
+                  <p>
+                    <strong>Opt-out:</strong> Reply <strong>STOP</strong> to any message to unsubscribe from SMS.
+                    Reply <strong>HELP</strong> for assistance.
+                  </p>
+                  <p>
+                    We use Twilio to deliver messages. Twilio processes your phone number only to deliver
+                    messages on our behalf. We do not sell your mobile number to third parties for their marketing.
+                  </p>
+                  <p>
+                    <strong>School SMS number:</strong>{" "}
+                    <a href="tel:+16507020602" className="text-blue-600 hover:text-blue-800">
+                      +1 (650) 702-0602
+                    </a>
+                  </p>
+                </div>
+              </section>
+
+              <Separator />
+
+              <section>
+                <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
+                  9. Children's Privacy
                 </h2>
                 <div className="space-y-3 text-gray-700 dark:text-gray-300">
                   <p>
@@ -175,7 +216,7 @@ export default function PrivacyPolicy() {
 
               <section>
                 <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
-                  9. Changes to This Policy
+                  10. Changes to This Policy
                 </h2>
                 <div className="space-y-3 text-gray-700 dark:text-gray-300">
                   <p>
@@ -188,7 +229,7 @@ export default function PrivacyPolicy() {
 
               <section>
                 <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
-                  10. Contact Information
+                  11. Contact Information
                 </h2>
                 <div className="space-y-3 text-gray-700 dark:text-gray-300">
                   <p>

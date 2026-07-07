@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useLocation } from 'wouter';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { apiRequest, queryClient } from '@/lib/queryClient';
@@ -15,16 +15,15 @@ import { Badge } from '@/components/ui/badge';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Textarea } from "@/components/ui/textarea";
 import { FinalExamCompletion } from "@/components/final-exam-completion";
+import QuizResultsScreen from "@/components/quiz/quiz-results-screen";
+import QuizSimpleList from "@/components/quiz/quiz-simple-list";
+import { buildQuizResultSummary, type QuizResultSummary, usesSimpleListLayout } from "@/lib/quiz-result-utils";
+import { buildQuestionSpeechText, isSpeechSupported, speakText, stopSpeech } from "@/lib/quiz-speech";
 import { isFamilyNightQuizParam, isFamilyNightFinalExamQuizParam, getFamilyNightReturnPath, FAMILY_NIGHT_FINAL_EXAM_OPENS_LABEL } from "@/lib/family-night-quizzes";
 import FamilyNightFinalExamCountdown from "@/components/family-night-final-exam-countdown";
 import { useFinalExamCountdown } from "@/components/family-night-final-exam-countdown";
 import { isVideoQuestion, isAnswerProvided, isResearchQuestion } from "@shared/quiz-scoring";
 import { DEFAULT_PASSING_SCORE } from "@shared/course-constants";
-
-function scoreToPercent(raw: number): number {
-  if (Number.isNaN(raw)) return 0;
-  return raw <= 1 ? raw * 100 : raw;
-}
 
 interface Question {
   id: number;
@@ -117,6 +116,8 @@ export default function QuizTake() {
     if (quizId >= 221 && quizId <= 231) return 16;
     // Course 10 (Introduction to Prophecy): Quizzes 233-242
     if (quizId >= 233 && quizId <= 242) return 10;
+    // Family Night (course 9): weekly + final exam quizzes
+    if ([220, 232, 243, 244].includes(quizId)) return 9;
     
     return null;
   };
@@ -187,79 +188,39 @@ export default function QuizTake() {
   const [autoRead, setAutoRead] = useState(false);
   const [speechSpeed, setSpeechSpeed] = useState(0.8);
   const [showBonusQuestions, setShowBonusQuestions] = useState(new Set<number>());
+  const [quizResult, setQuizResult] = useState<QuizResultSummary | null>(null);
+  const resultsTopRef = useRef<HTMLDivElement>(null);
 
   // Session persistence key
   const sessionKey = `quiz_${id}_progress`;
 
   // Check for speech synthesis support
   useEffect(() => {
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      setSpeechSupported(true);
-    }
+    setSpeechSupported(isSpeechSupported());
   }, []);
 
-  // Text-to-speech functions
   const readQuestion = (questionText: string) => {
-    if (!speechSupported) return;
-    
-    // Stop any current speech
-    window.speechSynthesis.cancel();
-    
-    // Create speech utterance
-    const utterance = new SpeechSynthesisUtterance(questionText);
-    
-    // Configure speech settings
-    utterance.rate = speechSpeed;
-    utterance.pitch = 1.0;
-    utterance.volume = 0.9;
-    
-    // Try to get a quality voice
-    const voices = window.speechSynthesis.getVoices();
-    const preferredVoice = voices.find(voice => 
-      voice.name.includes('Google') || 
-      voice.name.includes('Microsoft') ||
-      voice.name.includes('Samantha') ||
-      voice.name.includes('Alex')
-    );
-    
-    if (preferredVoice) {
-      utterance.voice = preferredVoice;
-    }
-    
-    // Event handlers
-    utterance.onstart = () => setIsSpeaking(true);
-    utterance.onend = () => setIsSpeaking(false);
-    utterance.onerror = () => setIsSpeaking(false);
-    
-    // Speak the question
-    window.speechSynthesis.speak(utterance);
+    speakText(questionText, {
+      rate: speechSpeed,
+      onStart: () => setIsSpeaking(true),
+      onEnd: () => setIsSpeaking(false),
+    });
   };
 
-  const stopSpeech = () => {
-    if (speechSupported) {
-      window.speechSynthesis.cancel();
-      setIsSpeaking(false);
-    }
+  const stopSpeechHandler = () => {
+    stopSpeech();
+    setIsSpeaking(false);
   };
 
   const readCurrentQuestion = () => {
     if (visibleQuestions && visibleQuestions[currentQuestion]) {
-      const currentQ = visibleQuestions[currentQuestion];
-      let questionText = `Question ${currentQuestion + 1}. ${currentQ.question}`;
-      
-      // Add options for multiple choice questions
-      if ((currentQ.type === 'multiple_choice' || currentQ.type === 'true_false') && currentQ.options) {
-        questionText += '. The answers are: ';
-        currentQ.options.forEach((option: string, index: number) => {
-          // Remove A), B), C), D) prefixes from the option text
-          const cleanOption = option.replace(/^[A-D]\)\s*/, '');
-          questionText += `Answer ${index + 1}: ${cleanOption}. `;
-        });
-      }
-      
-      readQuestion(questionText);
+      const q = visibleQuestions[currentQuestion];
+      readQuestion(buildQuestionSpeechText({ question: q.question, type: q.type, options: q.options }, currentQuestion));
     }
   };
+
+  const speechTextForQuestion = (q: Question, index: number) =>
+    buildQuestionSpeechText({ question: q.question, type: q.type, options: q.options }, index);
 
   // Auto-read when question changes
   useEffect(() => {
@@ -401,22 +362,19 @@ export default function QuizTake() {
       });
     },
     onSuccess: (result) => {
-      setIsSubmitted(true);
       // Clear saved progress when quiz is submitted
       localStorage.removeItem(sessionKey);
-      const scorePercent = scoreToPercent(result.score || 0);
-      const passingScore = quiz?.passingScore || DEFAULT_PASSING_SCORE;
-      
-      // For final exams, show the transition component instead of immediate toast
-      if (quiz?.isFinalExam && scorePercent >= passingScore) {
+      const passingScore = quiz?.passingScore ?? DEFAULT_PASSING_SCORE;
+      const totalQuestions = quiz?.questions?.length ?? 0;
+      const summary = buildQuizResultSummary(result.score, totalQuestions, passingScore);
+
+      // For final exams, show the transition component instead of results screen
+      if (quiz?.isFinalExam && summary.passed) {
         setShowFinalExamCompletion(true);
       } else {
-        // Regular quiz or failed final exam - show normal toast
-        toast({
-          title: scorePercent >= passingScore ? "Quiz Passed!" : "Quiz Completed",
-          description: `Your score: ${Math.round(scorePercent)}% ${scorePercent >= passingScore ? '- Well done!' : '- Week complete.'}`,
-        });
+        setQuizResult(summary);
       }
+      setIsSubmitted(true);
       
       queryClient.invalidateQueries({ queryKey: ['/api/student/quizzes'] });
       queryClient.invalidateQueries({ queryKey: ['/api/enrollments/student'] });
@@ -666,31 +624,32 @@ export default function QuizTake() {
     );
   }
 
-  // Show submission success page only if not in review mode
-  if (isSubmitted && !isReviewMode) {
+  // Scroll to results when shown
+  useEffect(() => {
+    if (!quizResult || isReviewMode) return;
+    const timer = window.setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      resultsTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 50);
+    return () => window.clearTimeout(timer);
+  }, [quizResult, isReviewMode]);
+
+  if (isSubmitted && !isReviewMode && quizResult) {
+    const fnLabels = familyNightQuiz
+      ? { passedContinue: "Continue", failedReturn: "Return to Family Night" }
+      : { passedContinue: "Continue to Course", failedReturn: "Return to Course" };
+
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div ref={resultsTopRef} className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
         <Navigation />
-        <div className="container mx-auto px-4 pt-24">
-          <Card className="max-w-2xl mx-auto">
-            <CardContent className="p-8 text-center">
-              <i className="fas fa-check-circle text-green-500 text-6xl mb-6"></i>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Quiz Submitted Successfully!</h2>
-              <p className="text-gray-600 mb-6">
-                Your answers have been recorded and your score has been calculated.
-              </p>
-              <div className="space-y-4">
-                <Button onClick={() => setIsReviewMode(true)} className="mr-4 bg-green-600 hover:bg-green-700">
-                  <i className="fas fa-eye mr-2"></i>
-                  Review Quiz
-                </Button>
-                <Button variant="outline" onClick={navigateAfterQuiz}>
-                  <i className="fas fa-arrow-left mr-2"></i>
-                  Return to Course
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+        <div className="container mx-auto px-4 pt-24 pb-12">
+          <QuizResultsScreen
+            result={quizResult}
+            quizTitle={quiz.title}
+            labels={fnLabels}
+            onContinue={navigateAfterQuiz}
+            onReview={() => setIsReviewMode(true)}
+          />
         </div>
       </div>
     );
@@ -890,6 +849,8 @@ export default function QuizTake() {
   }
 
   const currentQ = visibleQuestions[currentQuestion];
+  const showSimpleList =
+    !isReviewMode && usesSimpleListLayout(visibleQuestions);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -958,6 +919,21 @@ export default function QuizTake() {
         </div>
 
         {/* Question Card */}
+        {showSimpleList ? (
+          <QuizSimpleList
+            questions={visibleQuestions}
+            answers={answers}
+            onAnswerChange={handleAnswerChange}
+            onSubmit={handleSubmit}
+            speechSupported={speechSupported}
+            isSpeaking={isSpeaking}
+            onSpeakingChange={setIsSpeaking}
+            speechRate={speechSpeed}
+            showSubmitDialog={showSubmitDialog}
+            onShowSubmitDialogChange={setShowSubmitDialog}
+          />
+        ) : (
+        <>
         <Card className="mb-6">
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -1100,7 +1076,7 @@ export default function QuizTake() {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={stopSpeech}
+                        onClick={stopSpeechHandler}
                         className="flex items-center gap-2"
                       >
                         <i className="fas fa-stop"></i>
@@ -1493,6 +1469,8 @@ export default function QuizTake() {
             </Button>
           )}
         </div>
+        </>
+        )}
       </div>
     </div>
   );

@@ -17,6 +17,8 @@ import { queryClient } from "@/lib/queryClient";
 import { FaBook } from "react-icons/fa";
 import { MAN_OF_GOD_DESCRIPTION, MAN_OF_GOD_OVERVIEW } from "@/lib/man-of-god-config";
 import { DEFAULT_PASSING_SCORE } from "@shared/course-constants";
+import { resolvePostEnrollmentPath } from "@/lib/enrollment-navigation";
+import { courseRequiresPriorCompletion, getPrerequisiteEligibility } from "@shared/course-prerequisites";
 
 // Import course cover images - commented out due to missing files
 // import growCover from "@assets/image_1753296696582.png";
@@ -49,18 +51,18 @@ export default function BibleSchool() {
 
   // Simple enrollment mutation - all courses freely accessible
   const enrollMutation = useMutation({
-    mutationFn: async (courseId: number) => {
-      const response = await apiRequest('POST', '/api/enrollments', {
-        courseId: courseId,
-      });
+    mutationFn: async ({ courseId }: { courseId: number }) => {
+      const response = await apiRequest('POST', '/api/enrollments', { courseId });
       return response;
     },
-    onSuccess: () => {
+    onSuccess: (_, { courseId }) => {
       toast({
         title: "Success",
         description: "Successfully enrolled in the course!",
       });
       queryClient.invalidateQueries({ queryKey: ['/api/enrollments/student'] });
+      const priorCount = (enrollments as any[]).length;
+      window.location.href = resolvePostEnrollmentPath(priorCount, courseId);
     },
     onError: (error) => {
       toast({
@@ -119,8 +121,18 @@ export default function BibleSchool() {
       return;
     }
 
+    const prerequisite = getPrerequisiteEligibility(courseId, enrollments as any[]);
+    if (!prerequisite.eligible) {
+      toast({
+        title: "Prerequisite required",
+        description: prerequisite.message,
+        variant: "destructive",
+      });
+      return;
+    }
+
     // Perform enrollment
-    enrollMutation.mutate(courseId);
+    enrollMutation.mutate({ courseId });
   };
   
   // Calculate points based on new system: weeks × 20 points per quiz + 100 points for final exam
@@ -365,7 +377,18 @@ export default function BibleSchool() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {courses.map((course) => (
+            {courses.map((course) => {
+              const prerequisite = getPrerequisiteEligibility(
+                course.id,
+                (enrollments as any[]) ?? [],
+              );
+              const isPrerequisiteLocked =
+                isAuthenticated &&
+                !isEnrolledInCourse(course.id) &&
+                courseRequiresPriorCompletion(course.id) &&
+                !prerequisite.eligible;
+
+              return (
               <Card key={course.id} className="group hover:shadow-lg transition-all duration-300 hover:scale-[1.02] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 cursor-pointer">
                 <CardHeader className="pb-4">
                 <div className="relative">
@@ -405,6 +428,13 @@ export default function BibleSchool() {
                     {course.name}
                   </h3>
 
+                  {isPrerequisiteLocked && (
+                    <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-md px-2 py-1.5 mb-3 text-center">
+                      <i className="fas fa-lock mr-1"></i>
+                      {prerequisite.shortLabel}
+                    </p>
+                  )}
+
                   {/* Weeks/Points removed for streamlined public view */}
                   
                   <div className="flex gap-2 mb-3">
@@ -412,7 +442,11 @@ export default function BibleSchool() {
                     <Button 
                       onClick={() => handleEnroll(course.id, course.name)}
                       disabled={enrollMutation.isPending}
-                      className="flex-1 font-semibold py-1.5 px-3 text-sm rounded-lg transition-colors bg-primary hover:bg-primary/90 text-white"
+                      className={`flex-1 font-semibold py-1.5 px-3 text-sm rounded-lg transition-colors ${
+                        isPrerequisiteLocked
+                          ? "bg-slate-400 hover:bg-slate-400 text-white cursor-not-allowed"
+                          : "bg-primary hover:bg-primary/90 text-white"
+                      }`}
                     >
                       {enrollMutation.isPending ? (
                         <>
@@ -423,6 +457,11 @@ export default function BibleSchool() {
                         <>
                           <i className="fas fa-play mr-2"></i>
                           Continue Course
+                        </>
+                      ) : isPrerequisiteLocked ? (
+                        <>
+                          <i className="fas fa-lock mr-2"></i>
+                          Locked
                         </>
                       ) : (
                         <>
@@ -504,7 +543,8 @@ export default function BibleSchool() {
                 
                 </CardHeader>
                 </Card>
-            ))}
+            );
+            })}
           </div>
 
           {!isAuthenticated && (

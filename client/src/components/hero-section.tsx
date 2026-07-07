@@ -57,11 +57,18 @@ export default function HeroSection() {
             
             <div className="flex flex-col sm:flex-row flex-wrap gap-4 lg:gap-6">
               <Button 
+                onClick={() => window.location.href = '/course-catalog'}
+                className="bg-green-600 hover:bg-green-700 text-white border-2 border-green-500/50 px-6 py-4 font-semibold text-lg shadow-lg"
+              >
+                🎓 Join Bible School
+              </Button>
+
+              <Button 
                 onClick={() => window.location.href = '/bible-school'}
                 variant="outline"
                 className="bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 px-6 py-4 hover:bg-white/20 transition-all font-semibold text-lg"
               >
-                📚 Bible Courses
+                📚 Browse Courses
               </Button>
               
               <Button 

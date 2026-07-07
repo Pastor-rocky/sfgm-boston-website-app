@@ -15,6 +15,9 @@ import { getAudioUrl } from "@/lib/audio-storage";
 import CoursePasswordPrompt from "@/components/course-password-prompt";
 import { MAN_OF_GOD_DESCRIPTION, MAN_OF_GOD_WHAT_YOULL_LEARN } from "@/lib/man-of-god-config";
 import { DEFAULT_PASSING_SCORE } from "@shared/course-constants";
+import { resolvePostEnrollmentPath } from "@/lib/enrollment-navigation";
+import { courseRequiresPriorCompletion, getPrerequisiteEligibility } from "@shared/course-prerequisites";
+import CoursePrerequisiteBanner from "@/components/course-prerequisite-banner";
 
 
 export default function CourseDetail() {
@@ -24,7 +27,7 @@ export default function CourseDetail() {
   const [, setLocation] = useLocation();
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
   
-  // Locked courses that require password
+  // Locked courses that require password (after prerequisite, if any)
   const LOCKED_COURSES = [6, 8]; // Deacon Course and Youth Ministry Course
 
   // Redirect legacy G.R.O.W course IDs to canonical course 4
@@ -47,9 +50,8 @@ export default function CourseDetail() {
   // Course enrollment mutation
   const enrollMutation = useMutation({
     mutationFn: async () => {
-      const response = await apiRequest('POST', '/api/enrollments', {
-        courseId: parseInt(id!),
-      });
+      const body = { courseId: parseInt(id!) };
+      const response = await apiRequest('POST', '/api/enrollments', body);
       return response;
     },
     onSuccess: () => {
@@ -58,6 +60,8 @@ export default function CourseDetail() {
         description: "Successfully enrolled in the course!",
       });
       queryClient.invalidateQueries({ queryKey: ['/api/enrollments/student'] });
+      const priorCount = (enrollments as any[])?.length ?? 0;
+      window.location.href = resolvePostEnrollmentPath(priorCount, parseInt(id!));
     },
     onError: (error) => {
       toast({
@@ -126,6 +130,9 @@ export default function CourseDetail() {
   }
 
   const isEnrolled = enrollments?.some((e: any) => e.courseId === parseInt(id!) && (e.status === 'active' || e.status === 'completed'));
+  const courseIdNum = parseInt(id!);
+  const prerequisite = getPrerequisiteEligibility(courseIdNum, (enrollments as any[]) ?? []);
+  const isPrerequisiteLocked = !isEnrolled && courseRequiresPriorCompletion(courseIdNum) && !prerequisite.eligible;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-indigo-900 to-purple-900">
@@ -182,11 +189,14 @@ export default function CourseDetail() {
                     <Badge className="bg-green-600/20 border-green-500/50 text-green-300 px-6 py-3 text-lg">
                       <i className="fas fa-check mr-2"></i>Enrolled
                     </Badge>
+                  ) : isPrerequisiteLocked ? (
+                    <Badge className="bg-amber-600/20 border-amber-500/50 text-amber-200 px-6 py-3 text-lg">
+                      <i className="fas fa-lock mr-2"></i>Prerequisite Required
+                    </Badge>
                   ) : (
                     <Button 
                       onClick={() => {
                         // Check if course is locked and requires password
-                        const courseIdNum = parseInt(id!);
                         if (LOCKED_COURSES.includes(courseIdNum)) {
                           setShowPasswordPrompt(true);
                         } else {
@@ -213,6 +223,16 @@ export default function CourseDetail() {
                 </Button>
               )}
             </div>
+
+            {isPrerequisiteLocked && (
+              <div className="max-w-2xl mx-auto mb-8">
+                <CoursePrerequisiteBanner
+                  courseId={courseIdNum}
+                  enrollments={(enrollments as any[]) ?? []}
+                  variant="dark"
+                />
+              </div>
+            )}
 
             {/* Course Info Badges */}
             <div className="flex flex-wrap justify-center gap-4">
@@ -277,7 +297,7 @@ export default function CourseDetail() {
                   📚 Required Reading: "The 5 Levels of Leadership" by John Maxwell
                 </h2>
                 <p className="text-purple-200 text-center mb-8">
-                  Purchase or listen to the book to enhance your learning experience throughout this course.
+                  You will read this book in your own copy — it is not hosted on the SFGM website. Purchase or listen to enhance your learning throughout the course.
                 </p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -340,11 +360,11 @@ export default function CourseDetail() {
                   <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300">
                     <CardHeader className="text-center py-3 md:py-6">
                       <div className="text-2xl md:text-4xl mb-1 md:mb-2">📖</div>
-                      <CardTitle className="text-white text-base md:text-xl">Read e-book</CardTitle>
+                      <CardTitle className="text-white text-base md:text-xl">Read the Maxwell book</CardTitle>
                     </CardHeader>
                     <CardContent className="text-center py-2 md:py-4">
                       <p className="text-blue-200 text-xs md:text-sm">
-                        Work through each leadership level chapter to develop essential leadership skills for ministry and life.
+                        Read assigned pages in your own copy of The 5 Levels of Leadership by John Maxwell, plus weekly scripture passages.
                       </p>
                     </CardContent>
                   </Card>
@@ -909,6 +929,14 @@ export default function CourseDetail() {
               <CardContent>
                 {isEnrolled ? (
                   <CourseContentViewer courseId={(course as any)?.id} />
+                ) : isPrerequisiteLocked ? (
+                  <div className="py-4">
+                    <CoursePrerequisiteBanner
+                      courseId={courseIdNum}
+                      enrollments={(enrollments as any[]) ?? []}
+                      variant="dark"
+                    />
+                  </div>
                 ) : (
                   <div className="text-center py-8 text-purple-200">
                     <i className="fas fa-lock text-4xl mb-4 text-purple-400"></i>
@@ -944,7 +972,11 @@ export default function CourseDetail() {
                 <Separator className="bg-white/20" />
                 <div>
                   <h4 className="font-medium text-white mb-1">Prerequisites</h4>
-                  <p className="text-purple-200">None required</p>
+                  <p className="text-purple-200">
+                    {courseRequiresPriorCompletion(courseIdNum)
+                      ? "Complete the G.R.O.W course and at least one other Bible School course to unlock."
+                      : "None required"}
+                  </p>
                 </div>
               </CardContent>
             </Card>

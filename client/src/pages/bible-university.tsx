@@ -13,6 +13,8 @@ import { queryClient } from "@/lib/queryClient";
 import { getImageUrl } from "@/lib/image-storage";
 import { useState } from "react";
 import CoursePasswordPrompt from "@/components/course-password-prompt";
+import { resolvePostEnrollmentPath } from "@/lib/enrollment-navigation";
+import { getPrerequisiteEligibility } from "@shared/course-prerequisites";
 
 export default function BibleUniversity() {
   const { user, isAuthenticated } = useAuth();
@@ -45,8 +47,8 @@ export default function BibleUniversity() {
         description: "Successfully enrolled in the Deacon Course!",
       });
       queryClient.invalidateQueries({ queryKey: ['/api/enrollments/student'] });
-      // Navigate to the course page after successful enrollment
-      window.location.href = '/course/6';
+      const priorCount = (enrollments as any[]).length;
+      window.location.href = resolvePostEnrollmentPath(priorCount, 6);
     },
     onError: (error) => {
       toast({
@@ -71,8 +73,8 @@ export default function BibleUniversity() {
         description: "Successfully enrolled in the Youth Ministry Course!",
       });
       queryClient.invalidateQueries({ queryKey: ['/api/enrollments/student'] });
-      // Navigate to the course page after successful enrollment
-      window.location.href = '/course/8';
+      const priorCount = (enrollments as any[]).length;
+      window.location.href = resolvePostEnrollmentPath(priorCount, 8);
     },
     onError: (error) => {
       toast({
@@ -96,6 +98,16 @@ export default function BibleUniversity() {
       return;
     }
 
+    const prerequisite = getPrerequisiteEligibility(6, enrollments as any[]);
+    if (!prerequisite.eligible) {
+      toast({
+        title: "Prerequisite required",
+        description: prerequisite.message,
+        variant: "destructive",
+      });
+      return;
+    }
+
     // Show password prompt for locked course
     setPasswordCourseId(6);
     setPasswordCourseName("Deacon Course");
@@ -112,6 +124,16 @@ export default function BibleUniversity() {
     if (isEnrolledInYouthMinistryCourse) {
       // If enrolled, go to course content
       window.location.href = '/course/8';
+      return;
+    }
+
+    const prerequisite = getPrerequisiteEligibility(8, enrollments as any[]);
+    if (!prerequisite.eligible) {
+      toast({
+        title: "Prerequisite required",
+        description: prerequisite.message,
+        variant: "destructive",
+      });
       return;
     }
 

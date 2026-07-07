@@ -14,8 +14,18 @@ function getTwilioConfig() {
   const accountSid = process.env.TWILIO_ACCOUNT_SID;
   const authToken = process.env.TWILIO_AUTH_TOKEN;
   const fromNumber = process.env.TWILIO_PHONE_NUMBER;
+  const messagingServiceSid = process.env.TWILIO_MESSAGING_SERVICE_SID;
 
-  if (!accountSid || !authToken || !fromNumber) {
+  if (!accountSid || !authToken) {
+    return null;
+  }
+
+  // A2P 10DLC: prefer Messaging Service (number must be in its sender pool).
+  if (messagingServiceSid) {
+    return { accountSid, authToken, messagingServiceSid };
+  }
+
+  if (!fromNumber) {
     return null;
   }
 
@@ -42,7 +52,8 @@ export async function sendStudentSms(args: {
   if (!config) {
     return {
       delivered: false,
-      reason: "Missing Twilio configuration (TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER)",
+      reason:
+        "Missing Twilio configuration (TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, and TWILIO_MESSAGING_SERVICE_SID or TWILIO_PHONE_NUMBER)",
     };
   }
 
@@ -59,7 +70,9 @@ export async function sendStudentSms(args: {
   try {
     const client = twilio(config.accountSid, config.authToken);
     const message = await client.messages.create({
-      from: config.fromNumber,
+      ...("messagingServiceSid" in config
+        ? { messagingServiceSid: config.messagingServiceSid }
+        : { from: config.fromNumber! }),
       to,
       body: body.slice(0, 1600),
     });

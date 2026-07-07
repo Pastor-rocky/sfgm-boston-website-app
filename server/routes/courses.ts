@@ -209,7 +209,10 @@ export function registerCourseRoutes(app: Express) {
         courseId,
       });
       res.json({ success: true, enrollment });
-    } catch (error) {
+    } catch (error: any) {
+      if (error?.name === "CoursePrerequisiteError") {
+        return res.status(403).json({ message: error.message, requiresPriorCourse: true });
+      }
       console.error("Error enrolling student:", error);
       res.status(500).json({ message: "Failed to enroll student" });
     }

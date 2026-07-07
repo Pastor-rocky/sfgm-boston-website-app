@@ -1,40 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, BookOpen, ExternalLink, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, BookOpen } from "lucide-react";
+import LevelUpRequiredReading from "@/components/level-up-required-reading";
 
 export default function LevelUpLeadershipWeek2() {
   const [, setLocation] = useLocation();
-  
-  // Track which Bible passages have been read
-  const [readPassages, setReadPassages] = useState<Set<string>>(new Set());
-  
-  // Load read passages from localStorage on mount
-  useEffect(() => {
-    const saved = localStorage.getItem('level-up-week2-read-passages');
-    if (saved) {
-      try {
-        setReadPassages(new Set(JSON.parse(saved)));
-      } catch (e) {
-        console.error('Error loading read passages:', e);
-      }
-    }
-  }, []);
-  
-  // Save read passages to localStorage whenever it changes
-  useEffect(() => {
-    if (readPassages.size > 0) {
-      localStorage.setItem('level-up-week2-read-passages', JSON.stringify(Array.from(readPassages)));
-    }
-  }, [readPassages]);
-  
-  const handlePassageClick = (passageId: string, url: string) => {
-    // Mark passage as read
-    setReadPassages(prev => new Set([...prev, passageId]));
-    // Open the Bible passage
-    window.open(url, '_blank');
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 p-4 sm:p-6 lg:p-8">
@@ -77,138 +49,7 @@ export default function LevelUpLeadershipWeek2() {
               <h3 className="text-2xl font-bold text-purple-900">Required Reading</h3>
             </div>
             
-            <div className="space-y-6">
-              {/* Textbook Reading */}
-              <div className="bg-purple-50 border-l-4 border-purple-500 p-4 rounded-r-lg">
-                <h4 className="text-lg font-semibold text-purple-900 mb-2">
-                  📖 Five Levels of Leadership Textbook
-                </h4>
-                <p className="text-purple-800 mb-3">
-                  <strong>Read pages 85-129:</strong> Level 2 - Permission Leadership
-                </p>
-                <div className="bg-white p-3 rounded border border-purple-200">
-                  <p className="text-sm text-purple-700 mb-2">
-                    <strong>Key Topics to Focus On:</strong>
-                  </p>
-                  <ul className="text-sm text-purple-700 space-y-1 ml-4">
-                    <li>• Building relationships and trust</li>
-                    <li>• People follow because they want to, not because they have to</li>
-                    <li>• The power of connection and understanding</li>
-                    <li>• Moving from authority to influence</li>
-                  </ul>
-                </div>
-              </div>
-
-              {/* Bible Reading */}
-              <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
-                <h4 className="text-lg font-semibold text-blue-900 mb-2">
-                  📖 Bible Reading Assignment
-                </h4>
-                <p className="text-blue-800 mb-3">
-                  Study these passages to understand biblical principles of relationship-based leadership:
-                </p>
-                <div className="space-y-2">
-                  <Button
-                    onClick={() => handlePassageClick('1sam18-1-30', 'https://www.biblegateway.com/passage/?search=1+Samuel+18%3A1-30&version=NLT')}
-                    variant="outline"
-                    className={`w-full justify-start text-blue-700 border-blue-300 hover:bg-blue-100 ${
-                      readPassages.has('1sam18-1-30') ? 'bg-green-50 border-green-400' : ''
-                    }`}
-                  >
-                    {readPassages.has('1sam18-1-30') ? (
-                      <CheckCircle2 className="mr-2 h-4 w-4 text-green-600" />
-                    ) : (
-                      <ExternalLink className="mr-2 h-4 w-4" />
-                    )}
-                    1 Samuel 18:1-30 - David and Jonathan's Friendship
-                  </Button>
-                  <Button
-                    onClick={() => handlePassageClick('1sam20-1-42', 'https://www.biblegateway.com/passage/?search=1+Samuel+20%3A1-42&version=NLT')}
-                    variant="outline"
-                    className={`w-full justify-start text-blue-700 border-blue-300 hover:bg-blue-100 ${
-                      readPassages.has('1sam20-1-42') ? 'bg-green-50 border-green-400' : ''
-                    }`}
-                  >
-                    {readPassages.has('1sam20-1-42') ? (
-                      <CheckCircle2 className="mr-2 h-4 w-4 text-green-600" />
-                    ) : (
-                      <ExternalLink className="mr-2 h-4 w-4" />
-                    )}
-                    1 Samuel 20:1-42 - Covenant Friendship
-                  </Button>
-                  <Button
-                    onClick={() => handlePassageClick('1sam23-15-18', 'https://www.biblegateway.com/passage/?search=1+Samuel+23%3A15-18&version=NLT')}
-                    variant="outline"
-                    className={`w-full justify-start text-blue-700 border-blue-300 hover:bg-blue-100 ${
-                      readPassages.has('1sam23-15-18') ? 'bg-green-50 border-green-400' : ''
-                    }`}
-                  >
-                    {readPassages.has('1sam23-15-18') ? (
-                      <CheckCircle2 className="mr-2 h-4 w-4 text-green-600" />
-                    ) : (
-                      <ExternalLink className="mr-2 h-4 w-4" />
-                    )}
-                    1 Samuel 23:15-18 - Mutual Encouragement
-                  </Button>
-                  <Button
-                    onClick={() => handlePassageClick('isaiah41-8-10', 'https://www.biblegateway.com/passage/?search=Isaiah+41%3A8-10&version=NLT')}
-                    variant="outline"
-                    className={`w-full justify-start text-blue-700 border-blue-300 hover:bg-blue-100 ${
-                      readPassages.has('isaiah41-8-10') ? 'bg-green-50 border-green-400' : ''
-                    }`}
-                  >
-                    {readPassages.has('isaiah41-8-10') ? (
-                      <CheckCircle2 className="mr-2 h-4 w-4 text-green-600" />
-                    ) : (
-                      <ExternalLink className="mr-2 h-4 w-4" />
-                    )}
-                    Isaiah 41:8-10 - God's Friendship with Abraham
-                  </Button>
-                  <Button
-                    onClick={() => handlePassageClick('john15-9-17', 'https://www.biblegateway.com/passage/?search=John+15%3A9-17&version=NLT')}
-                    variant="outline"
-                    className={`w-full justify-start text-blue-700 border-blue-300 hover:bg-blue-100 ${
-                      readPassages.has('john15-9-17') ? 'bg-green-50 border-green-400' : ''
-                    }`}
-                  >
-                    {readPassages.has('john15-9-17') ? (
-                      <CheckCircle2 className="mr-2 h-4 w-4 text-green-600" />
-                    ) : (
-                      <ExternalLink className="mr-2 h-4 w-4" />
-                    )}
-                    John 15:9-17 - Jesus' Friendship with Disciples
-                  </Button>
-                  <Button
-                    onClick={() => handlePassageClick('james2-21-24', 'https://www.biblegateway.com/passage/?search=James+2%3A21-24&version=NLT')}
-                    variant="outline"
-                    className={`w-full justify-start text-blue-700 border-blue-300 hover:bg-blue-100 ${
-                      readPassages.has('james2-21-24') ? 'bg-green-50 border-green-400' : ''
-                    }`}
-                  >
-                    {readPassages.has('james2-21-24') ? (
-                      <CheckCircle2 className="mr-2 h-4 w-4 text-green-600" />
-                    ) : (
-                      <ExternalLink className="mr-2 h-4 w-4" />
-                    )}
-                    James 2:21-24 - Faith and Friendship with God
-                  </Button>
-                  <Button
-                    onClick={() => handlePassageClick('james4-1-7', 'https://www.biblegateway.com/passage/?search=James+4%3A1-7&version=NLT')}
-                    variant="outline"
-                    className={`w-full justify-start text-blue-700 border-blue-300 hover:bg-blue-100 ${
-                      readPassages.has('james4-1-7') ? 'bg-green-50 border-green-400' : ''
-                    }`}
-                  >
-                    {readPassages.has('james4-1-7') ? (
-                      <CheckCircle2 className="mr-2 h-4 w-4 text-green-600" />
-                    ) : (
-                      <ExternalLink className="mr-2 h-4 w-4" />
-                    )}
-                    James 4:1-7 - Drawing Near to God
-                  </Button>
-                </div>
-              </div>
-            </div>
+            <LevelUpRequiredReading weekNumber={2} />
           </CardContent>
         </Card>
 

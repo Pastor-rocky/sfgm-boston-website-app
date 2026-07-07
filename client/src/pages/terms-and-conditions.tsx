@@ -13,7 +13,7 @@ export default function TermsAndConditions() {
                 SFGM Boston - Soldiers for God Ministry
               </CardDescription>
               <p className="text-sm text-purple-100 mt-2">
-                Effective Date: January 1, 2025
+                Effective Date: July 7, 2026
               </p>
             </CardHeader>
             
@@ -245,7 +245,65 @@ export default function TermsAndConditions() {
 
               <section>
                 <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
-                  12. Contact Information
+                  12. SMS Text Messaging Program
+                </h2>
+                <div className="space-y-3 text-gray-700 dark:text-gray-300">
+                  <p>
+                    <strong>Program name:</strong> SFGM Boston Bible School
+                  </p>
+                  <p>
+                    <strong>Description:</strong> By providing your mobile phone number when you register,
+                    you agree to receive recurring, non-marketing text messages related to your Bible School
+                    enrollment, including instructor messages, course reminders, and school announcements from
+                    SFGM Boston - Soldiers for God Ministry.
+                  </p>
+                  <p>
+                    <strong>Message frequency:</strong> Varies based on course activity and instructor
+                    communication.
+                  </p>
+                  <p>
+                    <strong>Message and data rates may apply.</strong> Carriers are not liable for delayed or
+                    undelivered messages.
+                  </p>
+                  <p>
+                    <strong>Opt-out:</strong> Reply <strong>STOP</strong> to any message to cancel SMS from
+                    this program. You will receive a confirmation text. After opting out, you may still
+                    receive email communications if you remain enrolled.
+                  </p>
+                  <p>
+                    <strong>Help:</strong> Reply <strong>HELP</strong> for assistance, or contact{" "}
+                    <a href="mailto:pastor_rocky@sfgmboston.com" className="text-purple-600 hover:text-purple-800">
+                      pastor_rocky@sfgmboston.com
+                    </a>{" "}
+                    or{" "}
+                    <a href="tel:617-512-7451" className="text-purple-600 hover:text-purple-800">
+                      617-512-7451
+                    </a>
+                    .
+                  </p>
+                  <p>
+                    <strong>Privacy:</strong> See our{" "}
+                    <a href="/privacy-policy" className="text-purple-600 hover:text-purple-800">
+                      Privacy Policy
+                    </a>{" "}
+                    for how we handle your phone number. We do not sell mobile numbers to third parties for
+                    marketing.
+                  </p>
+                  <p>
+                    <strong>School SMS number:</strong> Messages may be sent from{" "}
+                    <a href="tel:+16507020602" className="text-purple-600 hover:text-purple-800">
+                      +1 (650) 702-0602
+                    </a>
+                    .
+                  </p>
+                </div>
+              </section>
+
+              <Separator />
+
+              <section>
+                <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
+                  13. Contact Information
                 </h2>
                 <div className="space-y-3 text-gray-700 dark:text-gray-300">
                   <p>

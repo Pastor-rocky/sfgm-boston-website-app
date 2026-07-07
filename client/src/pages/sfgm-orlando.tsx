@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { MapPin, Users, Phone, Mail, Clock, BookOpen, Award } from "lucide-react";
+import { resolvePostEnrollmentPath } from "@/lib/enrollment-navigation";
 
 export default function SFGMOrlando() {
   const { user, isAuthenticated } = useAuth();
@@ -38,8 +39,8 @@ export default function SFGMOrlando() {
         description: "Successfully enrolled in the course!",
       });
       queryClient.invalidateQueries({ queryKey: ['/api/enrollments/student'] });
-      // Navigate to the course page after successful enrollment
-      window.location.href = `/course/${courseId}`;
+      const priorCount = (enrollments as any[]).length;
+      window.location.href = resolvePostEnrollmentPath(priorCount, courseId);
     },
     onError: (error) => {
       toast({

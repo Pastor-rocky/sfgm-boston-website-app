@@ -17,6 +17,7 @@ import { DEFAULT_PASSING_SCORE } from "@shared/course-constants";
 import { useEffect, useState } from "react";
 import { apiRequest } from "@/lib/queryClient";
 import StudentInboxDropdown from "@/components/student-inbox-dropdown";
+import DashboardGuidedPreviousWeeks from "@/components/dashboard-guided-previous-weeks";
 
 // Animated Progress Ring Component
 function AnimatedProgressRing({ progress, size = 120, strokeWidth = 8, color = "blue" }: {
@@ -353,6 +354,8 @@ function EnhancedCourseCard({ enrollment, instructors, onUnenroll, onContinue }:
           )}
         </div>
 
+        <DashboardGuidedPreviousWeeks courseId={enrollment.courseId} />
+
         {/* Action Buttons */}
         <div className="flex gap-2 pt-2">
           <Button
@@ -632,6 +635,18 @@ export default function StudentDashboard() {
           </div>
         </div>
 
+        {/* Enroll in courses — prominent main-area link (sidebar card also exists) */}
+        <div className="mb-8">
+          <Link href="/course-catalog">
+            <Button
+              size="lg"
+              className="w-full sm:w-auto bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700 text-white font-semibold shadow-lg px-8 py-6 text-base"
+            >
+              <GraduationCap className="w-5 h-5 mr-2" />
+              Enroll in Courses
+            </Button>
+          </Link>
+        </div>
 
         {/* Enhanced Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -848,6 +863,12 @@ export default function StudentDashboard() {
                   label="Study Tools"
                   onClick={() => handleQuickAction('tools')}
                   color="indigo"
+                />
+                <QuickActionButton
+                  icon={GraduationCap}
+                  label="Enroll in Courses"
+                  onClick={() => handleQuickAction('enroll')}
+                  color="blue"
                 />
                 {!isProfileComplete() && (
                   <QuickActionButton

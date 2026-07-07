@@ -11,7 +11,7 @@ import { useLocation } from "wouter";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { FaBook, FaEye, FaUser, FaCalendar, FaGraduationCap, FaTimes, FaBookmark, FaCheck, FaPlus, FaBookOpen } from "react-icons/fa";
-import CoursePasswordPrompt, { COURSE_PASSWORDS } from "@/components/course-password-prompt";
+import CoursePasswordPrompt from "@/components/course-password-prompt";
 import { MAN_OF_GOD_DESCRIPTION } from "@/lib/man-of-god-config";
 // import growCover from "@assets/image_1753296696582.png";
 // import studyingForServiceCover from "@assets/Image 2_1753137106145.jpg";

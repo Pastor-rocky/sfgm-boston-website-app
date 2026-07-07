@@ -4,13 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Lock } from "lucide-react";
+import { COURSE_ACCESS_CODES } from "@shared/course-access-codes";
 
-// Course password configuration
-// Password: 123 (may be changed later)
-export const COURSE_PASSWORDS: { [courseId: number]: string } = {
-  6: "123", // Deacon Course
-  8: "123", // Youth Ministry Course
-};
+export const COURSE_PASSWORDS = COURSE_ACCESS_CODES;
 
 interface CoursePasswordPromptProps {
   courseId: number;

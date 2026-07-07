@@ -23,7 +23,16 @@ Assign instructors to courses in **Admin Panel → Courses → Assign Instructor
 1. Sign in at [twilio.com/console](https://www.twilio.com/console)
 2. Copy **Account SID** and **Auth Token**
 3. Buy or use a **Twilio phone number** (must support SMS)
-4. For production, register your **Messaging Service** / A2P 10DLC brand if sending to US numbers at scale
+4. **Required for US SMS (error 30034):** complete **A2P 10DLC** registration (Brand → Campaign → add number to Messaging Service sender pool). See [Twilio 10DLC](https://www.twilio.com/docs/messaging/compliance/a2p-10dlc).
+
+### A2P 10DLC checklist (fixes error 30034)
+1. Twilio Console → **Messaging → Regulatory compliance → Brands** → register your church/org brand (approval can take 1–7 days).
+2. Create an **A2P Campaign** (use case: e.g. “Mixed” or “Charity / Religious” — match how you message students).
+3. **Messaging → Services** → create or open a Messaging Service → link the approved Campaign.
+4. **Sender Pool** → add `+16507020602` (your Palo Alto number).
+5. Set `TWILIO_MESSAGING_SERVICE_SID=MGxxxxxxxx` in `.env` and Render (recommended). Keep `TWILIO_PHONE_NUMBER` as backup.
+
+Until 10DLC is approved, US texts will fail with **30034**. Toll-free numbers can send sooner but have their own verification.
 
 ### Environment variables (local `.env` + Render)
 
@@ -31,7 +40,8 @@ Assign instructors to courses in **Admin Panel → Courses → Assign Instructor
 SMS_ENABLED=true
 TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 TWILIO_AUTH_TOKEN=your_auth_token_here
-TWILIO_PHONE_NUMBER=+15551234567
+TWILIO_MESSAGING_SERVICE_SID=MGxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TWILIO_PHONE_NUMBER=+16507020602
 ```
 
 ### Test

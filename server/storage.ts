@@ -75,6 +75,7 @@ import { eq, and, or, desc, asc, avg, count, lt, gte, sql, ilike, like, isNotNul
 import { quizService } from "./services/quizService";
 import { courseProgressConfig, type CourseProgressDefinition, type ReadingStrategy, type VideoStrategy } from "./course-progress-config";
 import { miniCourseProgressConfig, type MiniCourseProgressDefinition } from "./mini-course-progress-config";
+import { getPrerequisiteEligibility, CoursePrerequisiteError } from "../shared/course-prerequisites";
 
 // Interface for CourseReading now imported from schema
 
@@ -538,8 +539,14 @@ After completing this chapter, proceed to the next module or assessment as direc
 
   // Enrollment operations
   async enrollStudent(enrollment: InsertEnrollment): Promise<Enrollment> {
-    // No prerequisite checks - all courses are freely accessible
-    const [newEnrollment] = await db.insert(enrollments).values(enrollment).returning();
+    const studentEnrollments = await this.getStudentEnrollments(enrollment.studentId!);
+    const courseId = enrollment.courseId!;
+    const prerequisite = getPrerequisiteEligibility(courseId, studentEnrollments);
+    if (!prerequisite.eligible) {
+      throw new CoursePrerequisiteError(prerequisite.message);
+    }
+
+    const [newEnrollment] = await db.insert(enrollments).values({ ...enrollment, courseId }).returning();
     return newEnrollment;
   }
 

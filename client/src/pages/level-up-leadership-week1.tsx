@@ -1,40 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, BookOpen, ExternalLink, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, BookOpen } from "lucide-react";
+import LevelUpRequiredReading from "@/components/level-up-required-reading";
 
 export default function LevelUpLeadershipWeek1() {
   const [, setLocation] = useLocation();
-  
-  // Track which Bible passages have been read
-  const [readPassages, setReadPassages] = useState<Set<string>>(new Set());
-  
-  // Load read passages from localStorage on mount
-  useEffect(() => {
-    const saved = localStorage.getItem('level-up-week1-read-passages');
-    if (saved) {
-      try {
-        setReadPassages(new Set(JSON.parse(saved)));
-      } catch (e) {
-        console.error('Error loading read passages:', e);
-      }
-    }
-  }, []);
-  
-  // Save read passages to localStorage whenever it changes
-  useEffect(() => {
-    if (readPassages.size > 0) {
-      localStorage.setItem('level-up-week1-read-passages', JSON.stringify(Array.from(readPassages)));
-    }
-  }, [readPassages]);
-  
-  const handlePassageClick = (passageId: string, url: string) => {
-    // Mark passage as read
-    setReadPassages(prev => new Set([...prev, passageId]));
-    // Open the Bible passage
-    window.open(url, '_blank');
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 p-4 sm:p-6 lg:p-8">
@@ -77,110 +49,7 @@ export default function LevelUpLeadershipWeek1() {
               <h3 className="text-2xl font-bold text-purple-900">Required Reading</h3>
             </div>
             
-            <div className="space-y-6">
-              {/* Textbook Reading */}
-              <div className="bg-purple-50 border-l-4 border-purple-500 p-4 rounded-r-lg">
-                <h4 className="text-lg font-semibold text-purple-900 mb-2">
-                  📖 Five Levels of Leadership Textbook
-                </h4>
-                <p className="text-purple-800 mb-3">
-                  <strong>Read pages 1-81:</strong> Introduction and Level 1 - Position Leadership
-                </p>
-                <div className="bg-white p-3 rounded border border-purple-200">
-                  <p className="text-sm text-purple-700 mb-2">
-                    <strong>Key Topics to Focus On:</strong>
-                  </p>
-                  <ul className="text-sm text-purple-700 space-y-1 ml-4">
-                    <li>• Understanding positional authority</li>
-                    <li>• The limitations of title-based leadership</li>
-                    <li>• Building credibility and influence</li>
-                    <li>• The foundation for all other leadership levels</li>
-                  </ul>
-                </div>
-              </div>
-
-              {/* Bible Reading */}
-              <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
-                <h4 className="text-lg font-semibold text-blue-900 mb-2">
-                  📖 Bible Reading Assignment
-                </h4>
-                <p className="text-blue-800 mb-3">
-                  Study these passages to understand biblical principles of positional leadership:
-                </p>
-                <div className="space-y-2">
-                  <Button
-                    onClick={() => handlePassageClick('2chron9-31', 'https://www.biblegateway.com/passage/?search=2+Chronicles+9%3A31&version=NIV')}
-                    variant="outline"
-                    className={`w-full justify-start text-blue-700 border-blue-300 hover:bg-blue-100 ${
-                      readPassages.has('2chron9-31') ? 'bg-green-50 border-green-400' : ''
-                    }`}
-                  >
-                    {readPassages.has('2chron9-31') ? (
-                      <CheckCircle2 className="mr-2 h-4 w-4 text-green-600" />
-                    ) : (
-                      <ExternalLink className="mr-2 h-4 w-4" />
-                    )}
-                    2 Chronicles 9:31 - Solomon's Reign
-                  </Button>
-                  <Button
-                    onClick={() => handlePassageClick('2chron10-1-19', 'https://www.biblegateway.com/passage/?search=2+Chronicles+10%3A1-19&version=NIV')}
-                    variant="outline"
-                    className={`w-full justify-start text-blue-700 border-blue-300 hover:bg-blue-100 ${
-                      readPassages.has('2chron10-1-19') ? 'bg-green-50 border-green-400' : ''
-                    }`}
-                  >
-                    {readPassages.has('2chron10-1-19') ? (
-                      <CheckCircle2 className="mr-2 h-4 w-4 text-green-600" />
-                    ) : (
-                      <ExternalLink className="mr-2 h-4 w-4" />
-                    )}
-                    2 Chronicles 10:1-19 - Rehoboam's Leadership
-                  </Button>
-                  <Button
-                    onClick={() => handlePassageClick('mark10-35-45', 'https://www.biblegateway.com/passage/?search=Mark+10%3A35-45&version=NIV')}
-                    variant="outline"
-                    className={`w-full justify-start text-blue-700 border-blue-300 hover:bg-blue-100 ${
-                      readPassages.has('mark10-35-45') ? 'bg-green-50 border-green-400' : ''
-                    }`}
-                  >
-                    {readPassages.has('mark10-35-45') ? (
-                      <CheckCircle2 className="mr-2 h-4 w-4 text-green-600" />
-                    ) : (
-                      <ExternalLink className="mr-2 h-4 w-4" />
-                    )}
-                    Mark 10:35-45 - True Greatness in Leadership
-                  </Button>
-                  <Button
-                    onClick={() => handlePassageClick('john13-1-17', 'https://www.biblegateway.com/passage/?search=John+13%3A1-17&version=NIV')}
-                    variant="outline"
-                    className={`w-full justify-start text-blue-700 border-blue-300 hover:bg-blue-100 ${
-                      readPassages.has('john13-1-17') ? 'bg-green-50 border-green-400' : ''
-                    }`}
-                  >
-                    {readPassages.has('john13-1-17') ? (
-                      <CheckCircle2 className="mr-2 h-4 w-4 text-green-600" />
-                    ) : (
-                      <ExternalLink className="mr-2 h-4 w-4" />
-                    )}
-                    John 13:1-17 - Jesus Washes Disciples' Feet
-                  </Button>
-                  <Button
-                    onClick={() => handlePassageClick('phil2-1-11', 'https://www.biblegateway.com/passage/?search=Philippians+2%3A1-11&version=NIV')}
-                    variant="outline"
-                    className={`w-full justify-start text-blue-700 border-blue-300 hover:bg-blue-100 ${
-                      readPassages.has('phil2-1-11') ? 'bg-green-50 border-green-400' : ''
-                    }`}
-                  >
-                    {readPassages.has('phil2-1-11') ? (
-                      <CheckCircle2 className="mr-2 h-4 w-4 text-green-600" />
-                    ) : (
-                      <ExternalLink className="mr-2 h-4 w-4" />
-                    )}
-                    Philippians 2:1-11 - Christ's Example of Humility
-                  </Button>
-                </div>
-              </div>
-            </div>
+            <LevelUpRequiredReading weekNumber={1} />
           </CardContent>
         </Card>
 
