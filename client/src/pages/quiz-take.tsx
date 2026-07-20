@@ -347,7 +347,15 @@ export default function QuizTake() {
     }
   }, [isStarted, timeLeft, isSubmitted]);
 
-
+  // Scroll to results when shown — must stay above early returns (Rules of Hooks)
+  useEffect(() => {
+    if (!quizResult || isReviewMode) return;
+    const timer = window.setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      resultsTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 50);
+    return () => window.clearTimeout(timer);
+  }, [quizResult, isReviewMode]);
 
   const submitQuizMutation = useMutation({
     mutationFn: async (quizAnswers: Record<number, string>) => {
@@ -623,16 +631,6 @@ export default function QuizTake() {
       />
     );
   }
-
-  // Scroll to results when shown
-  useEffect(() => {
-    if (!quizResult || isReviewMode) return;
-    const timer = window.setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      resultsTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 50);
-    return () => window.clearTimeout(timer);
-  }, [quizResult, isReviewMode]);
 
   if (isSubmitted && !isReviewMode && quizResult) {
     const fnLabels = familyNightQuiz
