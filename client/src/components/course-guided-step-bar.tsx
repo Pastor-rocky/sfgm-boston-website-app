@@ -127,16 +127,29 @@ export default function CourseGuidedStepBar({
               </Badge>
             )}
             {quizInfo.hasAttempts ? (
-              <Button
-                onClick={() => {
-                  window.location.href = `${quizInfo.quizUrl}?review=true`;
-                }}
-                variant="outline"
-                className="border-green-300 text-green-700 hover:bg-green-50"
-              >
-                <i className="fas fa-eye mr-2"></i>
-                View Previous Quiz
-              </Button>
+              <>
+                <Button
+                  onClick={() => {
+                    window.location.href = `${quizInfo.quizUrl}?review=true`;
+                  }}
+                  variant="outline"
+                  className="border-green-300 text-green-700 hover:bg-green-50"
+                >
+                  <i className="fas fa-eye mr-2"></i>
+                  View Previous Quiz
+                </Button>
+                {!quizInfo.latestPassed && quizInfo.isAccessible && (
+                  <Button
+                    onClick={() => {
+                      window.location.href = quizInfo.quizUrl;
+                    }}
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
+                  >
+                    <i className="fas fa-redo mr-2"></i>
+                    Retake Quiz
+                  </Button>
+                )}
+              </>
             ) : (
               <Button
                 disabled={!quizInfo.isAccessible}

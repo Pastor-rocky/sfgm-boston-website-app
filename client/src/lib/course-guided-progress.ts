@@ -30,7 +30,8 @@ export interface VideoLite {
 const GUIDED_WEEKLY_QUIZ_IDS: Record<number, (number | null)[]> = {
   1: [...ACTS_IN_ACTION_QUIZ_IDS.slice(0, 10)],
   2: [48, 49, 50, 51, 52, 53, 54, 55, 56, 57],
-  3: [26, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46],
+  // Must match server/routes/quizzes.ts QUIZ_SLUG_MAP (dbaj-week-N)
+  3: [26, 46, 37, 38, 39, 40, 41, 42, 43, 44, 45],
   4: [71, 72, 73, 74],
   5: [59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70].slice(0, 12),
   6: [76, 77, 78, 79, 80],
@@ -124,15 +125,11 @@ function isWeekContentCompleted(
   );
 }
 
-function isWeekFullyCompleted(
+function isWeekQuizPassed(
   courseId: number,
   weekNumber: number,
-  progress: ContentProgressItem[],
-  videos: VideoLite[],
   attempts: QuizAttemptLite[],
 ): boolean {
-  if (!isWeekContentCompleted(courseId, weekNumber, progress, videos)) return false;
-
   const quizIds = GUIDED_WEEKLY_QUIZ_IDS[courseId];
   const quizId = quizIds?.[weekNumber - 1];
   if (quizId == null) return true;
@@ -142,6 +139,17 @@ function isWeekFullyCompleted(
   return (
     attemptInfo.count > 0 && (attemptInfo.bestScorePercent ?? 0) >= passingScore
   );
+}
+
+function isWeekFullyCompleted(
+  courseId: number,
+  weekNumber: number,
+  progress: ContentProgressItem[],
+  videos: VideoLite[],
+  attempts: QuizAttemptLite[],
+): boolean {
+  if (!isWeekContentCompleted(courseId, weekNumber, progress, videos)) return false;
+  return isWeekQuizPassed(courseId, weekNumber, attempts);
 }
 
 function canAccessWeek(
@@ -154,6 +162,74 @@ function canAccessWeek(
   return isWeekContentCompleted(courseId, weekNumber - 1, progress, videos);
 }
 
+/** Furthest week unlocked by content progression (prior week videos + readings done). */
+export function getFurthestAccessibleWeek(
+  courseId: number,
+  progress: ContentProgressItem[],
+  videos: VideoLite[],
+): number {
+  if (!usesGuidedFlow(courseId)) return 1;
+
+  const maxWeek = getGuidedMaxWeeks(courseId);
+  let furthest = 1;
+  for (let w = 1; w <= maxWeek; w++) {
+    if (!canAccessWeek(courseId, w, progress, videos)) break;
+    furthest = w;
+  }
+  return furthest;
+}
+
+/**
+ * Week the student should focus on now.
+ * Uses content progression — a failed quiz on an earlier week does NOT trap the student.
+ */
+export function computeGuidedActiveWeek(
+  courseId: number,
+  progress: ContentProgressItem[],
+  videos: VideoLite[],
+  _attempts: QuizAttemptLite[],
+): number {
+  if (!usesGuidedFlow(courseId)) return 1;
+
+  const furthest = getFurthestAccessibleWeek(courseId, progress, videos);
+  for (let w = 1; w <= furthest; w++) {
+    if (!isWeekContentCompleted(courseId, w, progress, videos)) {
+      return w;
+    }
+  }
+  return furthest;
+}
+
+/** Weeks where content is done but the quiz was attempted and not passed. */
+export function getFailedQuizWeeks(
+  courseId: number,
+  progress: ContentProgressItem[],
+  videos: VideoLite[],
+  attempts: QuizAttemptLite[],
+): number[] {
+  if (!usesGuidedFlow(courseId)) return [];
+
+  const maxWeek = getGuidedMaxWeeks(courseId);
+  const failed: number[] = [];
+  for (let w = 1; w <= maxWeek; w++) {
+    if (!canAccessWeek(courseId, w, progress, videos)) continue;
+    if (!isWeekContentCompleted(courseId, w, progress, videos)) continue;
+
+    const quizIds = GUIDED_WEEKLY_QUIZ_IDS[courseId];
+    const quizId = quizIds?.[w - 1];
+    if (quizId == null) continue;
+
+    const attemptInfo = getQuizAttemptInfo(quizId, attempts);
+    if (attemptInfo.count === 0) continue;
+
+    const passingScore = getPassingScoreForWeek(courseId, w);
+    if ((attemptInfo.bestScorePercent ?? 0) < passingScore) {
+      failed.push(w);
+    }
+  }
+  return failed;
+}
+
 /** Current guided week for dashboard / cards. */
 export function computeGuidedWeek(
   courseId: number,
@@ -161,16 +237,7 @@ export function computeGuidedWeek(
   videos: VideoLite[],
   attempts: QuizAttemptLite[],
 ): number {
-  if (!usesGuidedFlow(courseId)) return 1;
-
-  const maxWeek = getGuidedMaxWeeks(courseId);
-  for (let w = 1; w <= maxWeek; w++) {
-    if (!canAccessWeek(courseId, w, progress, videos)) break;
-    if (!isWeekFullyCompleted(courseId, w, progress, videos, attempts)) {
-      return w;
-    }
-  }
-  return maxWeek;
+  return computeGuidedActiveWeek(courseId, progress, videos, attempts);
 }
 
 export function getPreviousReviewWeeks(guidedWeek: number): number[] {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -36,6 +36,14 @@ import {
   MAXWELL_BOOK_TITLE,
   MAXWELL_OFFLINE_NOTE,
 } from '@/lib/level-up-week-readings';
+import {
+  computeGuidedActiveWeek,
+  getFailedQuizWeeks,
+  getFurthestAccessibleWeek,
+  type ContentProgressItem as GuidedProgressItem,
+  type QuizAttemptLite,
+  type VideoLite,
+} from '@/lib/course-guided-progress';
 
 
 interface ContentProgressItem {
@@ -1231,9 +1239,14 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
     });
     
     // Check if ALL videos for this week are completed
-    const allVideosCompleted = weekVideos.length === 0 || weekVideos.every((video: CourseVideo) => 
+    let allVideosCompleted = weekVideos.length === 0 || weekVideos.every((video: CourseVideo) => 
         isContentCompleted('video', video.id)
       );
+
+    // Don't Be a Jonah: required videos only on odd weeks 1,3,5,7,9
+    if (courseId === 3 && ![1, 3, 5, 7, 9].includes(weekNumber)) {
+      allVideosCompleted = true;
+    }
     
     // Check if ALL readings for this week are completed
     let allReadingsCompleted = true;
@@ -1621,50 +1634,21 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
 
   // Check if a week is fully completed (all videos + readings + quiz with passing score)
   const isWeekFullyCompleted = (weekNumber: number) => {
-    const weekVideos = getVideosForWeek(weekNumber);
-    
-    const weekReadings = readings.filter((r: CourseReading) => {
-      const readingWeek = extractWeekNumber(r.title);
-      return readingWeek === weekNumber && r.isPublished;
-    });
-    
+    if (!isWeekContentCompleted(weekNumber)) return false;
+
     const weekQuizzes = quizzes.filter((q: any) => {
+      if (q.isFinalExam) return false;
       const quizWeek = extractWeekNumber(q.title);
       return quizWeek === weekNumber;
     });
-    
-    // Check if ALL videos for this week are completed
-    const allVideosCompleted = weekVideos.every((video: CourseVideo) => 
-      isContentCompleted('video', video.id)
-    );
-    
-    // Check if ALL readings for this week are completed
-    let allReadingsCompleted = true;
-    
-    // Special handling for Course 1 (Acts in Action) - has hardcoded readings
-    if (courseId === 1) {
-      const hardcodedReadingIds = getCourse1ReadingIds(weekNumber);
-      allReadingsCompleted = hardcodedReadingIds.length === 0 || hardcodedReadingIds.every(id => 
-        isContentCompleted('reading', id)
-      );
-    } else {
-      allReadingsCompleted = weekReadings.every((reading: CourseReading) => 
-        isContentCompleted('reading', reading.id)
-      );
-    }
-    
-    // Check if quiz is completed with passing score (scores stored as 0–1 or 0–100)
-    let quizCompleted = true; // Default true if no quiz exists
-    if (weekQuizzes.length > 0) {
-      quizCompleted = weekQuizzes.some((quiz: any) => {
-        const attemptInfo = getQuizAttemptInfo(quiz.id);
-        const passingScore = quiz.passingScore || DEFAULT_PASSING_SCORE;
-        return attemptInfo.count > 0 && (attemptInfo.bestScorePercent ?? 0) >= passingScore;
-      });
-    }
-    
-    // Week is fully completed only when ALL requirements are met
-    return allVideosCompleted && allReadingsCompleted && quizCompleted;
+
+    if (weekQuizzes.length === 0) return true;
+
+    return weekQuizzes.some((quiz: any) => {
+      const attemptInfo = getQuizAttemptInfo(quiz.id);
+      const passingScore = quiz.passingScore || DEFAULT_PASSING_SCORE;
+      return attemptInfo.count > 0 && (attemptInfo.bestScorePercent ?? 0) >= passingScore;
+    });
   };
 
   const stats = getCompletionStats();
@@ -1726,31 +1710,89 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
     return 'quiz';
   };
 
+  const guidedProgressVideos = useMemo((): VideoLite[] =>
+    videos.map((v) => ({
+      id: v.id,
+      title: v.title,
+      isPublished: v.isPublished,
+    })),
+  [videos]);
+
+  const guidedProgressItems = useMemo((): GuidedProgressItem[] =>
+    contentProgress.map((p) => ({
+      contentType: p.contentType,
+      contentId: p.contentId,
+      completed: p.completed,
+    })),
+  [contentProgress]);
+
+  const guidedQuizAttempts = useMemo((): QuizAttemptLite[] =>
+    quizAttempts.map((a) => ({
+      quizId: a.quizId,
+      score: a.score,
+      completedAt: a.completedAt,
+      startedAt: a.startedAt,
+    })),
+  [quizAttempts]);
+
+  const furthestAccessibleWeek = useMemo(() => {
+    if (!useGuidedFlow) return getGuidedMaxWeeks(courseId);
+    return getFurthestAccessibleWeek(courseId, guidedProgressItems, guidedProgressVideos);
+  }, [useGuidedFlow, courseId, guidedProgressItems, guidedProgressVideos]);
+
+  const failedQuizWeeks = useMemo(() => {
+    if (!useGuidedFlow) return [];
+    return getFailedQuizWeeks(courseId, guidedProgressItems, guidedProgressVideos, guidedQuizAttempts);
+  }, [useGuidedFlow, courseId, guidedProgressItems, guidedProgressVideos, guidedQuizAttempts]);
+
+  const hasInitializedGuidedWeek = useRef(false);
+
+  useEffect(() => {
+    hasInitializedGuidedWeek.current = false;
+  }, [courseId]);
+
+  const jumpToGuidedWeek = (week: number) => {
+    const step = resolveGuidedStep(week);
+    setGuidedWeek(week);
+    setGuidedStep(step);
+    setActiveTab(step === 'video' ? 'videos' : step === 'quiz' ? 'quizzes' : 'readings');
+  };
+
   useEffect(() => {
     if (!useGuidedFlow || reviewWeek !== null) return;
-    const maxWeek = getGuidedMaxWeeks(courseId);
-    for (let w = 1; w <= maxWeek; w++) {
-      if (!canAccessWeek(w)) {
-        if (w > 1 && isWeekFullyCompleted(w - 1)) {
-          const step = resolveGuidedStep(w);
-          setGuidedWeek(w);
-          setGuidedStep(step);
-          setActiveTab(step === 'video' ? 'videos' : step === 'quiz' ? 'quizzes' : 'readings');
-        }
-        return;
+
+    const activeWeek = computeGuidedActiveWeek(
+      courseId,
+      guidedProgressItems,
+      guidedProgressVideos,
+      guidedQuizAttempts,
+    );
+
+    setGuidedWeek((current) => {
+      if (!hasInitializedGuidedWeek.current) {
+        hasInitializedGuidedWeek.current = true;
+        return activeWeek;
       }
-      if (!isWeekFullyCompleted(w)) {
-        const step = resolveGuidedStep(w);
-        setGuidedWeek(w);
-        setGuidedStep(step);
-        setActiveTab(step === 'video' ? 'videos' : step === 'quiz' ? 'quizzes' : 'readings');
-        return;
-      }
-    }
-    setGuidedWeek(maxWeek);
-    setGuidedStep('quiz');
-    setActiveTab('quizzes');
-  }, [useGuidedFlow, reviewWeek, contentProgress, videos, readings, quizzes, quizAttempts, courseId]);
+      if (!canAccessWeek(current)) return activeWeek;
+      if (activeWeek > current) return activeWeek;
+      return current;
+    });
+  }, [
+    useGuidedFlow,
+    reviewWeek,
+    courseId,
+    furthestAccessibleWeek,
+    guidedProgressItems,
+    guidedProgressVideos,
+    guidedQuizAttempts,
+  ]);
+
+  useEffect(() => {
+    if (!useGuidedFlow || reviewWeek !== null) return;
+    const step = resolveGuidedStep(guidedWeek);
+    setGuidedStep(step);
+    setActiveTab(step === 'video' ? 'videos' : step === 'quiz' ? 'quizzes' : 'readings');
+  }, [guidedWeek, useGuidedFlow, reviewWeek, contentProgress, videos, readings, courseId]);
 
   useEffect(() => {
     if (!useGuidedFlow || reviewWeek === null) return;
@@ -1916,6 +1958,49 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
       )}
         </CardContent>
       </Card>
+
+      {useGuidedFlow && reviewWeek === null && failedQuizWeeks.length > 0 && (
+        <Card className="border-amber-200 bg-amber-50">
+          <CardContent className="py-3">
+            <p className="text-sm text-amber-900">
+              <i className="fas fa-exclamation-circle mr-2"></i>
+              {failedQuizWeeks.length === 1
+                ? `Week ${failedQuizWeeks[0]} quiz needs a retake when you are ready.`
+                : `Weeks ${failedQuizWeeks.join(', ')} need quiz retakes when you are ready.`}
+              {' '}You can keep going — use the week buttons below to retake any time.
+            </p>
+          </CardContent>
+        </Card>
+      )}
+
+      {useGuidedFlow && reviewWeek === null && (
+        <Card className="border-slate-200">
+          <CardContent className="py-3">
+            <p className="text-xs font-medium text-slate-600 mb-2">Jump to week</p>
+            <div className="flex flex-wrap gap-2">
+              {Array.from({ length: getGuidedMaxWeeks(courseId) }, (_, i) => i + 1)
+                .filter((w) => canAccessWeek(w))
+                .map((w) => (
+                  <Button
+                    key={w}
+                    size="sm"
+                    variant={guidedWeek === w ? 'default' : 'outline'}
+                    className={guidedWeek === w ? 'bg-blue-600' : ''}
+                    onClick={() => jumpToGuidedWeek(w)}
+                  >
+                    Week {w}
+                    {failedQuizWeeks.includes(w) ? ' ⚠' : ''}
+                  </Button>
+                ))}
+              {furthestAccessibleWeek < getGuidedMaxWeeks(courseId) && (
+                <span className="text-xs text-slate-500 self-center ml-1">
+                  Week {furthestAccessibleWeek + 1}+ locked until Week {furthestAccessibleWeek} content is finished
+                </span>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {useGuidedFlow && reviewWeek !== null && (
         <Card className="border-amber-200 bg-amber-50">
@@ -6636,11 +6721,9 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                           
                           {/* Quiz Action Buttons */}
                           {hasAttempts ? (
-                            // Quiz completed - show view previous quiz button
                             <div className="flex flex-col gap-2">
                               <Button
                                 onClick={() => {
-                              // Generate quiz URL based on courseId
                               let quizUrl;
                               if (courseId === 1) {
                                 quizUrl = isFinalExam ? '/quiz/acts-final-exam' : `/quiz/acts-week-${quizNumber}`;
@@ -6673,12 +6756,50 @@ export default function CourseContentViewer({ courseId }: CourseContentViewerPro
                                 <i className="fas fa-eye mr-2"></i>
                                 View Previous Quiz
                               </Button>
+                              {!quizAttemptInfo.latestPassed && isAccessible && (
+                                <Button
+                                  onClick={() => {
+                                    let quizUrl;
+                                    if (courseId === 1) {
+                                      quizUrl = isFinalExam ? '/quiz/acts-final-exam' : `/quiz/acts-week-${quizNumber}`;
+                                    } else if (courseId === 2) {
+                                      quizUrl = isFinalExam ? '/quiz/firestarter-final-exam' : `/quiz/firestarter-week-${quizNumber}`;
+                                    } else if (courseId === 3) {
+                                      quizUrl = isFinalExam ? '/quiz/dbaj-final-exam' : `/quiz/dbaj-week-${quizNumber}`;
+                                    } else if (courseId === 5) {
+                                      quizUrl = isFinalExam ? '/quiz/studying-for-service-final-exam' : `/quiz/studying-for-service-week-${quizNumber}`;
+                                    } else if (courseId === 4) {
+                                      quizUrl = isFinalExam ? '/quiz/grow-final-exam' : `/quiz/grow-week-${quizNumber}`;
+                                    } else if (courseId === 6) {
+                                      quizUrl = isFinalExam ? '/quiz/deacon-course-final-exam' : `/quiz/deacon-course-week-${quizNumber}`;
+                                    } else if (courseId === 7) {
+                                      quizUrl = isFinalExam ? '/quiz/level-up-leadership-final-exam' : `/quiz/level-up-leadership-week-${quizNumber}`;
+                                    } else if (courseId === 8) {
+                                      quizUrl = isFinalExam ? '/quiz/youth-ministry-final-exam' : `/quiz/youth-ministry-week-${quizNumber}`;
+                                    } else if (courseId === 16) {
+                                      quizUrl = isFinalExam ? '/quiz/man-of-god-final-exam' : `/quiz/man-of-god-week-${quizNumber}`;
+                                    } else if (courseId === 10) {
+                                      quizUrl = `/quiz/introduction-to-prophecy-week-${quizNumber}`;
+                                    } else {
+                                      quizUrl = `/quiz/${quiz.id}`;
+                                    }
+                                    window.location.href = quizUrl;
+                                  }}
+                                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
+                                >
+                                  <i className="fas fa-redo mr-2"></i>
+                                  Retake Quiz
+                                </Button>
+                              )}
                               <p className="text-xs text-gray-500 text-center">
-                                {quizAttemptInfo.latestPassed ? '✅ Completed' : '❌ Failed - No Retry'}
+                                {quizAttemptInfo.latestPassed
+                                  ? '✅ Completed'
+                                  : isAccessible
+                                    ? 'Previous attempt did not pass — you can retake.'
+                                    : 'Complete this week\'s content to retake.'}
                               </p>
                             </div>
                           ) : (
-                            // Quiz not taken - show take quiz button or locked state
                             <Button
                               disabled={!isAccessible}
                               onClick={() => {
