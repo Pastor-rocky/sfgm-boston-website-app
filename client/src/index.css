@@ -79,12 +79,27 @@
     overflow-x: hidden;
     /* iOS safe area insets for notched devices */
     padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-    /* Prevent pull-to-refresh on iOS Safari */
-    overscroll-behavior-y: contain;
-    /* Prevent rubber band effect on iOS */
+    /* Allow normal wheel scrolling on desktop/Electron */
+    overscroll-behavior-y: auto;
     position: relative;
     min-height: 100vh;
     min-height: -webkit-fill-available;
+  }
+
+  /* Touch devices: contain overscroll to prevent pull-to-refresh / rubber-band */
+  @media (hover: none) and (pointer: coarse) {
+    body {
+      overscroll-behavior-y: contain;
+    }
+  }
+
+  /* Desktop: ensure document scroll is never blocked */
+  @media (hover: hover) and (pointer: fine) {
+    html,
+    body {
+      overflow-y: auto;
+      overscroll-behavior-y: auto;
+    }
   }
   
   h1, h2, h3, h4, h5, h6 {

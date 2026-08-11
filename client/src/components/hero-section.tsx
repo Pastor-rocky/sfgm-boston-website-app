@@ -50,8 +50,21 @@ export default function HeroSection() {
                 Welcome to the <span className="text-red-900 font-extrabold" style={{filter: 'brightness(1.2) contrast(1.1)'}}>House Of Restoration Ministries</span>
               </h1>
               
-              <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl text-white mb-8 leading-relaxed font-bold" style={{textShadow: '2px 2px 0px black, -2px -2px 0px black, 2px -2px 0px black, -2px 2px 0px black, 0px 0px 3px rgba(0, 0, 0, 0.8)'}}>
+              <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl text-white mb-6 leading-relaxed font-bold" style={{textShadow: '2px 2px 0px black, -2px -2px 0px black, 2px -2px 0px black, -2px 2px 0px black, 0px 0px 3px rgba(0, 0, 0, 0.8)'}}>
                 <span className="text-green-500 text-xl sm:text-2xl lg:text-3xl xl:text-4xl">GROW</span>ing ourselves to <span className="text-green-500 text-xl sm:text-2xl lg:text-3xl xl:text-4xl">GROW</span> each other to <span className="text-green-500 text-xl sm:text-2xl lg:text-3xl xl:text-4xl">GROW</span> the KINGDOM!
+              </p>
+
+              <p
+                className="mb-8 text-base sm:text-lg lg:text-xl font-semibold leading-snug text-white/95"
+                style={{
+                  textShadow:
+                    "2px 2px 0px black, -2px -2px 0px black, 2px -2px 0px black, -2px 2px 0px black, 0px 0px 3px rgba(0, 0, 0, 0.8)",
+                }}
+              >
+                <span className="text-amber-300">Coming Soon</span>
+                {" — "}
+                <span className="font-extrabold">SFGM Roma Academy</span>
+                {": Pre-K to High School full learning system"}
               </p>
             </div>
             
