@@ -72,9 +72,9 @@ export default function Landing() {
               </p>
               <h3 className="mt-2 text-2xl font-bold text-slate-900">SFGM Roma Academy</h3>
               <p className="mt-3 text-sm leading-relaxed text-slate-600">
-                Preschool–grade curriculum library, Flip Book lessons, and classroom presentation tools
-                for families. Same SFGM membership — children&apos;s assessments and Bible courses for
-                kids will live here when we open the doors.
+                Preschool–High School curriculum library, Flip Book lessons, and classroom presentation
+                tools for families. Same SFGM membership — children&apos;s assessments and Bible courses
+                for kids will live here when we open the doors.
               </p>
               <div className="mt-6">
                 <Button
@@ -88,6 +88,20 @@ export default function Landing() {
                 <p className="mt-3 text-xs text-slate-500">
                   Not available to the public yet. Beta testing stays private until the academy is
                   finished.
+                </p>
+                <p className="mt-3 text-[11px] leading-relaxed text-slate-400">
+                  Curriculum materials drawn from the Core Knowledge Foundation&apos;s openly licensed
+                  resources at{" "}
+                  <a
+                    href="https://www.coreknowledge.org"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:text-slate-600"
+                  >
+                    coreknowledge.org
+                  </a>
+                  . Special thanks to the Core Knowledge® Foundation for making these materials
+                  available to schools and families.
                 </p>
               </div>
             </div>
