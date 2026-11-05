@@ -61,14 +61,21 @@ export default function HeroSection() {
                     "2px 2px 0px black, -2px -2px 0px black, 2px -2px 0px black, -2px 2px 0px black, 0px 0px 3px rgba(0, 0, 0, 0.8)",
                 }}
               >
-                <span className="text-amber-300">Coming Soon</span>
-                {" — "}
                 <span className="font-extrabold">SFGM Roma Academy</span>
-                {": Pre-K to High School full learning system"}
+                {": Pre-K to Twelfth Grade classroom — open now for families"}
               </p>
             </div>
             
             <div className="flex flex-col sm:flex-row flex-wrap gap-4 lg:gap-6">
+              <Button
+                onClick={() => {
+                  window.location.href = "https://roma-academy-classroom.pages.dev/";
+                }}
+                className="bg-amber-500 hover:bg-amber-600 text-amber-950 border-2 border-amber-300/60 px-6 py-4 font-semibold text-lg shadow-lg"
+              >
+                🏫 Roma Academy Classroom
+              </Button>
+
               <Button 
                 onClick={() => window.location.href = '/course-catalog'}
                 className="bg-green-600 hover:bg-green-700 text-white border-2 border-green-500/50 px-6 py-4 font-semibold text-lg shadow-lg"
