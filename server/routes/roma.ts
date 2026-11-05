@@ -103,7 +103,8 @@ function handoffUrl(family: ReturnType<typeof publicFamily>, token: string) {
     encodeURIComponent(JSON.stringify({ ...family, token })),
     "utf8"
   ).toString("base64");
-  return `${CLASSROOM_BASE}/?romaFamily=${payload}`;
+  // Land on Forms so district docs autofill from this family right away.
+  return `${CLASSROOM_BASE}/?romaFamily=${encodeURIComponent(payload)}#documents`;
 }
 
 async function replaceChildren(familyId: number, children: z.infer<typeof childSchema>[]) {

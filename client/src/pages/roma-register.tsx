@@ -25,6 +25,37 @@ const GRADES = [
 
 type Child = { fullName: string; dateOfBirth: string; grade: string };
 
+/** Age on Sept 1 of the current school year → suggested grade (parent may change). */
+function gradeFromDob(iso: string): string {
+  const m = String(iso || "").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) return "Preschool";
+  const birth = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  const now = new Date();
+  const startY = now.getMonth() >= 6 ? now.getFullYear() : now.getFullYear() - 1;
+  const cutoff = new Date(startY, 8, 1);
+  let age = cutoff.getFullYear() - birth.getFullYear();
+  if (
+    cutoff.getMonth() < birth.getMonth() ||
+    (cutoff.getMonth() === birth.getMonth() && cutoff.getDate() < birth.getDate())
+  ) {
+    age -= 1;
+  }
+  if (age >= 17) return "Twelfth Grade";
+  if (age >= 16) return "Eleventh Grade";
+  if (age >= 15) return "Tenth Grade";
+  if (age >= 14) return "Ninth Grade";
+  if (age >= 13) return "Eighth Grade";
+  if (age >= 12) return "Seventh Grade";
+  if (age >= 11) return "Sixth Grade";
+  if (age >= 10) return "Fifth Grade";
+  if (age >= 9) return "Fourth Grade";
+  if (age >= 8) return "Third Grade";
+  if (age >= 7) return "Second Grade";
+  if (age >= 6) return "First Grade";
+  if (age >= 5) return "Kindergarten";
+  return "Preschool";
+}
+
 export default function RomaRegister() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -142,8 +173,13 @@ export default function RomaRegister() {
                   required
                   value={c.dateOfBirth}
                   onChange={(e) => {
+                    const dob = e.target.value;
                     const next = [...children];
-                    next[i] = { ...c, dateOfBirth: e.target.value };
+                    next[i] = {
+                      ...c,
+                      dateOfBirth: dob,
+                      grade: dob ? gradeFromDob(dob) : c.grade,
+                    };
                     setChildren(next);
                   }}
                 />
@@ -155,6 +191,7 @@ export default function RomaRegister() {
                     next[i] = { ...c, grade: e.target.value };
                     setChildren(next);
                   }}
+                  title="Suggested from date of birth — change if needed"
                 >
                   {GRADES.map((g) => (
                     <option key={g}>{g}</option>
