@@ -1050,3 +1050,41 @@ export type ForumPostLike = typeof forumPostLikes.$inferSelect;
 export type InsertForumPostLike = typeof forumPostLikes.$inferInsert;
 export type ForumReplyLike = typeof forumReplyLikes.$inferSelect;
 export type InsertForumReplyLike = typeof forumReplyLikes.$inferInsert;
+
+// Roma Academy family accounts
+export const romaFamilies = pgTable("roma_families", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id")
+    .notNull()
+    .unique()
+    .references(() => users.id, { onDelete: "cascade" }),
+  parentFirstName: varchar("parent_first_name").notNull(),
+  parentLastName: varchar("parent_last_name").notNull(),
+  parent2Name: varchar("parent2_name"),
+  email: varchar("email").notNull(),
+  phone: varchar("phone").notNull(),
+  addressLine1: varchar("address_line1"),
+  city: varchar("city"),
+  state: varchar("state").default("MA"),
+  zip: varchar("zip"),
+  schoolDistrict: varchar("school_district"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const romaChildren = pgTable("roma_children", {
+  id: serial("id").primaryKey(),
+  familyId: integer("family_id")
+    .notNull()
+    .references(() => romaFamilies.id, { onDelete: "cascade" }),
+  fullName: varchar("full_name").notNull(),
+  dateOfBirth: varchar("date_of_birth").notNull(),
+  grade: varchar("grade"),
+  sortOrder: integer("sort_order").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export type RomaFamily = typeof romaFamilies.$inferSelect;
+export type InsertRomaFamily = typeof romaFamilies.$inferInsert;
+export type RomaChild = typeof romaChildren.$inferSelect;
+export type InsertRomaChild = typeof romaChildren.$inferInsert;

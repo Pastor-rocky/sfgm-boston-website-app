@@ -80,7 +80,7 @@ export default function Landing() {
               <div className="mt-6">
                 <Button
                   onClick={() => {
-                    window.location.href = "https://roma-academy-classroom.pages.dev/";
+                    window.location.href = "/roma-academy";
                   }}
                   className="btn-primary w-full px-6 py-4 text-base shadow-lg sm:w-auto"
                 >

@@ -69,7 +69,7 @@ export default function HeroSection() {
             <div className="flex flex-col sm:flex-row flex-wrap gap-4 lg:gap-6">
               <Button
                 onClick={() => {
-                  window.location.href = "https://roma-academy-classroom.pages.dev/";
+                  window.location.href = "/roma-academy";
                 }}
                 className="bg-amber-500 hover:bg-amber-600 text-amber-950 border-2 border-amber-300/60 px-6 py-4 font-semibold text-lg shadow-lg"
               >
