@@ -27,6 +27,7 @@ const createRoute = (
 
 export const marketingRoutes: RouteDefinition[] = [
   createRoute("/", () => import("@/pages/landing")),
+  createRoute("/introduction-to-prophecy", () => import("@/pages/introduction-to-prophecy-public")),
   createRoute("/bible-school", () => import("@/pages/bible-school")),
   createRoute("/bible-university", () => import("@/pages/bible-university")),
   createRoute("/sfgm-orlando", () => import("@/pages/sfgm-orlando")),

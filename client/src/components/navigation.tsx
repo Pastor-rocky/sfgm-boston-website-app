@@ -23,6 +23,7 @@ export default function Navigation() {
   const [isEnrollmentOpen, setIsEnrollmentOpen] = useState(false);
 
   const publicLinks = [
+    { href: "/introduction-to-prophecy", label: "Introduction to Prophecy 📖", icon: "fas fa-book-open" },
     { href: "/events", label: "View All Events 📅", icon: "fas fa-calendar-check" },
     { href: "/previous-services-blogs", label: "Previous Services 📺", icon: "fas fa-video" },
     { href: "/music", label: "Music 🎵", icon: "fas fa-music" },
