@@ -42,6 +42,29 @@ export default function Landing() {
             </div>
           </div>
         </div>
+        <div className="mx-auto grid max-w-6xl items-center gap-8 border-t border-white/10 px-4 py-10 sm:px-6 md:grid-cols-[200px_1fr] md:py-14">
+          <Link href="/forever-changed" className="mx-auto block w-full max-w-[200px]">
+            <img
+              src="/forever-changed-cover.jpg"
+              alt="Forever Changed, SFGM Boston"
+              className="w-full rounded-md shadow-2xl transition duration-200 hover:scale-[1.02]"
+            />
+          </Link>
+          <div className="text-center md:text-left">
+            <h2 className="text-4xl font-bold leading-tight sm:text-5xl">Forever Changed</h2>
+            <p className="mt-3 text-lg text-slate-200">
+              SFGM Boston. Listen to the album, song by song.
+            </p>
+            <div className="mt-6">
+              <Link href="/forever-changed">
+                <Button className="bg-amber-500 px-8 py-6 text-base font-semibold text-slate-950 hover:bg-amber-400">
+                  <i className="fas fa-play mr-3"></i>
+                  Play the album
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
       </section>
       <HeroSection />
       <AboutSection />

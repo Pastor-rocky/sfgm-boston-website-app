@@ -120,8 +120,8 @@ function Footer() {
               <Link href="/" className="text-white hover:text-blue-300 transition-colors">
                 <i className="fas fa-home mr-1"></i>Home
               </Link>
-              <Link href="/music" className="text-white hover:text-blue-300 transition-colors">
-                <i className="fas fa-music mr-1"></i>Music
+              <Link href="/forever-changed" className="text-white hover:text-blue-300 transition-colors">
+                <i className="fas fa-music mr-1"></i>Forever Changed
               </Link>
               <Link href="/bible-school" className="text-white hover:text-blue-300 transition-colors">
                 <i className="fas fa-graduation-cap mr-1"></i>Bible School

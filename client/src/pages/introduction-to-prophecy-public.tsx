@@ -19,7 +19,6 @@ export default function IntroductionToProphecyPublic() {
   const [error, setError] = useState("");
   const [chapterId, setChapterId] = useState("00");
   const audioRef = useRef<HTMLAudioElement>(null);
-  const continuePlayback = useRef(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -41,8 +40,7 @@ export default function IntroductionToProphecyPublic() {
 
   const chapter = book?.chapters.find((item) => item.id === chapterId) ?? book?.chapters[0];
 
-  const openChapter = (id: string, play = false) => {
-    continuePlayback.current = play;
+  const openChapter = (id: string) => {
     setChapterId(id);
     const url = new URL(window.location.href);
     url.searchParams.set("chapter", id);
@@ -51,22 +49,27 @@ export default function IntroductionToProphecyPublic() {
   };
 
   useEffect(() => {
-    if (!continuePlayback.current) return;
     const audio = audioRef.current;
-    if (!audio) return;
-    continuePlayback.current = false;
-    const start = () => {
-      audio.play().catch(() => {});
-    };
-    if (audio.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) start();
-    else audio.addEventListener("canplay", start, { once: true });
+    if (!audio || !chapter?.audio) return;
+    if (audio.dataset.loadedSrc === chapter.audio) return;
+    audio.dataset.loadedSrc = chapter.audio;
+    audio.src = chapter.audio;
   }, [chapter?.audio]);
 
   const playNextChapter = () => {
     if (!book || !chapter) return;
     const index = book.chapters.findIndex((item) => item.id === chapter.id);
     const next = book.chapters.slice(index + 1).find((item) => item.audio);
-    if (next) openChapter(next.id, true);
+    const audio = audioRef.current;
+    if (!next || !audio) return;
+    audio.dataset.loadedSrc = next.audio;
+    audio.src = next.audio;
+    void audio.play().catch(() => {});
+    setChapterId(next.id);
+    const url = new URL(window.location.href);
+    url.searchParams.set("chapter", next.id);
+    window.history.replaceState({}, "", url);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -138,7 +141,6 @@ export default function IntroductionToProphecyPublic() {
                     ref={audioRef}
                     controls
                     preload="none"
-                    src={chapter.audio}
                     className="w-full"
                     onEnded={playNextChapter}
                   >
