@@ -14,8 +14,8 @@ export default function Landing() {
     <div className="min-h-screen bg-slate-50">
       <Navigation />
       <section className="bg-slate-950 text-white">
-        <div className="mx-auto grid max-w-6xl items-center gap-8 px-4 py-10 sm:px-6 md:grid-cols-[280px_1fr] md:py-14">
-          <Link href="/introduction-to-prophecy" className="mx-auto block w-full max-w-[280px]">
+        <div className="mx-auto grid max-w-6xl items-center gap-8 px-4 py-10 sm:px-6 md:grid-cols-[200px_1fr] md:py-14">
+          <Link href="/introduction-to-prophecy" className="mx-auto block w-full max-w-[200px]">
             <img
               src="/introduction-to-prophecy-front.jpg"
               alt="Introduction to Prophecy, by Teacher Larry Kaslov and Pastor Rocky Kaslov"

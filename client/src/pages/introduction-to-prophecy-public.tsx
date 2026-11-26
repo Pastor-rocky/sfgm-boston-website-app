@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
@@ -18,6 +18,8 @@ export default function IntroductionToProphecyPublic() {
   const [book, setBook] = useState<Book | null>(null);
   const [error, setError] = useState("");
   const [chapterId, setChapterId] = useState("00");
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const continuePlayback = useRef(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -39,12 +41,32 @@ export default function IntroductionToProphecyPublic() {
 
   const chapter = book?.chapters.find((item) => item.id === chapterId) ?? book?.chapters[0];
 
-  const openChapter = (id: string) => {
+  const openChapter = (id: string, play = false) => {
+    continuePlayback.current = play;
     setChapterId(id);
     const url = new URL(window.location.href);
     url.searchParams.set("chapter", id);
     window.history.replaceState({}, "", url);
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    if (!continuePlayback.current) return;
+    const audio = audioRef.current;
+    if (!audio) return;
+    continuePlayback.current = false;
+    const start = () => {
+      audio.play().catch(() => {});
+    };
+    if (audio.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) start();
+    else audio.addEventListener("canplay", start, { once: true });
+  }, [chapter?.audio]);
+
+  const playNextChapter = () => {
+    if (!book || !chapter) return;
+    const index = book.chapters.findIndex((item) => item.id === chapter.id);
+    const next = book.chapters.slice(index + 1).find((item) => item.audio);
+    if (next) openChapter(next.id, true);
   };
 
   return (
@@ -113,14 +135,18 @@ export default function IntroductionToProphecyPublic() {
                 <div className="mt-6 rounded-2xl border border-amber-400/30 bg-slate-900 p-4">
                   <p className="mb-2 text-sm font-semibold text-amber-100">Listen to this chapter</p>
                   <audio
-                    key={chapter.audio}
+                    ref={audioRef}
                     controls
                     preload="none"
                     src={chapter.audio}
                     className="w-full"
+                    onEnded={playNextChapter}
                   >
                     Your browser cannot play this recording.
                   </audio>
+                  <p className="mt-2 text-xs text-slate-400">
+                    The next chapter starts when this one ends. Press pause to stay here.
+                  </p>
                 </div>
               ) : (
                 <p className="mt-6 text-sm text-slate-300">This part is for reading.</p>
