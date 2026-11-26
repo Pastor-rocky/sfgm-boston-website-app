@@ -6,15 +6,15 @@ import Footer from "@/components/footer";
 const AUDIO_BASE = "https://images.sfgmboston.com/sfgm-public/forever-changed/";
 
 const tracks = [
-  { id: "01", title: "Worthy Is The Name", file: "worthy-is-the-name.mp3" },
-  { id: "02", title: "O Christo", file: "o-christo.mp3" },
-  { id: "03", title: "Medley", file: "medley.mp3" },
-  { id: "04", title: "Come Like A Rushing Wind", file: "come-like-a-rushing-wind.mp3" },
-  { id: "05", title: "The Room", file: "the-room.mp3" },
-  { id: "06", title: "I Don't Know", file: "i-dont-know.mp3" },
-  { id: "07", title: "In His Presence", file: "in-his-presence.mp3" },
-  { id: "08", title: "Send Your Spirit", file: "send-your-spirit.mp3" },
-  { id: "09", title: "When I'm On My Knees", file: "when-im-on-my-knees.mp3" },
+  { id: "01", title: "Forever Changed", file: "i-dont-know.mp3" },
+  { id: "02", title: "Kana Tsipav Tiro Anav", file: "when-im-on-my-knees.mp3" },
+  { id: "03", title: "Worthy Is The Name", file: "worthy-is-the-name.mp3" },
+  { id: "04", title: "O Christo", file: "o-christo.mp3" },
+  { id: "05", title: "Medley", file: "medley.mp3" },
+  { id: "06", title: "Your Ways", file: "in-his-presence.mp3" },
+  { id: "07", title: "Come Like A Rushing Wind", file: "come-like-a-rushing-wind.mp3" },
+  { id: "08", title: "The Room", file: "the-room.mp3" },
+  { id: "09", title: "Shor Avri Tiro Duxo", file: "send-your-spirit.mp3" },
 ];
 
 export default function ForeverChanged() {
