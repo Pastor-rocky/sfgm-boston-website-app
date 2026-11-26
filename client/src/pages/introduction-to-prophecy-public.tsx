@@ -106,10 +106,7 @@ export default function IntroductionToProphecyPublic() {
             </aside>
 
             <article>
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-amber-300">
-                Read and listen · no login
-              </p>
-              <h2 className="mt-2 text-3xl font-bold text-white">{chapter.title}</h2>
+              <h2 className="text-3xl font-bold text-white">{chapter.title}</h2>
               <p className="mt-2 text-sm text-slate-300">{book.byline}</p>
 
               {chapter.audio ? (

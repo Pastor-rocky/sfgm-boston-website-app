@@ -23,15 +23,11 @@ export default function Landing() {
             />
           </Link>
           <div className="text-center md:text-left">
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-amber-300">
-              New today · no login
-            </p>
-            <h1 className="mt-3 text-4xl font-bold leading-tight sm:text-5xl">
+            <h1 className="text-4xl font-bold leading-tight sm:text-5xl">
               Introduction to Prophecy
             </h1>
             <p className="mt-3 text-lg text-slate-200">
               Decoding the Divine Timeline. Read the book and listen to each chapter.
-              Nothing to sign in for.
             </p>
             <p className="mt-2 text-sm text-slate-400">
               By Teacher Larry Kaslov · Co-authored by Pastor Rocky Kaslov
