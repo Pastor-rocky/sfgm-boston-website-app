@@ -4,6 +4,7 @@ import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 
 const AUDIO_BASE = "https://images.sfgmboston.com/sfgm-public/forever-changed/";
+const ALBUM_DOWNLOAD = `${AUDIO_BASE}Forever-Changed.zip`;
 
 const tracks = [
   { id: "01", title: "Forever Changed", file: "in-his-presence.mp3" },
@@ -74,6 +75,13 @@ export default function ForeverChanged() {
             <p className="mt-1 text-center text-sm text-slate-300 lg:text-left">
               SFGM Boston · The House Of Restoration Ministries
             </p>
+            <a
+              href={ALBUM_DOWNLOAD}
+              className="mt-4 flex items-center justify-center gap-2 rounded-full bg-amber-500 px-4 py-3 text-sm font-semibold text-slate-950 hover:bg-amber-400"
+            >
+              <i className="fas fa-download"></i>
+              Download the album
+            </a>
             <label className="mt-4 block text-sm font-semibold text-amber-200 lg:hidden" htmlFor="track-select">
               Song
             </label>
@@ -115,9 +123,18 @@ export default function ForeverChanged() {
               <audio ref={audioRef} controls preload="none" className="w-full" onEnded={playNext}>
                 Your browser cannot play this recording.
               </audio>
-              <p className="mt-2 text-xs text-slate-400">
-                The next song starts when this one ends. Press pause to stay here.
-              </p>
+              <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+                <p className="text-xs text-slate-400">
+                  The next song starts when this one ends. Press pause to stay here.
+                </p>
+                <a
+                  href={`${AUDIO_BASE}download/${track.id}.mp3`}
+                  className="text-sm font-semibold text-amber-200 hover:text-white"
+                >
+                  <i className="fas fa-download mr-2"></i>
+                  Download this song
+                </a>
+              </div>
             </div>
           </article>
         </div>

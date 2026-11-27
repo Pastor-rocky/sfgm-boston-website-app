@@ -55,13 +55,20 @@ export default function Landing() {
             <p className="mt-3 text-lg text-slate-200">
               SFGM Boston. Listen to the album, song by song.
             </p>
-            <div className="mt-6">
+            <div className="mt-6 flex flex-wrap justify-center gap-3 md:justify-start">
               <Link href="/forever-changed">
                 <Button className="bg-amber-500 px-8 py-6 text-base font-semibold text-slate-950 hover:bg-amber-400">
                   <i className="fas fa-play mr-3"></i>
                   Play the album
                 </Button>
               </Link>
+              <a
+                href="https://images.sfgmboston.com/sfgm-public/forever-changed/Forever-Changed.zip"
+                className="inline-flex items-center rounded-md border border-amber-400 px-8 py-6 text-base font-semibold text-amber-200 hover:bg-white/10"
+              >
+                <i className="fas fa-download mr-3"></i>
+                Download the album
+              </a>
             </div>
           </div>
         </div>
